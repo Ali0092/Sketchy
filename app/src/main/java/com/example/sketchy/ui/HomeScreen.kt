@@ -123,14 +123,7 @@ private fun HeroHeader(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp)
         )
-        Row(
-            modifier = Modifier.padding(top = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            StatChip("${Sketch.entries.size}", "Illustrations")
-            StatChip("${EmptyState.entries.size}", "Empty States")
-            StatChip("100%", "Compose")
-        }
+
     }
 }
 

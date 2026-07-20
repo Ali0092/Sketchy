@@ -1,5 +1,6 @@
 package com.example.sketchy.ui
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,14 +19,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +31,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -153,7 +156,6 @@ private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier 
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SketchyDetailScreen(
     sketch: Sketch,
@@ -163,24 +165,7 @@ fun SketchyDetailScreen(
     var animate by remember { mutableStateOf(true) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
-                Column {
-                    Text(sketch.displayName, style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        sketch.category,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            },
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Text(text = "←", style = MaterialTheme.typography.headlineSmall)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-        )
+        DetailHeader(title = sketch.displayName, subtitle = sketch.category, onBack = onBack)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -274,7 +259,6 @@ private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Mod
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmptyStateDetailScreen(
     state: EmptyState,
@@ -284,24 +268,7 @@ fun EmptyStateDetailScreen(
     var animate by remember { mutableStateOf(true) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
-                Column {
-                    Text(state.defaultTitle, style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        state.category,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            },
-            navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Text(text = "←", style = MaterialTheme.typography.headlineSmall)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-        )
+        DetailHeader(title = state.defaultTitle, subtitle = state.category, onBack = onBack)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -329,6 +296,47 @@ fun EmptyStateDetailScreen(
             CodeSnippetCard(
                 code = "SketchyEmptyState(\n    state = EmptyState.${state.name}\n)",
                 modifier = Modifier.padding(top = 12.dp)
+            )
+        }
+    }
+}
+
+/** A small hand-drawn chevron, in keeping with the rest of the sketched artwork. */
+@Composable
+private fun BackArrow(tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.size(20.dp)) {
+        val path = Path().apply {
+            moveTo(size.width * 0.64f, size.height * 0.1f)
+            lineTo(size.width * 0.2f, size.height * 0.5f)
+            lineTo(size.width * 0.64f, size.height * 0.9f)
+        }
+        drawPath(
+            path = path,
+            color = tint,
+            style = Stroke(width = 2.2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
+        )
+    }
+}
+
+/** A compact back button + title/subtitle header — tighter than Material3's default [androidx.compose.material3.TopAppBar]. */
+@Composable
+private fun DetailHeader(title: String, subtitle: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(start = 4.dp, end = 20.dp, top = 4.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBack) {
+            BackArrow(tint = MaterialTheme.colorScheme.onBackground)
+        }
+        Column(modifier = Modifier.padding(start = 4.dp)) {
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(
+                subtitle,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
