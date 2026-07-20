@@ -48,10 +48,10 @@ private val InkFaint = Color(0x330D1B2A)
 private val Accent = Color(0xFFFFBC00)
 private val AccentTeal = Color(0xFF008091)
 
-private const val TWO_PI = 2f * PI.toFloat()
+internal const val TWO_PI = 2f * PI.toFloat()
 
 /** Smooth −1..1 sine wave over the loop, optionally phase-shifted. */
-private fun wave(t: Float, offset: Float = 0f) = sin((t + offset) * TWO_PI)
+internal fun wave(t: Float, offset: Float = 0f) = sin((t + offset) * TWO_PI)
 
 /** Every sketch currently available in the library. */
 enum class Sketch(val displayName: String) {
@@ -63,7 +63,7 @@ enum class Sketch(val displayName: String) {
 }
 
 /** The square size every scene is hand-drawn against; content scales to fit any other size. */
-private val DesignSize = 320.dp
+internal val DesignSize = 320.dp
 
 /**
  * Renders a single [Sketch]. Set [animate] to false to freeze the scene at
@@ -123,26 +123,26 @@ fun SketchyIllustration(
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-private fun DrawScope.d(v: Float) = v.dp.toPx()
-private fun DrawScope.pt(x: Float, y: Float) = Offset(d(x), d(y))
+internal fun DrawScope.d(v: Float) = v.dp.toPx()
+internal fun DrawScope.pt(x: Float, y: Float) = Offset(d(x), d(y))
 
-private fun DrawScope.bold(width: Float = 2.4f) = Stroke(
+internal fun DrawScope.bold(width: Float = 2.4f) = Stroke(
     width = d(width), cap = StrokeCap.Round, join = StrokeJoin.Round
 )
-private fun DrawScope.thin(width: Float = 1.6f) = Stroke(
+internal fun DrawScope.thin(width: Float = 1.6f) = Stroke(
     width = d(width), cap = StrokeCap.Round, join = StrokeJoin.Round
 )
-private fun DrawScope.dashed() = Stroke(
+internal fun DrawScope.dashed() = Stroke(
     width = d(1.4f),
     cap = StrokeCap.Round,
     pathEffect = PathEffect.dashPathEffect(floatArrayOf(d(3f), d(4f)))
 )
 
-private fun DrawScope.stroke(path: Path, color: Color = Ink, width: Float = 2.4f) {
+internal fun DrawScope.stroke(path: Path, color: Color = Ink, width: Float = 2.4f) {
     drawPath(path = path, color = color, style = bold(width))
 }
 
-private fun DrawScope.sketchLine(
+internal fun DrawScope.sketchLine(
     from: Offset,
     to: Offset,
     color: Color = Ink,
@@ -157,7 +157,7 @@ private fun DrawScope.sketchLine(
     )
 }
 
-private fun DrawScope.sketchCircle(
+internal fun DrawScope.sketchCircle(
     center: Offset,
     radius: Float,
     color: Color = Ink,
@@ -173,7 +173,7 @@ private fun DrawScope.sketchCircle(
 }
 
 /** A little star that twinkles: it swells, brightens, and flashes diagonal glints. */
-private fun DrawScope.twinkle(
+internal fun DrawScope.twinkle(
     cx: Float,
     cy: Float,
     size: Float,
