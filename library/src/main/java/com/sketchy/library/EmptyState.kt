@@ -45,95 +45,116 @@ data class SketchyColors(
 
 /**
  * Every empty state currently available in the library, with sensible
- * default copy that [SketchyEmptyState] uses unless you override it.
+ * default copy that [SketchyEmptyState] uses unless you override it, grouped
+ * by [category].
  */
-enum class EmptyState(val defaultTitle: String, val defaultSubtitle: String) {
+enum class EmptyState(val defaultTitle: String, val defaultSubtitle: String, val category: String) {
     // ── Connectivity & errors ──────────────────────────────────────────
     NoInternet(
         "No Internet Connection",
-        "Please check your network settings and try again."
+        "Please check your network settings and try again.",
+        "Connectivity & Errors"
     ),
     ServerError(
         "Something Went Wrong",
-        "Our servers are having trouble. Please try again later."
+        "Our servers are having trouble. Please try again later.",
+        "Connectivity & Errors"
     ),
     SyncFailed(
         "Sync Failed",
-        "We couldn't sync your latest changes. Try again."
+        "We couldn't sync your latest changes. Try again.",
+        "Connectivity & Errors"
     ),
     UnderMaintenance(
         "Under Maintenance",
-        "We're making some improvements. Check back soon."
+        "We're making some improvements. Check back soon.",
+        "Connectivity & Errors"
     ),
     LocationNotFound(
         "Location Not Found",
-        "We couldn't find that place. Try another search."
+        "We couldn't find that place. Try another search.",
+        "Connectivity & Errors"
     ),
 
     // ── Content & search ───────────────────────────────────────────────
     NoResults(
         "No Results Found",
-        "Try adjusting your search or filters."
+        "Try adjusting your search or filters.",
+        "Content & Search"
     ),
     NoData(
         "No Data Available",
-        "There's nothing to display right now."
+        "There's nothing to display right now.",
+        "Content & Search"
     ),
     NoComments(
         "No Comments Yet",
-        "Be the first to share your thoughts."
+        "Be the first to share your thoughts.",
+        "Content & Search"
     ),
     NoMessages(
         "No Messages Yet",
-        "Start a conversation to see it here."
+        "Start a conversation to see it here.",
+        "Content & Search"
     ),
     PageNotFound(
         "Page Not Found",
-        "The page you're looking for doesn't exist."
+        "The page you're looking for doesn't exist.",
+        "Content & Search"
     ),
 
     // ── Saved & commerce ───────────────────────────────────────────────
     EmptyCart(
         "Your Cart is Empty",
-        "Looks like you haven't added anything yet."
+        "Looks like you haven't added anything yet.",
+        "Saved & Commerce"
     ),
     EmptyWishlist(
         "Your Wishlist is Empty",
-        "Tap the star on items you wish for."
+        "Tap the star on items you wish for.",
+        "Saved & Commerce"
     ),
     NoFavorites(
         "No Favorites Yet",
-        "Tap the heart icon to save items you love."
+        "Tap the heart icon to save items you love.",
+        "Saved & Commerce"
     ),
     NoBookmarks(
         "No Bookmarks",
-        "Save items to find them here later."
+        "Save items to find them here later.",
+        "Saved & Commerce"
     ),
     NoDownloads(
         "No Downloads",
-        "Files you download will show up here."
+        "Files you download will show up here.",
+        "Saved & Commerce"
     ),
 
     // ── Everyday & productivity ────────────────────────────────────────
     EmptyInbox(
         "Your Inbox is Empty",
-        "New messages will show up here."
+        "New messages will show up here.",
+        "Everyday & Productivity"
     ),
     NoNotifications(
         "All Caught Up",
-        "You have no new notifications."
+        "You have no new notifications.",
+        "Everyday & Productivity"
     ),
     EmptyCalendar(
         "Nothing Scheduled",
-        "Your calendar is wide open."
+        "Your calendar is wide open.",
+        "Everyday & Productivity"
     ),
     NoPhotos(
         "No Photos Yet",
-        "Photos you add will appear here."
+        "Photos you add will appear here.",
+        "Everyday & Productivity"
     ),
     AllDone(
         "All Done!",
-        "You've completed everything on your list."
+        "You've completed everything on your list.",
+        "Everyday & Productivity"
     ),
 }
 

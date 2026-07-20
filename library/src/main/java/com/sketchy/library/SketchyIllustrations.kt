@@ -42,24 +42,44 @@ import kotlin.math.sin
  * on top of a soft entrance fade/scale and a slow whole-canvas float.
  */
 
-private val Ink = Color(0xFF0D1B2A)
-private val InkSoft = Color(0x990D1B2A)
-private val InkFaint = Color(0x330D1B2A)
-private val Accent = Color(0xFFFFBC00)
-private val AccentTeal = Color(0xFF008091)
+internal val Ink = Color(0xFF0D1B2A)
+internal val InkSoft = Color(0x990D1B2A)
+internal val InkFaint = Color(0x330D1B2A)
+internal val Accent = Color(0xFFFFBC00)
+internal val AccentTeal = Color(0xFF008091)
 
 internal const val TWO_PI = 2f * PI.toFloat()
 
 /** Smooth −1..1 sine wave over the loop, optionally phase-shifted. */
 internal fun wave(t: Float, offset: Float = 0f) = sin((t + offset) * TWO_PI)
 
-/** Every sketch currently available in the library. */
-enum class Sketch(val displayName: String) {
-    PlanTasks("Plan Every Task"),
-    FindFocus("Find Your Focus"),
-    NeverMissMeeting("Never Miss a Meeting"),
-    CaptureThoughts("Capture Every Thought"),
-    BuildBetterHabits("Build Better Habits"),
+/** Every sketch currently available in the library, grouped by [category]. */
+enum class Sketch(val displayName: String, val category: String) {
+    PlanTasks("Plan Every Task", "Productivity"),
+    FindFocus("Find Your Focus", "Productivity"),
+    NeverMissMeeting("Never Miss a Meeting", "Productivity"),
+    CaptureThoughts("Capture Every Thought", "Productivity"),
+    BuildBetterHabits("Build Better Habits", "Productivity"),
+
+    // ── Finance & banking ──────────────────────────────────────────────
+    TrackSpending("Track Every Expense", "Finance"),
+    GrowSavings("Watch Your Savings Grow", "Finance"),
+
+    // ── Fitness & workouts ─────────────────────────────────────────────
+    TrainAnywhere("Train Anywhere, Anytime", "Fitness"),
+    TrackProgress("See Your Progress", "Fitness"),
+
+    // ── Food delivery ───────────────────────────────────────────────────
+    OrderFavorites("Order Your Favorites", "Food Delivery"),
+    FastDelivery("Fast, Fresh Delivery", "Food Delivery"),
+
+    // ── Travel ───────────────────────────────────────────────────────────
+    PlanTrip("Plan Your Perfect Trip", "Travel"),
+    ExploreWorld("Explore The World", "Travel"),
+
+    // ── Music & streaming ───────────────────────────────────────────────
+    ListenAnywhere("Your Soundtrack, Anywhere", "Music"),
+    DiscoverMusic("Discover New Sounds", "Music"),
 }
 
 /** The square size every scene is hand-drawn against; content scales to fit any other size. */
@@ -116,6 +136,21 @@ fun SketchyIllustration(
                 Sketch.NeverMissMeeting -> drawMeetingsScene(t)
                 Sketch.CaptureThoughts -> drawNotesScene(t)
                 Sketch.BuildBetterHabits -> drawHabitsScene(t)
+
+                Sketch.TrackSpending -> drawTrackSpendingScene(t)
+                Sketch.GrowSavings -> drawGrowSavingsScene(t)
+
+                Sketch.TrainAnywhere -> drawTrainAnywhereScene(t)
+                Sketch.TrackProgress -> drawTrackProgressScene(t)
+
+                Sketch.OrderFavorites -> drawOrderFavoritesScene(t)
+                Sketch.FastDelivery -> drawFastDeliveryScene(t)
+
+                Sketch.PlanTrip -> drawPlanTripScene(t)
+                Sketch.ExploreWorld -> drawExploreWorldScene(t)
+
+                Sketch.ListenAnywhere -> drawListenAnywhereScene(t)
+                Sketch.DiscoverMusic -> drawDiscoverMusicScene(t)
             }
         }
     }
@@ -195,7 +230,7 @@ internal fun DrawScope.twinkle(
     }
 }
 
-private fun DrawScope.groundHint(y: Float) {
+internal fun DrawScope.groundHint(y: Float) {
     drawLine(
         color = InkFaint,
         start = pt(20f, y),

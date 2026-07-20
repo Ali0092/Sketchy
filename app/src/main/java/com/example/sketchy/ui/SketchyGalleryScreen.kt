@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,21 +33,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.sp
+import com.example.sketchy.ui.theme.SketchyCream
+import com.example.sketchy.ui.theme.SketchyGold
+import com.example.sketchy.ui.theme.SketchyInk
+import com.example.sketchy.ui.theme.SketchyTeal
 import com.sketchy.library.EmptyState
 import com.sketchy.library.Sketch
 import com.sketchy.library.SketchyEmptyState
 import com.sketchy.library.SketchyIllustration
 
-/** Warm off-white page background the ink-and-accent sketches were drawn against. */
-val SketchyPageBackground = Color(0xFFFCF8F2)
-
 @Composable
-fun SketchyGalleryScreen(onSelect: (Sketch) -> Unit, modifier: Modifier = Modifier) {
+fun SketchyGalleryScreen(query: String, onSelect: (Sketch) -> Unit, modifier: Modifier = Modifier) {
+    val filtered = Sketch.entries.filter { it.matches(query) }
+    val grouped = filtered.groupBy { it.category }
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
         contentPadding = PaddingValues(16.dp),
@@ -52,9 +58,65 @@ fun SketchyGalleryScreen(onSelect: (Sketch) -> Unit, modifier: Modifier = Modifi
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier
     ) {
-        items(Sketch.entries, key = { it.name }) { sketch ->
-            SketchyCard(sketch = sketch, onClick = { onSelect(sketch) })
+        if (grouped.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) { NoResultsHint(query) }
         }
+        grouped.forEach { (category, items) ->
+            item(span = { GridItemSpan(maxLineSpan) }, key = "header_$category") {
+                CategoryHeader(category, items.size)
+            }
+            items(items, key = { it.name }) { sketch ->
+                SketchyCard(sketch = sketch, onClick = { onSelect(sketch) })
+            }
+        }
+    }
+}
+
+private fun Sketch.matches(query: String) =
+    query.isBlank() || displayName.contains(query, ignoreCase = true) || category.contains(query, ignoreCase = true)
+
+private fun EmptyState.matches(query: String) =
+    query.isBlank() || defaultTitle.contains(query, ignoreCase = true) || category.contains(query, ignoreCase = true)
+
+@Composable
+private fun CategoryHeader(category: String, count: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.padding(top = 8.dp, bottom = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = category.uppercase(),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 0.8.sp,
+            color = SketchyTeal
+        )
+        Text(
+            text = "$count",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun NoResultsHint(query: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 48.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "No matches for \"$query\"",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = "Try a different name or category.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -63,8 +125,9 @@ private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier 
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = SketchyCream),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp, pressedElevation = 6.dp)
     ) {
         Box(
             modifier = Modifier
@@ -74,12 +137,14 @@ private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier 
         ) {
             SketchyIllustration(
                 sketch = sketch,
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier.size(140.dp)
             )
         }
         Text(
             text = sketch.displayName,
             style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = SketchyInk,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,43 +164,60 @@ fun SketchyDetailScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(sketch.displayName) },
+            title = {
+                Column {
+                    Text(sketch.displayName, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        sketch.category,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            },
             navigationIcon = {
                 IconButton(onClick = onBack) {
                     Text(text = "←", style = MaterialTheme.typography.headlineSmall)
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = SketchyPageBackground)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
         )
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .background(SketchyPageBackground),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SketchyIllustration(
-                sketch = sketch,
-                animate = animate,
-                modifier = Modifier.size(320.dp)
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = SketchyCream),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    SketchyIllustration(
+                        sketch = sketch,
+                        animate = animate,
+                        modifier = Modifier.size(260.dp)
+                    )
+                }
+            }
+            AnimateToggleRow(animate = animate, onAnimateChange = { animate = it })
+            CodeSnippetCard(
+                code = "SketchyIllustration(\n    sketch = Sketch.${sketch.name}\n)",
+                modifier = Modifier.padding(top = 12.dp)
             )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(SketchyPageBackground)
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Animate", style = MaterialTheme.typography.bodyLarge)
-            Switch(checked = animate, onCheckedChange = { animate = it })
         }
     }
 }
 
 @Composable
-fun EmptyStateGalleryScreen(onSelect: (EmptyState) -> Unit, modifier: Modifier = Modifier) {
+fun EmptyStateGalleryScreen(query: String, onSelect: (EmptyState) -> Unit, modifier: Modifier = Modifier) {
+    val filtered = EmptyState.entries.filter { it.matches(query) }
+    val grouped = filtered.groupBy { it.category }
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
         contentPadding = PaddingValues(16.dp),
@@ -143,8 +225,16 @@ fun EmptyStateGalleryScreen(onSelect: (EmptyState) -> Unit, modifier: Modifier =
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier
     ) {
-        items(EmptyState.entries, key = { it.name }) { state ->
-            EmptyStateCard(state = state, onClick = { onSelect(state) })
+        if (grouped.isEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) { NoResultsHint(query) }
+        }
+        grouped.forEach { (category, items) ->
+            item(span = { GridItemSpan(maxLineSpan) }, key = "header_$category") {
+                CategoryHeader(category, items.size)
+            }
+            items(items, key = { it.name }) { state ->
+                EmptyStateCard(state = state, onClick = { onSelect(state) })
+            }
         }
     }
 }
@@ -154,8 +244,9 @@ private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Mod
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = SketchyCream),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp, pressedElevation = 6.dp)
     ) {
         Box(
             modifier = Modifier
@@ -173,6 +264,8 @@ private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Mod
         Text(
             text = state.defaultTitle,
             style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = SketchyInk,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
@@ -192,37 +285,69 @@ fun EmptyStateDetailScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
-            title = { Text(state.defaultTitle) },
+            title = {
+                Column {
+                    Text(state.defaultTitle, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        state.category,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            },
             navigationIcon = {
                 IconButton(onClick = onBack) {
                     Text(text = "←", style = MaterialTheme.typography.headlineSmall)
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = SketchyPageBackground)
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
         )
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .background(SketchyPageBackground),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SketchyEmptyState(
-                state = state,
-                animate = animate,
-                illustrationSize = 260.dp
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = SketchyCream),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    SketchyEmptyState(
+                        state = state,
+                        animate = animate,
+                        illustrationSize = 220.dp
+                    )
+                }
+            }
+            AnimateToggleRow(animate = animate, onAnimateChange = { animate = it })
+            CodeSnippetCard(
+                code = "SketchyEmptyState(\n    state = EmptyState.${state.name}\n)",
+                modifier = Modifier.padding(top = 12.dp)
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(SketchyPageBackground)
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Animate", style = MaterialTheme.typography.bodyLarge)
-            Switch(checked = animate, onCheckedChange = { animate = it })
-        }
+    }
+}
+
+@Composable
+private fun AnimateToggleRow(animate: Boolean, onAnimateChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "Animate", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Switch(
+            checked = animate,
+            onCheckedChange = onAnimateChange,
+            colors = SwitchDefaults.colors(checkedTrackColor = SketchyGold, checkedThumbColor = SketchyInk)
+        )
     }
 }

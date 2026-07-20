@@ -1,6 +1,5 @@
 package com.example.sketchy.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,35 +8,48 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = SketchyGold,
+    onPrimary = SketchyInk,
+    secondary = SketchyTeal,
+    onSecondary = SketchyOnDark,
+    tertiary = SketchyGold,
+    onTertiary = SketchyInk,
+    background = SketchyInk,
+    onBackground = SketchyOnDark,
+    surface = SketchyInkLight,
+    onSurface = SketchyOnDark,
+    surfaceVariant = SketchyInkLight,
+    onSurfaceVariant = SketchyOnDark,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
+    primary = SketchyGold,
+    onPrimary = SketchyInk,
+    secondary = SketchyTeal,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary = SketchyInk,
+    onTertiary = SketchyCream,
+    background = SketchyCream,
+    onBackground = SketchyInk,
+    surface = SketchySurface,
+    onSurface = SketchyInk,
+    surfaceVariant = SketchySurfaceVariant,
+    onSurfaceVariant = SketchyInk,
 )
 
+/**
+ * Brand theme built from the same ink/gold/teal palette as the illustrations
+ * themselves. Dynamic (Material You) color is opt-in rather than default, so
+ * the brand palette is what people see out of the box.
+ */
 @Composable
 fun SketchyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -45,7 +57,6 @@ fun SketchyTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

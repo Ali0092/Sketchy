@@ -2,10 +2,13 @@ package com.example.sketchy.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Brand palette — matches the ink/gold/teal used across every Sketchy illustration,
+// so the app chrome and the artwork read as one cohesive product.
+val SketchyInk = Color(0xFF0D1B2A)
+val SketchyInkLight = Color(0xFF17293D)
+val SketchyGold = Color(0xFFFFBC00)
+val SketchyTeal = Color(0xFF008091)
+val SketchyCream = Color(0xFFFCF8F2)
+val SketchySurface = Color(0xFFFFFFFF)
+val SketchySurfaceVariant = Color(0xFFF0EAE0)
+val SketchyOnDark = Color(0xFFF5F1E8)
