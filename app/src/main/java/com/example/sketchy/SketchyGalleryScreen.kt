@@ -1,4 +1,4 @@
-package com.example.sketchy.ui
+package com.example.sketchy
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -44,10 +44,10 @@ import com.example.sketchy.ui.theme.SketchyCream
 import com.example.sketchy.ui.theme.SketchyGold
 import com.example.sketchy.ui.theme.SketchyInk
 import com.example.sketchy.ui.theme.SketchyTeal
-import com.sketchy.library.EmptyState
-import com.sketchy.library.Sketch
-import com.sketchy.library.SketchyEmptyState
-import com.sketchy.library.SketchyIllustration
+import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.emptystates.SketchyEmptyState
+import com.sketchy.library.illustrations.Sketch
+import com.sketchy.library.illustrations.SketchyIllustration
 
 @Composable
 fun SketchyGalleryScreen(query: String, onSelect: (Sketch) -> Unit, modifier: Modifier = Modifier) {

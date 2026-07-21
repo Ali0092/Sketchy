@@ -1,251 +1,23 @@
-package com.sketchy.library
+package com.sketchy.library.illustrations
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.unit.dp
-import kotlin.math.PI
+import com.sketchy.library.utils.*
 import kotlin.math.cos
 import kotlin.math.sin
 
-/**
- * Signature sketched illustrations, hand-drawn as line-art on Canvas.
- * Warm off-white ink against the dark page backgrounds.
- *
- * Every scene receives a looping phase `t` (0..1 over ~4s) that drives gentle
- * ambient motion — pulsing sparkles, ringing bells, a sweeping stopwatch needle —
- * on top of a soft entrance fade/scale and a slow whole-canvas float.
- */
-
-internal val Ink = Color(0xFF0D1B2A)
-internal val InkSoft = Color(0x990D1B2A)
-internal val InkFaint = Color(0x330D1B2A)
-internal val Accent = Color(0xFFFFBC00)
-internal val AccentTeal = Color(0xFF008091)
-
-internal const val TWO_PI = 2f * PI.toFloat()
-
-/** Smooth −1..1 sine wave over the loop, optionally phase-shifted. */
-internal fun wave(t: Float, offset: Float = 0f) = sin((t + offset) * TWO_PI)
-
-/** Every sketch currently available in the library, grouped by [category]. */
-enum class Sketch(val displayName: String, val category: String) {
-    PlanTasks("Plan Every Task", "Productivity"),
-    FindFocus("Find Your Focus", "Productivity"),
-    NeverMissMeeting("Never Miss a Meeting", "Productivity"),
-    CaptureThoughts("Capture Every Thought", "Productivity"),
-    BuildBetterHabits("Build Better Habits", "Productivity"),
-
-    // ── Finance & banking ──────────────────────────────────────────────
-    TrackSpending("Track Every Expense", "Finance"),
-    GrowSavings("Watch Your Savings Grow", "Finance"),
-
-    // ── Fitness & workouts ─────────────────────────────────────────────
-    TrainAnywhere("Train Anywhere, Anytime", "Fitness"),
-    TrackProgress("See Your Progress", "Fitness"),
-
-    // ── Food delivery ───────────────────────────────────────────────────
-    OrderFavorites("Order Your Favorites", "Food Delivery"),
-    FastDelivery("Fast, Fresh Delivery", "Food Delivery"),
-
-    // ── Travel ───────────────────────────────────────────────────────────
-    PlanTrip("Plan Your Perfect Trip", "Travel"),
-    ExploreWorld("Explore The World", "Travel"),
-
-    // ── Music & streaming ───────────────────────────────────────────────
-    ListenAnywhere("Your Soundtrack, Anywhere", "Music"),
-    DiscoverMusic("Discover New Sounds", "Music"),
-}
-
-/** The square size every scene is hand-drawn against; content scales to fit any other size. */
-internal val DesignSize = 320.dp
-
-/**
- * Renders a single [Sketch]. Set [animate] to false to freeze the scene at
- * its resting frame instead of looping its ambient motion.
- *
- * The scene is hand-drawn against a 320dp design canvas and scales uniformly
- * to fit whatever size [modifier] gives it, so it works equally well as a
- * small gallery thumbnail or a full-bleed illustration.
- */
-@Composable
-fun SketchyIllustration(
-    sketch: Sketch,
-    modifier: Modifier = Modifier.size(DesignSize),
-    animate: Boolean = true,
-) {
-    // Looping phase driving all ambient motion inside the scenes.
-    val t: Float = if (animate) {
-        val transition = rememberInfiniteTransition(label = "sketchy_art")
-        val phase by transition.animateFloat(
-            initialValue = 0f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(tween(4000, easing = LinearEasing)),
-            label = "phase"
-        )
-        phase
-    } else {
-        0f
-    }
-    // Soft entrance when the page first composes.
-    val appear = remember { Animatable(0f) }
-    LaunchedEffect(Unit) { appear.animateTo(1f, tween(700, easing = FastOutSlowInEasing)) }
-
-    Canvas(
-        modifier = modifier
-            .graphicsLayer {
-                alpha = appear.value
-                val entrance = 0.94f + 0.06f * appear.value
-                scaleX = entrance
-                scaleY = entrance
-                // slow breathing float of the whole artwork
-                translationY = wave(t) * 3.dp.toPx()
-            }
-    ) {
-        // Scale the 320dp design canvas uniformly to fit whatever size we were given.
-        val fit = minOf(size.width, size.height) / DesignSize.toPx()
-        withTransform({ scale(scaleX = fit, scaleY = fit, pivot = Offset.Zero) }) {
-            when (sketch) {
-                Sketch.PlanTasks -> drawTasksScene(t)
-                Sketch.FindFocus -> drawFocusScene(t)
-                Sketch.NeverMissMeeting -> drawMeetingsScene(t)
-                Sketch.CaptureThoughts -> drawNotesScene(t)
-                Sketch.BuildBetterHabits -> drawHabitsScene(t)
-
-                Sketch.TrackSpending -> drawTrackSpendingScene(t)
-                Sketch.GrowSavings -> drawGrowSavingsScene(t)
-
-                Sketch.TrainAnywhere -> drawTrainAnywhereScene(t)
-                Sketch.TrackProgress -> drawTrackProgressScene(t)
-
-                Sketch.OrderFavorites -> drawOrderFavoritesScene(t)
-                Sketch.FastDelivery -> drawFastDeliveryScene(t)
-
-                Sketch.PlanTrip -> drawPlanTripScene(t)
-                Sketch.ExploreWorld -> drawExploreWorldScene(t)
-
-                Sketch.ListenAnywhere -> drawListenAnywhereScene(t)
-                Sketch.DiscoverMusic -> drawDiscoverMusicScene(t)
-            }
-        }
-    }
-}
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-internal fun DrawScope.d(v: Float) = v.dp.toPx()
-internal fun DrawScope.pt(x: Float, y: Float) = Offset(d(x), d(y))
-
-internal fun DrawScope.bold(width: Float = 2.4f) = Stroke(
-    width = d(width), cap = StrokeCap.Round, join = StrokeJoin.Round
-)
-internal fun DrawScope.thin(width: Float = 1.6f) = Stroke(
-    width = d(width), cap = StrokeCap.Round, join = StrokeJoin.Round
-)
-internal fun DrawScope.dashed() = Stroke(
-    width = d(1.4f),
-    cap = StrokeCap.Round,
-    pathEffect = PathEffect.dashPathEffect(floatArrayOf(d(3f), d(4f)))
-)
-
-internal fun DrawScope.stroke(path: Path, color: Color = Ink, width: Float = 2.4f) {
-    drawPath(path = path, color = color, style = bold(width))
-}
-
-internal fun DrawScope.sketchLine(
-    from: Offset,
-    to: Offset,
-    color: Color = Ink,
-    width: Float = 2.4f
-) {
-    drawLine(
-        color = color,
-        start = from,
-        end = to,
-        strokeWidth = d(width),
-        cap = StrokeCap.Round
-    )
-}
-
-internal fun DrawScope.sketchCircle(
-    center: Offset,
-    radius: Float,
-    color: Color = Ink,
-    width: Float = 2.4f,
-    filled: Boolean = false
-) {
-    drawCircle(
-        color = color,
-        radius = d(radius),
-        center = center,
-        style = if (filled) Fill else bold(width)
-    )
-}
-
-/** A little star that twinkles: it swells, brightens, and flashes diagonal glints. */
-internal fun DrawScope.twinkle(
-    cx: Float,
-    cy: Float,
-    size: Float,
-    t: Float,
-    offset: Float = 0f,
-    color: Color = Ink
-) {
-    val k = (1f + wave(t, offset)) / 2f
-    val s = size * (0.7f + 0.5f * k)
-    val c = color.copy(alpha = color.alpha * (0.35f + 0.65f * k))
-    sketchLine(pt(cx - s, cy), pt(cx + s, cy), c, 1.8f)
-    sketchLine(pt(cx, cy - s), pt(cx, cy + s), c, 1.8f)
-    // diagonal glints only near peak brightness
-    if (k > 0.7f) {
-        val g = c.copy(alpha = c.alpha * (k - 0.7f) / 0.3f)
-        val ds = s * 0.55f
-        sketchLine(pt(cx - ds, cy - ds), pt(cx + ds, cy + ds), g, 1.4f)
-        sketchLine(pt(cx - ds, cy + ds), pt(cx + ds, cy - ds), g, 1.4f)
-    }
-}
-
-internal fun DrawScope.groundHint(y: Float) {
-    drawLine(
-        color = InkFaint,
-        start = pt(20f, y),
-        end = pt(300f, y),
-        strokeWidth = d(1.2f),
-        cap = StrokeCap.Round,
-        pathEffect = PathEffect.dashPathEffect(floatArrayOf(d(2.5f), d(6f)))
-    )
-}
-
-// ─── Scene 1: Plan Every Task ───────────────────────────────────────────────
+// ─── Plan Every Task ────────────────────────────────────────────────────────
 //   Person seated at a small desk with an open laptop, floating checklist,
 //   a leafy plant, and a scatter of sparkles.
 
-private fun DrawScope.drawTasksScene(t: Float) {
+internal fun DrawScope.drawTasksScene(t: Float) {
     // ── floating checklist paper (upper left) ───────────────
     val paper = Path().apply {
         moveTo(d(30f), d(38f))
@@ -438,12 +210,12 @@ private fun DrawScope.drawTasksScene(t: Float) {
     groundHint(285f)
 }
 
-// ─── Scene 2: Find Your Focus ───────────────────────────────────────────────
+// ─── Find Your Focus ────────────────────────────────────────────────────────
 //   A person meditating cross-legged inside a softly breathing aura ring,
 //   a hovering stopwatch with a sweeping needle, and a phone set face-down
 //   drifting off to sleep ("zzz").
 
-private fun DrawScope.drawFocusScene(t: Float) {
+internal fun DrawScope.drawFocusScene(t: Float) {
     // ── breathing aura rings around the person ──────────────
     sketchCircle(pt(160f, 186f), 104f + 5f * wave(t), InkFaint, 1.4f)
     sketchCircle(pt(160f, 186f), 86f + 4f * wave(t, 0.12f), InkFaint, 1.2f)
@@ -570,10 +342,10 @@ private fun DrawScope.drawFocusScene(t: Float) {
     groundHint(292f)
 }
 
-// ─── Scene 3: Never Miss a Meeting ──────────────────────────────────────────
+// ─── Never Miss a Meeting ───────────────────────────────────────────────────
 //   Big alarm clock with twin bells, ringing waves, and a floating calendar tag.
 
-private fun DrawScope.drawMeetingsScene(t: Float) {
+internal fun DrawScope.drawMeetingsScene(t: Float) {
     val cx = 160f
     val cy = 172f
     val r = 74f
@@ -754,10 +526,10 @@ private fun DrawScope.drawMeetingsScene(t: Float) {
     groundHint(292f)
 }
 
-// ─── Scene 4: Capture Every Thought ─────────────────────────────────────────
+// ─── Capture Every Thought ──────────────────────────────────────────────────
 //   A person writing in an open notebook with a light-bulb "idea" above.
 
-private fun DrawScope.drawNotesScene(t: Float) {
+internal fun DrawScope.drawNotesScene(t: Float) {
     // ── light bulb (top center) ────────────────────────────
     val bulbCx = 160f
     val bulbCy = 72f
@@ -890,10 +662,10 @@ private fun DrawScope.drawNotesScene(t: Float) {
     groundHint(302f)
 }
 
-// ─── Scene 5: Build Better Habits ───────────────────────────────────────────
+// ─── Build Better Habits ────────────────────────────────────────────────────
 //   A person mid-run, progress ring behind them, streak flame in a corner.
 
-private fun DrawScope.drawHabitsScene(t: Float) {
+internal fun DrawScope.drawHabitsScene(t: Float) {
     // big progress ring (background)
     val ringCx = 160f
     val ringCy = 165f

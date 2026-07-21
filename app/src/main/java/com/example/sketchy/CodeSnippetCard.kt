@@ -1,4 +1,4 @@
-package com.example.sketchy.ui
+package com.example.sketchy
 
 import android.content.ClipData
 import androidx.compose.foundation.background

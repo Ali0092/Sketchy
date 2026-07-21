@@ -1,8 +1,9 @@
-package com.sketchy.library
+package com.sketchy.library.emptystates
 
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.utils.*
 
 // ─── No Results ──────────────────────────────────────────────────────────────
 //   A magnifying glass sweeping over a blank, faintly lined page.

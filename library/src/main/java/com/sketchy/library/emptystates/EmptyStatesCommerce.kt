@@ -1,9 +1,10 @@
-package com.sketchy.library
+package com.sketchy.library.emptystates
 
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.utils.*
 
 // ─── Empty Cart ───────────────────────────────────────────────────────────────
 //   A shopping cart, bouncing gently, with dashed lines standing in for the

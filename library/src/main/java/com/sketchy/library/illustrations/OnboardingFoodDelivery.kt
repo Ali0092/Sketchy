@@ -1,8 +1,9 @@
-package com.sketchy.library
+package com.sketchy.library.illustrations
 
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.utils.*
 
 // ─── Order Your Favorites ────────────────────────────────────────────────────
 //   A person on a couch ordering from a phone, a burger floating above with

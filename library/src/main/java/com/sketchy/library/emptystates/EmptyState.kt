@@ -1,4 +1,4 @@
-package com.sketchy.library
+package com.sketchy.library.emptystates
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
@@ -30,6 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sketchy.library.utils.DesignSize
+import com.sketchy.library.utils.wave
 
 /**
  * A fully reskinnable color palette for a sketch. Override any part to fit
@@ -233,15 +234,6 @@ fun SketchyEmptyState(
             BasicText(text = subtitle, style = subtitleStyle)
         }
     }
-}
-
-/** A faint dashed baseline shared by every empty-state icon for visual grounding. */
-internal fun DrawScope.groundLine(y: Float, color: Color) {
-    val path = Path().apply {
-        moveTo(d(60f), d(y))
-        lineTo(d(260f), d(y))
-    }
-    drawPath(path = path, color = color, style = dashed())
 }
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyColors) {

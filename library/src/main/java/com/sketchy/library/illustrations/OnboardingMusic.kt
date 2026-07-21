@@ -1,9 +1,10 @@
-package com.sketchy.library
+package com.sketchy.library.illustrations
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.sketchy.library.utils.*
 
 // ─── Your Soundtrack, Anywhere ───────────────────────────────────────────────
 //   A person walking with headphones on, floating music notes and a bouncing

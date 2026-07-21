@@ -1,10 +1,11 @@
-package com.sketchy.library
+package com.sketchy.library.emptystates
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.utils.*
 
 // ─── No Internet ─────────────────────────────────────────────────────────────
 //   Nested wifi arcs searching for a signal, with a small alert badge.

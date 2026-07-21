@@ -1,8 +1,7 @@
-package com.example.sketchy.ui
+package com.example.sketchy
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sketchy.ui.theme.SketchyGold
 import com.example.sketchy.ui.theme.SketchyTeal
-import com.sketchy.library.EmptyState
-import com.sketchy.library.Sketch
+import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.illustrations.Sketch
 
 const val TabIllustrations = 0
 const val TabEmptyStates = 1

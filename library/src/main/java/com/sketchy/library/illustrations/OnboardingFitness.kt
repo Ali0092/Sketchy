@@ -1,10 +1,11 @@
-package com.sketchy.library
+package com.sketchy.library.illustrations
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.utils.*
 
 // ─── Train Anywhere, Anytime ────────────────────────────────────────────────
 //   A person mid-lunge with dumbbells, sweat drops flicking off, on a small
