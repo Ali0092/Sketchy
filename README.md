@@ -15,6 +15,10 @@ themeable to match your app.
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)
 
 ---
+## Demo
+https://github.com/user-attachments/assets/20713439-38bc-40af-ad9b-04a778d570cd
+
+
 
 ## Why Sketchy
 
