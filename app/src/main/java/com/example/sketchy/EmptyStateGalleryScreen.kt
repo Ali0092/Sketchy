@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,12 +23,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.sketchy.ui.theme.SketchyCream
 import com.example.sketchy.ui.theme.SketchyInk
-import com.sketchy.library.illustrations.Sketch
-import com.sketchy.library.illustrations.SketchyIllustration
+import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.emptystates.SketchyEmptyState
 
 @Composable
-fun SketchyGalleryScreen(query: String, onSelect: (Sketch) -> Unit, modifier: Modifier = Modifier) {
-    val filtered = Sketch.entries.filter { it.matches(query) }
+fun EmptyStateGalleryScreen(query: String, onSelect: (EmptyState) -> Unit, modifier: Modifier = Modifier) {
+    val filtered = EmptyState.entries.filter { it.matches(query) }
     val grouped = filtered.groupBy { it.category }
 
     LazyVerticalGrid(
@@ -46,15 +45,15 @@ fun SketchyGalleryScreen(query: String, onSelect: (Sketch) -> Unit, modifier: Mo
             item(span = { GridItemSpan(maxLineSpan) }, key = "header_$category") {
                 CategoryHeader(category, items.size)
             }
-            items(items, key = { it.name }) { sketch ->
-                SketchyCard(sketch = sketch, onClick = { onSelect(sketch) })
+            items(items, key = { it.name }) { state ->
+                EmptyStateCard(state = state, onClick = { onSelect(state) })
             }
         }
     }
 }
 
 @Composable
-private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -68,13 +67,15 @@ private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier 
                 .aspectRatio(1f),
             contentAlignment = Alignment.Center
         ) {
-            SketchyIllustration(
-                sketch = sketch,
-                modifier = Modifier.size(140.dp)
+            SketchyEmptyState(
+                state = state,
+                illustrationSize = 130.dp,
+                title = null,
+                subtitle = null
             )
         }
         Text(
-            text = sketch.displayName,
+            text = state.defaultTitle,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
             color = SketchyInk,

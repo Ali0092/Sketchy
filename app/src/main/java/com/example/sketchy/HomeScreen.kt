@@ -103,7 +103,7 @@ private fun HeroHeader(modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = "OPEN SOURCE · MIT LICENSED",
+                text = "OPEN SOURCE·",
                 style = MaterialTheme.typography.labelSmall,
                 letterSpacing = 1.5.sp,
                 fontWeight = FontWeight.SemiBold,
