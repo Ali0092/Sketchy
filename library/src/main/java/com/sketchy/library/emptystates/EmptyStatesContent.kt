@@ -3,6 +3,7 @@ package com.sketchy.library.emptystates
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.SketchyColors
 import com.sketchy.library.utils.*
 
 // ─── No Results ──────────────────────────────────────────────────────────────

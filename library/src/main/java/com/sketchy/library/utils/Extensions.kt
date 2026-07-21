@@ -86,9 +86,9 @@ internal fun DrawScope.twinkle(
 }
 
 /** A faint dashed baseline used by illustration scenes for visual grounding. */
-internal fun DrawScope.groundHint(y: Float) {
+internal fun DrawScope.groundHint(y: Float, color: Color = InkFaint) {
     drawLine(
-        color = InkFaint,
+        color = color,
         start = pt(20f, y),
         end = pt(300f, y),
         strokeWidth = d(1.2f),

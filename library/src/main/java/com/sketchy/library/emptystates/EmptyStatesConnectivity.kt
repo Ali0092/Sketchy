@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
+import com.sketchy.library.SketchyColors
 import com.sketchy.library.utils.*
 
 // ─── No Internet ─────────────────────────────────────────────────────────────

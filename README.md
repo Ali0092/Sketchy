@@ -28,16 +28,15 @@ animated in a way that feels alive. Sketchy takes a different approach:
   a sweeping stopwatch hand, a ringing bell, a heartbeat pulse — not just a
   generic fade-in. Turn it off with a single `animate = false` when you want
   a static frame instead.
-- **Genuinely reskinnable.** The empty-state catalog takes color, size, and
-  copy as plain parameters (`SketchyColors`, `Dp`, `String`, `TextStyle`) —
-  no XML theming, no design-system lock-in. It doesn't even depend on
-  Material.
+- **Genuinely reskinnable.** Both catalogs take color, size, and copy as
+  plain parameters (`SketchyColors`, `Dp`, `String`, `TextStyle`) — no XML
+  theming, no design-system lock-in. It doesn't even depend on Material.
 
 ## What's inside
 
 | Catalog | Count | Entry point |
 |---|---|---|
-| **Onboarding illustrations** | 15, across 6 categories | `SketchyIllustration(sketch, modifier, animate)` |
+| **Onboarding illustrations** | 15, across 6 categories | `SketchyIllustration(modifier, sketch, animate, colors)` |
 | **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle)` |
 
 A `:app` module ships alongside the library as a live, searchable catalog of
@@ -80,8 +79,8 @@ dependencies {
 ### An onboarding illustration
 
 ```kotlin
-import com.sketchy.library.Sketch
-import com.sketchy.library.SketchyIllustration
+import com.sketchy.library.illustrations.Sketch
+import com.sketchy.library.illustrations.SketchyIllustration
 
 SketchyIllustration(
     sketch = Sketch.PlanTasks,
@@ -93,12 +92,34 @@ Every `Sketch` scales to whatever size you give it and animates on a loop by
 default. Pass `animate = false` to freeze it on its resting frame — handy for
 lower-power devices or a still hero image.
 
+### An illustration, restyled to match your theme
+
+`colors` is a plain `SketchyColors` parameter — override any subset of it and
+every stroke, fill, and sparkle in the scene repaints to match, no XML themes
+or design-system lock-in required:
+
+```kotlin
+import com.sketchy.library.SketchyColors
+import com.sketchy.library.illustrations.Sketch
+import com.sketchy.library.illustrations.SketchyIllustration
+
+SketchyIllustration(
+    sketch = Sketch.BuildBetterHabits,
+    modifier = Modifier.size(280.dp),
+    colors = SketchyColors(
+        ink = MaterialTheme.colorScheme.onSurface,
+        accent = MaterialTheme.colorScheme.primary,
+        accentSecondary = MaterialTheme.colorScheme.secondary,
+    )
+)
+```
+
 ### An empty state, fully restyled
 
 ```kotlin
-import com.sketchy.library.EmptyState
 import com.sketchy.library.SketchyColors
-import com.sketchy.library.SketchyEmptyState
+import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.emptystates.SketchyEmptyState
 
 SketchyEmptyState(
     state = EmptyState.NoInternet,
@@ -116,7 +137,8 @@ SketchyEmptyState(
 
 Every knob — color, size, copy, typography — is an ordinary parameter with a
 sensible default. Omit `title`/`subtitle` entirely (pass `null`) for an
-icon-only illustration.
+icon-only illustration. `SketchyColors` is the same type for both catalogs, so
+one palette restyles your entire onboarding flow and empty-state set at once.
 
 ## Catalog
 
@@ -152,10 +174,16 @@ icon-only illustration.
 Sketchy/
 ├── library/    # The published artifact — pure Compose, no app dependencies
 │   └── src/main/java/com/sketchy/library/
-│       ├── SketchyIllustrations.kt   # Sketch enum, shared drawing primitives
-│       ├── OnboardingFinance.kt      # …grouped by category, 2 scenes each
-│       ├── EmptyState.kt             # EmptyState enum, SketchyColors, SketchyEmptyState
-│       └── EmptyStates*.kt           # …grouped by category, 5 scenes each
+│       ├── SketchyColors.kt           # Shared reskinnable palette (both catalogs)
+│       ├── illustrations/
+│       │   ├── SketchyIllustrations.kt  # Sketch enum, SketchyIllustration composable
+│       │   └── Onboarding*.kt           # …grouped by category, 2-5 scenes each
+│       ├── emptystates/
+│       │   ├── EmptyState.kt            # EmptyState enum, SketchyEmptyState composable
+│       │   └── EmptyStates*.kt          # …grouped by category, 5 scenes each
+│       └── utils/
+│           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
+│           └── Utils.kt                 # Ink/accent color constants, wave(), DesignSize
 └── app/        # Demo app — searchable, categorized gallery of everything above
 ```
 
@@ -178,15 +206,18 @@ Or open the project in Android Studio and run the `app` configuration.
 
 ## Contributing
 
-New illustrations are very welcome. A new scene is just a private
+New illustrations are very welcome. A new scene is just an `internal`
 `DrawScope` function plus one enum entry — no boilerplate beyond that:
 
 1. Pick a category (or propose a new one) and add an entry to the `Sketch`
    or `EmptyState` enum with its display copy and category.
-2. Write the scene as `internal fun DrawScope.drawYourScene(t: Float, ...)`,
-   reusing the shared primitives (`stroke`, `sketchLine`, `sketchCircle`,
-   `twinkle`, `wave`, `groundHint`) already in the library for a consistent
-   hand-drawn look.
+2. Write the scene as `internal fun DrawScope.drawYourScene(t: Float, colors: SketchyColors)`
+   in the matching `illustrations/Onboarding*.kt` or `emptystates/EmptyStates*.kt`
+   file, reusing the shared extensions from `utils/Extensions.kt` (`stroke`,
+   `sketchLine`, `sketchCircle`, `twinkle`, `wave`, `groundHint`/`groundLine`)
+   for a consistent hand-drawn look — and always paint from `colors.*`
+   (never the raw `Ink`/`Accent` constants in `utils/Utils.kt`) so the scene
+   stays themeable.
 3. Wire it into the `when` dispatcher and open a PR.
 
 Please keep new scenes framework-agnostic (no Material/Material3 imports

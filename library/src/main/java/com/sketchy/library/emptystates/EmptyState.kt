@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
@@ -29,20 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sketchy.library.SketchyColors
 import com.sketchy.library.utils.DesignSize
 import com.sketchy.library.utils.wave
-
-/**
- * A fully reskinnable color palette for a sketch. Override any part to fit
- * your app's own design system without touching any drawing code.
- */
-data class SketchyColors(
-    val ink: Color = Color(0xFF0D1B2A),
-    val inkSoft: Color = Color(0x990D1B2A),
-    val inkFaint: Color = Color(0x330D1B2A),
-    val accent: Color = Color(0xFFFFBC00),
-    val accentSecondary: Color = Color(0xFF008091),
-)
 
 /**
  * Every empty state currently available in the library, with sensible

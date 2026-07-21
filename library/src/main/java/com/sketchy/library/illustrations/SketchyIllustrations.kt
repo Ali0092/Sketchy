@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import com.sketchy.library.SketchyColors
 import com.sketchy.library.utils.DesignSize
 import com.sketchy.library.utils.wave
 
@@ -69,13 +70,15 @@ enum class Sketch(val displayName: String, val category: String) {
  *
  * The scene is hand-drawn against a 320dp design canvas and scales uniformly
  * to fit whatever size [modifier] gives it, so it works equally well as a
- * small gallery thumbnail or a full-bleed illustration.
+ * small gallery thumbnail or a full-bleed illustration. [colors] restyles the
+ * ink and accent colors to fit your own design system.
  */
 @Composable
 fun SketchyIllustration(
     modifier: Modifier = Modifier.size(DesignSize),
     sketch: Sketch,
     animate: Boolean = true,
+    colors: SketchyColors = SketchyColors(),
 ) {
     // Looping phase driving all ambient motion inside the scenes.
     val t: Float = if (animate) {
@@ -108,32 +111,32 @@ fun SketchyIllustration(
         // Scale the 320dp design canvas uniformly to fit whatever size we were given.
         val fit = minOf(size.width, size.height) / DesignSize.toPx()
         withTransform({ scale(scaleX = fit, scaleY = fit, pivot = Offset.Zero) }) {
-            drawIllustration(sketch, t)
+            drawIllustration(sketch, t, colors)
         }
     }
 }
 
-private fun DrawScope.drawIllustration(sketch: Sketch, t: Float) {
+private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyColors) {
     when (sketch) {
-        Sketch.PlanTasks -> drawTasksScene(t)
-        Sketch.FindFocus -> drawFocusScene(t)
-        Sketch.NeverMissMeeting -> drawMeetingsScene(t)
-        Sketch.CaptureThoughts -> drawNotesScene(t)
-        Sketch.BuildBetterHabits -> drawHabitsScene(t)
+        Sketch.PlanTasks -> drawTasksScene(t, colors)
+        Sketch.FindFocus -> drawFocusScene(t, colors)
+        Sketch.NeverMissMeeting -> drawMeetingsScene(t, colors)
+        Sketch.CaptureThoughts -> drawNotesScene(t, colors)
+        Sketch.BuildBetterHabits -> drawHabitsScene(t, colors)
 
-        Sketch.TrackSpending -> drawTrackSpendingScene(t)
-        Sketch.GrowSavings -> drawGrowSavingsScene(t)
+        Sketch.TrackSpending -> drawTrackSpendingScene(t, colors)
+        Sketch.GrowSavings -> drawGrowSavingsScene(t, colors)
 
-        Sketch.TrainAnywhere -> drawTrainAnywhereScene(t)
-        Sketch.TrackProgress -> drawTrackProgressScene(t)
+        Sketch.TrainAnywhere -> drawTrainAnywhereScene(t, colors)
+        Sketch.TrackProgress -> drawTrackProgressScene(t, colors)
 
-        Sketch.OrderFavorites -> drawOrderFavoritesScene(t)
-        Sketch.FastDelivery -> drawFastDeliveryScene(t)
+        Sketch.OrderFavorites -> drawOrderFavoritesScene(t, colors)
+        Sketch.FastDelivery -> drawFastDeliveryScene(t, colors)
 
-        Sketch.PlanTrip -> drawPlanTripScene(t)
-        Sketch.ExploreWorld -> drawExploreWorldScene(t)
+        Sketch.PlanTrip -> drawPlanTripScene(t, colors)
+        Sketch.ExploreWorld -> drawExploreWorldScene(t, colors)
 
-        Sketch.ListenAnywhere -> drawListenAnywhereScene(t)
-        Sketch.DiscoverMusic -> drawDiscoverMusicScene(t)
+        Sketch.ListenAnywhere -> drawListenAnywhereScene(t, colors)
+        Sketch.DiscoverMusic -> drawDiscoverMusicScene(t, colors)
     }
 }
