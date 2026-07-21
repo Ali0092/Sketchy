@@ -7,6 +7,7 @@ kind of warm, human illustration you'd want for onboarding flows and empty
 states — drawn entirely on `Canvas`, animated out of the box, and fully
 themeable to match your app.
 
+[![](https://jitpack.io/v/Ali0092/Sketchy.svg)](https://jitpack.io/#Ali0092/Sketchy)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Kotlin](https://img.shields.io/badge/kotlin-2.2.10-7F52FF?logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-BOM%202026.02.01-4285F4?logo=jetpackcompose&logoColor=white)
@@ -45,8 +46,32 @@ available and copy the exact usage snippet for whatever you pick.
 
 ## Installation
 
-Sketchy isn't published to Maven Central yet — for now, pull it in as a
-Gradle composite build or module include from a local clone:
+Sketchy is published on [JitPack](https://jitpack.io/#Ali0092/Sketchy).
+
+Add the JitPack repository:
+
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+Then add the dependency:
+
+```kotlin
+// app/build.gradle.kts
+dependencies {
+    implementation("com.github.Ali0092:Sketchy:1.0.0")
+}
+```
+
+Alternatively, pull it in as a Gradle composite build or module include from
+a local clone:
 
 ```kotlin
 // settings.gradle.kts
@@ -70,9 +95,6 @@ dependencies {
     implementation(project(":library"))
 }
 ```
-
-> Maven Central / JitPack publishing is on the roadmap — see
-> [Roadmap](#roadmap).
 
 ## Usage
 
@@ -225,7 +247,8 @@ inside `:library`) so the empty-state API stays usable in any design system.
 
 ## Roadmap
 
-- [ ] Publish to Maven Central / JitPack
+- [x] Publish to JitPack
+- [ ] Publish to Maven Central
 - [ ] More illustration categories (education, real estate, dating, gaming)
 - [ ] Optional Material3 color-scheme bridge for one-line theme matching
 - [ ] Snapshot/screenshot tests for every scene
