@@ -50,49 +50,23 @@ Sketchy is published on [JitPack](https://jitpack.io/#Ali0092/Sketchy).
 
 Add the JitPack repository:
 
-```kotlin
-// settings.gradle.kts
+```groovy
+// settings.gradle
 dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
         mavenCentral()
-        maven { url = uri("https://jitpack.io") }
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
 
 Then add the dependency:
 
-```kotlin
-// app/build.gradle.kts
+```groovy
+// app/build.gradle
 dependencies {
-    implementation("com.github.Ali0092:Sketchy:1.0.0")
-}
-```
-
-Alternatively, pull it in as a Gradle composite build or module include from
-a local clone:
-
-```kotlin
-// settings.gradle.kts
-includeBuild("../Sketchy") {
-    dependencySubstitution {
-        substitute(module("com.sketchy:library")).using(project(":library"))
-    }
-}
-```
-
-or simply copy the `library/` module into a multi-module project and add:
-
-```kotlin
-// settings.gradle.kts
-include(":library")
-```
-
-```kotlin
-// app/build.gradle.kts
-dependencies {
-    implementation(project(":library"))
+    implementation 'com.github.Ali0092:Sketchy:1.0.1'
 }
 ```
 
@@ -209,23 +183,6 @@ Sketchy/
 └── app/        # Demo app — searchable, categorized gallery of everything above
 ```
 
-## Running the demo app
-
-```bash
-git clone https://github.com/<your-username>/Sketchy.git
-cd Sketchy
-./gradlew :app:installDebug
-```
-
-Or open the project in Android Studio and run the `app` configuration.
-
-## Requirements
-
-- Android `minSdk` 26+
-- Kotlin 2.2.10+
-- Jetpack Compose BOM 2026.02.01+ (no Material3 dependency required by
-  `:library` itself)
-
 ## Contributing
 
 New illustrations are very welcome. A new scene is just an `internal`
@@ -245,14 +202,35 @@ New illustrations are very welcome. A new scene is just an `internal`
 Please keep new scenes framework-agnostic (no Material/Material3 imports
 inside `:library`) so the empty-state API stays usable in any design system.
 
-## Roadmap
-
-- [x] Publish to JitPack
-- [ ] Publish to Maven Central
-- [ ] More illustration categories (education, real estate, dating, gaming)
-- [ ] Optional Material3 color-scheme bridge for one-line theme matching
-- [ ] Snapshot/screenshot tests for every scene
-
 ## License
 
 Sketchy is available under the [MIT License](LICENSE).
+
+<div align="center">
+
+### Muhammad Ali
+
+<a href="mailto:aliatwork364@gmail.com">
+  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+</a>
+<a href="https://muhammadali0092.netlify.app" target="_blank">
+  <img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=react&logoColor=61DAFB" alt="Portfolio" />
+</a>
+<a href="https://www.linkedin.com/in/muhammad-ali-a28422222" target="_blank">
+  <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+</a>
+<a href="https://github.com/Ali0092" target="_blank">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+</a>
+
+</div>
+
+---
+
+<div align="center">
+
+❤️ **Created with love by [Muhammad Ali](https://github.com/Ali0092)**
+
+> *"Empty screens deserve better than a spinner."*
+
+</div>
