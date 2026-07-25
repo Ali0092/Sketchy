@@ -21,20 +21,26 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyStyle) {
         lineTo(d(80f), d(288f))
         close()
     }
-    stroke(mat, colors.accentBlue, 2.2f)
+    paint(mat, vBrush(270f, 288f, colors.fabric.lit(0.3f), colors.fabric), colors.accentBlue, 2.2f)
 
     val lunge = (1f + wave(t, 0f)) / 2f // 0..1 breathing effort
 
+    contactShadow(160f, 280f, 74f, 7f, colors.shade)
+
     // head
-    sketchCircle(pt(160f, 96f), 20f, colors.ink, width = 2.4f)
+    paintCircle(pt(160f, 96f), 20f, colors.skin, colors.ink, 2.4f)
     val ponytail = Path().apply {
         moveTo(d(144f), d(90f))
         quadraticTo(d(128f), d(84f), d(126f), d(70f))
     }
-    stroke(ponytail, colors.ink)
+    limb(ponytail, colors.hair, colors.ink, 2.4f, thickness = 8f)
     sketchCircle(pt(166f, 96f), 1.6f, colors.ink, filled = true)
     sketchLine(pt(163f, 104f), pt(170f, 104f), colors.ink, 1.8f)
-    sketchLine(pt(158f, 116f), pt(158f, 124f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(158f), d(116f))
+        lineTo(d(158f), d(124f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
 
     // torso, leaning into the lunge
     val body = Path().apply {
@@ -46,7 +52,8 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(174f), d(130f), d(158f), d(124f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(124f, 196f, colors.terracotta.lit(0.25f), colors.clay), colors.ink, 2.4f)
+    shade(body, hBrush(160f, 184f, colors.shade.a(0f), colors.shade))
 
     // front leg bent forward, back leg extended
     val legF = Path().apply {
@@ -57,8 +64,8 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyStyle) {
         moveTo(d(172f), d(188f))
         quadraticTo(d(206f), d(210f), d(224f), d(248f))
     }
-    stroke(legF, colors.ink)
-    stroke(legB, colors.ink)
+    limb(legF, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    limb(legB, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
     sketchLine(pt(102f, 234f), pt(126f, 236f), colors.ink)
     sketchLine(pt(212f, 250f), pt(236f, 250f), colors.ink)
 
@@ -72,13 +79,13 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyStyle) {
         moveTo(d(178f), d(148f))
         quadraticTo(d(206f), d(140f + pump), d(222f), d(120f + pump))
     }
-    stroke(armL, colors.ink)
-    stroke(armR, colors.ink)
+    limb(armL, colors.skin, colors.ink, 2.4f, thickness = 8f)
+    limb(armR, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     fun dumbbell(cx: Float, cy: Float) {
         sketchLine(pt(cx - 14f, cy), pt(cx + 14f, cy), colors.ink, 3f)
-        sketchCircle(pt(cx - 14f, cy), 7f, colors.accent, width = 2.4f)
-        sketchCircle(pt(cx + 14f, cy), 7f, colors.accent, width = 2.4f)
+        paintCircle(pt(cx - 14f, cy), 7f, colors.metalDark, colors.accent, 2.4f)
+        paintCircle(pt(cx + 14f, cy), 7f, colors.metalDark, colors.accent, 2.4f)
     }
     dumbbell(90f, 118f - pump)
     dumbbell(228f, 118f + pump)
@@ -115,9 +122,14 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
     drawPath(arc, color = colors.accentBlue, style = bold(3.4f))
 
     // person flexing, roughly centered in the ring
-    sketchCircle(pt(ringCx, 108f), 20f, colors.ink, width = 2.4f)
+    contactShadow(ringCx, 256f, 46f, 6f, colors.shade)
+    paintCircle(pt(ringCx, 108f), 20f, colors.skin, colors.ink, 2.4f)
     sketchLine(pt(ringCx - 4f, 108f), pt(ringCx + 4f, 108f), colors.ink, 1.6f)
-    sketchLine(pt(ringCx, 128f), pt(ringCx, 138f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(ringCx), d(128f))
+        lineTo(d(ringCx), d(138f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val torso = Path().apply {
         moveTo(d(ringCx), d(138f))
         quadraticTo(d(ringCx - 26f), d(144f), d(ringCx - 30f), d(170f))
@@ -127,9 +139,18 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(ringCx + 26f), d(144f), d(ringCx), d(138f))
         close()
     }
-    stroke(torso, colors.ink)
-    sketchLine(pt(ringCx - 22f, 222f), pt(ringCx - 26f, 250f), colors.ink)
-    sketchLine(pt(ringCx + 22f, 222f), pt(ringCx + 26f, 250f), colors.ink)
+    paint(torso, vBrush(138f, 224f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(torso, hBrush(ringCx, ringCx + 30f, colors.shade.a(0f), colors.shade))
+    listOf(
+        Path().apply {
+            moveTo(d(ringCx - 22f), d(222f))
+            lineTo(d(ringCx - 26f), d(250f))
+        },
+        Path().apply {
+            moveTo(d(ringCx + 22f), d(222f))
+            lineTo(d(ringCx + 26f), d(250f))
+        }
+    ).forEach { leg -> limb(leg, colors.skinDark, colors.ink, 2.4f, thickness = 10f) }
 
     // flexed arm, bicep pulsing with the beat
     val flex = 1f + 0.1f * ((1f + wave(t, 0f)) / 2f)
@@ -137,7 +158,7 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
         moveTo(d(ringCx + 26f), d(150f))
         quadraticTo(d(ringCx + 52f), d(150f), d(ringCx + 50f), d(126f))
     }
-    stroke(armPath, colors.ink)
+    limb(armPath, colors.skin, colors.ink, 2.4f, thickness = 9f)
     val bicepPivot = pt(ringCx + 44f, 142f)
     withTransform({ scale(scaleX = flex, scaleY = flex, pivot = bicepPivot) }) {
         sketchCircle(bicepPivot, 11f, colors.accent.copy(alpha = 0.3f), filled = true)
@@ -146,7 +167,7 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
         moveTo(d(ringCx - 26f), d(150f))
         quadraticTo(d(ringCx - 40f), d(180f), d(ringCx - 34f), d(206f))
     }
-    stroke(armDown, colors.ink)
+    limb(armDown, colors.skin, colors.ink, 2.4f, thickness = 9f)
 
     // stat card floating top-right with a sweeping heart-rate line
     val card = Path().apply {
@@ -156,7 +177,7 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
         lineTo(d(224f), d(126f))
         close()
     }
-    stroke(card, colors.ink, 2.2f)
+    paint(card, vBrush(84f, 126f, colors.paper, colors.metal), colors.ink, 2.2f)
     val hr = Path().apply {
         moveTo(d(230f), d(108f))
         lineTo(d(244f), d(108f))

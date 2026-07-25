@@ -20,17 +20,25 @@ internal fun DrawScope.drawEmptyCart(t: Float, colors: SketchyStyle) {
         lineTo(d(116f), d(190f + bounce))
         close()
     }
-    stroke(basket, colors.ink, 2.4f)
-    sketchLine(pt(80f, 96f + bounce), pt(96f, 120f + bounce), colors.ink, 2.4f)
-    sketchLine(pt(60f, 96f + bounce), pt(80f, 96f + bounce), colors.ink, 2.4f)
+    contactShadow(168f, 228f + bounce, 62f, 6f, colors.shade)
+    paint(basket, vBrush(120f + bounce, 190f + bounce, colors.metal.lit(0.35f), colors.metalDark), colors.ink, 2.4f)
+    shade(basket, hBrush(168f, 232f, colors.shade.a(0f), colors.shade))
+    limb(
+        Path().apply {
+            moveTo(d(60f), d(96f + bounce))
+            lineTo(d(80f), d(96f + bounce))
+            lineTo(d(96f), d(120f + bounce))
+        },
+        colors.metalDark, colors.ink, 2.4f, thickness = 5f
+    )
 
     for (i in 0..2) {
         val x = 128f + i * 32f
         sketchLine(pt(x, 132f + bounce), pt(x - 6f, 178f + bounce), colors.inkFaint, 1.6f)
     }
 
-    sketchCircle(pt(136f, 210f + bounce), 11f, colors.ink, width = 2.2f)
-    sketchCircle(pt(200f, 210f + bounce), 11f, colors.ink, width = 2.2f)
+    paintCircle(pt(136f, 210f + bounce), 11f, colors.hair, colors.ink, 2.2f)
+    paintCircle(pt(200f, 210f + bounce), 11f, colors.hair, colors.ink, 2.2f)
 
     twinkle(240f, 90f, 3f, t, 0.4f, colors.accent)
     twinkle(70f, 150f, 3f, t, 0.7f, colors.inkSoft)
@@ -65,7 +73,7 @@ internal fun DrawScope.drawEmptyWishlist(t: Float, colors: SketchyStyle) {
             color = colors.accent.copy(alpha = 0.10f + 0.10f * k),
             style = Fill
         )
-        stroke(star, colors.ink, 2.6f)
+        paint(star, vBrush(cy - 58f, cy + 58f, colors.sun, colors.sunDeep), colors.ink, 2.6f)
     }
 
     twinkle(90f, 90f, 4f, t, 0.2f, colors.accent)
@@ -93,7 +101,7 @@ internal fun DrawScope.drawNoFavorites(t: Float, colors: SketchyStyle) {
             cubicTo(d(cx + 46f), d(cy - 66f), d(cx + 70f), d(cy - 6f), d(cx), d(cy + 42f))
             close()
         }
-        stroke(heart, colors.ink, 2.6f)
+        paint(heart, vBrush(cy - 66f, cy + 42f, colors.terracotta.lit(0.2f), colors.clay), colors.ink, 2.6f)
         if (beat > 0.01f) {
             drawPath(heart, color = colors.accentRed.copy(alpha = 0.18f * beat), style = Fill)
         }
@@ -118,7 +126,8 @@ internal fun DrawScope.drawNoBookmarks(t: Float, colors: SketchyStyle) {
             lineTo(d(126f), d(220f))
             close()
         }
-        stroke(ribbon, colors.ink, 2.4f)
+        paint(ribbon, vBrush(90f, 220f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+        shade(ribbon, hBrush(160f, 194f, colors.shade.a(0f), colors.shade))
         sketchLine(pt(138f, 112f), pt(182f, 112f), colors.inkFaint, 1.6f)
         sketchLine(pt(138f, 130f), pt(182f, 130f), colors.inkFaint, 1.6f)
     }
@@ -139,7 +148,8 @@ internal fun DrawScope.drawNoDownloads(t: Float, colors: SketchyStyle) {
         lineTo(d(224f), d(trayY + 26f))
         lineTo(d(224f), d(trayY))
     }
-    stroke(tray, colors.ink, 2.4f)
+    contactShadow(160f, trayY + 32f, 64f, 6f, colors.shade)
+    paint(tray, vBrush(trayY, trayY + 26f, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2.4f)
 
     val drop = (t % 1f)
     val arrowY = 90f + drop * 90f

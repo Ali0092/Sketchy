@@ -19,14 +19,25 @@ internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyStyle) {
         lineTo(d(70f), d(268f))
         close()
     }
-    stroke(couch, colors.ink, 2.2f)
-    sketchLine(pt(70f, 232f), pt(70f, 200f), colors.ink)
-    sketchLine(pt(250f, 232f), pt(250f, 200f), colors.ink)
+    contactShadow(160f, 272f, 96f, 8f, colors.shade)
+    paint(couch, vBrush(232f, 268f, colors.fabric.lit(0.28f), colors.fabricDark), colors.ink, 2.2f)
+    shade(couch, vBrush(250f, 268f, colors.shade.a(0f), colors.shade))
+    listOf(70f, 250f).forEach { ax ->
+        val armRest = Path().apply {
+            moveTo(d(ax), d(232f))
+            lineTo(d(ax), d(200f))
+        }
+        limb(armRest, colors.fabricDark, colors.ink, 2.4f, thickness = 12f)
+    }
 
     // person
-    sketchCircle(pt(140f, 158f), 20f, colors.ink, width = 2.4f)
+    paintCircle(pt(140f, 158f), 20f, colors.skin, colors.ink, 2.4f)
     sketchCircle(pt(146f, 158f), 1.5f, colors.ink, filled = true)
-    sketchLine(pt(140f, 178f), pt(140f, 186f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(140f), d(178f))
+        lineTo(d(140f), d(186f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val body = Path().apply {
         moveTo(d(140f), d(186f))
         quadraticTo(d(118f), d(190f), d(112f), d(206f))
@@ -36,7 +47,8 @@ internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(162f), d(190f), d(140f), d(186f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(186f, 240f, colors.terracotta.lit(0.25f), colors.clay), colors.ink, 2.4f)
+    shade(body, hBrush(140f, 168f, colors.shade.a(0f), colors.shade))
 
     // phone held up
     val phone = Path().apply {
@@ -46,12 +58,13 @@ internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyStyle) {
         lineTo(d(156f), d(200f))
         close()
     }
-    stroke(phone, colors.ink, 2.2f)
+    paint(phone, vBrush(146f, 200f, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2.2f)
+    sheen(phone, pt(152f, 196f), pt(184f, 150f), colors.paper.a(0.45f))
     val armR = Path().apply {
         moveTo(d(164f), d(196f))
         quadraticTo(d(168f), d(180f), d(166f), d(160f))
     }
-    stroke(armR, colors.ink)
+    limb(armR, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     // "+" bubble popping over the phone
     val popAt = t % 1f
@@ -106,7 +119,7 @@ internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyStyle) {
         cubicTo(d(272f), d(50f), d(276f), d(70f), d(260f), d(90f))
         close()
     }
-    stroke(pin, colors.accent, 2.2f)
+    paint(pin, vBrush(50f, 90f, colors.sun.lit(0.35f), colors.sun), colors.accent, 2.2f)
     sketchCircle(pt(260f, 62f), 5f, colors.accent, width = 1.8f)
 
     // scooter body
@@ -117,9 +130,10 @@ internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyStyle) {
         lineTo(d(156f), d(scooterY - 26f))
         lineTo(d(140f), d(scooterY - 26f))
     }
-    stroke(body, colors.ink, 2.4f)
-    sketchCircle(pt(100f, scooterY + 10f), 14f, colors.ink, width = 2.4f)
-    sketchCircle(pt(150f, scooterY + 10f), 14f, colors.ink, width = 2.4f)
+    contactShadow(125f, scooterY + 26f, 62f, 6f, colors.shade)
+    limb(body, colors.terracotta, colors.ink, 2.4f, thickness = 9f)
+    paintCircle(pt(100f, scooterY + 10f), 14f, colors.hair, colors.ink, 2.4f)
+    paintCircle(pt(150f, scooterY + 10f), 14f, colors.hair, colors.ink, 2.4f)
     sketchLine(pt(150f, scooterY - 8f), pt(164f, scooterY - 34f), colors.ink, 2.4f)
     sketchLine(pt(158f, scooterY - 34f), pt(170f, scooterY - 34f), colors.ink, 2.4f)
 
@@ -131,22 +145,22 @@ internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyStyle) {
         lineTo(d(94f), d(scooterY - 10f))
         close()
     }
-    stroke(bag, colors.accentBlue, 2.2f)
+    paint(bag, vBrush(scooterY - 44f, scooterY - 10f, colors.fabric.lit(0.3f), colors.fabric), colors.accentBlue, 2.2f)
     sketchLine(pt(100f, scooterY - 44f), pt(100f, scooterY - 52f), colors.accentBlue, 2f)
     sketchLine(pt(116f, scooterY - 44f), pt(116f, scooterY - 52f), colors.accentBlue, 2f)
 
-    // rider
-    sketchCircle(pt(140f, scooterY - 58f), 16f, colors.ink, width = 2.4f)
+    // rider, in a helmet
+    paintCircle(pt(140f, scooterY - 58f), 16f, colors.clay, colors.ink, 2.4f)
     val torso = Path().apply {
         moveTo(d(140f), d(scooterY - 42f))
         quadraticTo(d(126f), d(scooterY - 34f), d(130f), d(scooterY - 18f))
     }
-    stroke(torso, colors.ink)
+    limb(torso, colors.fabricDark, colors.ink, 2.4f, thickness = 12f)
     val armDrive = Path().apply {
         moveTo(d(136f), d(scooterY - 34f))
         lineTo(d(158f), d(scooterY - 30f))
     }
-    stroke(armDrive, colors.ink)
+    limb(armDrive, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     // speed lines trailing behind
     val drift = 6f * wave(t, 0.2f)

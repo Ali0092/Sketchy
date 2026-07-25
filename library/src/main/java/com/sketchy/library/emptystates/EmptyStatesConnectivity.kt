@@ -27,7 +27,7 @@ internal fun DrawScope.drawNoInternet(t: Float, colors: SketchyStyle) {
         }
         drawPath(arc, color = colors.ink.copy(alpha = 0.35f + 0.65f * k), style = bold(2.4f))
     }
-    sketchCircle(pt(cx, domeY + 14f), 4f, colors.ink, filled = true)
+    paintCircle(pt(cx, domeY + 14f), 4f, colors.ink, colors.ink, 2f)
 
     // alert badge, pulsing
     val badgePivot = pt(226f, 96f)
@@ -58,7 +58,7 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyStyle) {
             lineTo(d(left), d(y + 30f))
             close()
         }
-        stroke(box, colors.ink, 2.2f)
+        paint(box, vBrush(y, y + 30f, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2.2f)
         val ledColor = if (row == 1) colors.accentRed.copy(
             alpha = 0.4f + 0.6f * (1f + wave(t, 0.3f)) / 2f
         ) else colors.accentGreen
@@ -82,7 +82,7 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyStyle) {
         lineTo(d(142f), d(90f))
         close()
     }
-    stroke(warn, colors.ink, 2.2f)
+    paint(warn, vBrush(58f, 90f, colors.sun, colors.sunDeep), colors.ink, 2.2f)
     sketchLine(pt(160f, 68f), pt(160f, 78f), colors.accentRed, 2.2f)
     sketchCircle(pt(160f, 84f), 1.6f, colors.accentRed, filled = true)
 
@@ -151,7 +151,7 @@ internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyStyle) {
     val r = 46f
     val pivot = pt(cx, cy)
     withTransform({ rotate(degrees = 360f * t, pivot = pivot) }) {
-        sketchCircle(pt(cx, cy), r, colors.ink, width = 2.4f)
+        paintCircle(pt(cx, cy), r, colors.metal.lit(0.2f), colors.ink, 2.4f)
         sketchCircle(pt(cx, cy), 14f, colors.inkSoft, width = 1.8f)
         for (i in 0 until 8) {
             val a = i * (360.0 / 8.0) * kotlin.math.PI / 180.0
@@ -164,6 +164,7 @@ internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyStyle) {
     }
 
     // static wrench overlay
+    contactShadow(160f, 254f, 58f, 6f, colors.shade)
     val wrench = Path().apply {
         moveTo(d(110f), d(210f))
         lineTo(d(170f), d(150f))
@@ -171,8 +172,8 @@ internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyStyle) {
         lineTo(d(118f), d(218f))
         close()
     }
-    stroke(wrench, colors.accentBlue, 2.2f)
-    sketchCircle(pt(104f, 216f), 12f, colors.accentBlue, width = 2.2f)
+    paint(wrench, dBrush(110f, 210f, 178f, 158f, colors.metal.lit(0.35f), colors.metalDark), colors.accentBlue, 2.2f)
+    paintCircle(pt(104f, 216f), 12f, colors.metal, colors.accentBlue, 2.2f)
 
     twinkle(230f, 210f, 3f, t, 0.5f, colors.inkSoft)
     groundLine(250f, colors.inkFaint)
@@ -203,8 +204,10 @@ internal fun DrawScope.drawLocationNotFound(t: Float, colors: SketchyStyle) {
         )
         close()
     }
-    stroke(pin, colors.ink, 2.6f)
-    sketchCircle(pt(cx, pinTop + 24f), 14f, colors.accentRed, width = 2.2f)
+    contactShadow(cx, 236f, 26f, 5f, colors.shade)
+    paint(pin, vBrush(pinTop, pinTop + 76f, colors.terracotta.lit(0.25f), colors.clay), colors.ink, 2.6f)
+    shade(pin, hBrush(cx, cx + 40f, colors.shade.a(0f), colors.shade))
+    paintCircle(pt(cx, pinTop + 24f), 14f, colors.paper, colors.accentRed, 2.2f)
 
     twinkle(96f, 100f, 3f, t, 0.3f, colors.inkSoft)
     twinkle(230f, 130f, 3f, t, 0.7f, colors.inkSoft)

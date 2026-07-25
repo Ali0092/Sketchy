@@ -14,22 +14,29 @@ import com.sketchy.library.utils.*
 internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyStyle) {
     val step = wave(t, 0f)
 
+    contactShadow(150f, 262f, 48f, 7f, colors.shade)
+
     // head + headphones
-    sketchCircle(pt(150f, 110f), 20f, colors.ink, width = 2.4f)
+    paintCircle(pt(150f, 110f), 20f, colors.skin, colors.ink, 2.4f)
     val band = Path().apply {
         moveTo(d(132f), d(104f))
         quadraticTo(d(150f), d(84f), d(168f), d(104f))
     }
-    stroke(band, colors.ink, 2.4f)
-    sketchCircle(pt(131f, 112f), 8f, colors.ink, width = 2.2f)
-    sketchCircle(pt(169f, 112f), 8f, colors.ink, width = 2.2f)
+    limb(band, colors.metalDark, colors.ink, 2.4f, thickness = 5f)
+    paintCircle(pt(131f, 112f), 8f, colors.metalDark, colors.ink, 2.2f)
+    paintCircle(pt(169f, 112f), 8f, colors.metalDark, colors.ink, 2.2f)
     sketchCircle(pt(156f, 110f), 1.5f, colors.ink, filled = true)
     val smile = Path().apply {
         moveTo(d(148f), d(118f))
         quadraticTo(d(151f), d(121f), d(154f), d(118f))
     }
     stroke(smile, colors.ink, 1.6f)
-    sketchLine(pt(150f, 130f), pt(150f, 138f), colors.ink)
+    // the neck: one line outlined, a rod of real thickness painted
+    val neck = Path().apply {
+        moveTo(d(150f), d(130f))
+        lineTo(d(150f), d(138f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
 
     // walking body, gentle side-to-side sway
     val body = Path().apply {
@@ -41,7 +48,8 @@ internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(170f), d(142f), d(150f), d(138f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(138f, 216f, colors.fabric.lit(0.22f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(150f, 178f, colors.shade.a(0f), colors.shade))
 
     // walking legs alternate with the step wave
     val legL = Path().apply {
@@ -52,15 +60,15 @@ internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyStyle) {
         moveTo(d(162f), d(210f))
         quadraticTo(d(168f - step * 10f), d(234f), d(174f - step * 14f), d(256f))
     }
-    stroke(legL, colors.ink)
-    stroke(legR, colors.ink)
+    limb(legL, colors.fabricDark, colors.ink, 2.4f, thickness = 9f)
+    limb(legR, colors.fabricDark, colors.ink, 2.4f, thickness = 9f)
     sketchLine(pt(118f + step * 14f, 256f), pt(134f + step * 14f, 256f), colors.ink)
     sketchLine(pt(166f - step * 14f, 256f), pt(182f - step * 14f, 256f), colors.ink)
     val armL = Path().apply {
         moveTo(d(128f), d(158f))
         quadraticTo(d(116f - step * 8f), d(174f), d(120f - step * 10f), d(192f))
     }
-    stroke(armL, colors.ink)
+    limb(armL, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     // floating music notes drifting up and fading
     val notes = listOf(0f to 210f, 0.33f to 230f, 0.66f to 250f)
@@ -91,6 +99,8 @@ internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyStyle) {
 //   from the speaker.
 
 internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
+    contactShadow(140f, 234f, 78f, 8f, colors.shade)
+
     // record player base
     val base = Path().apply {
         moveTo(d(70f), d(200f))
@@ -99,13 +109,14 @@ internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
         lineTo(d(70f), d(230f))
         close()
     }
-    stroke(base, colors.ink, 2.4f)
+    paint(base, vBrush(200f, 230f, colors.wood.lit(0.2f), colors.woodDark), colors.ink, 2.4f)
+    shade(base, hBrush(150f, 210f, colors.shade.a(0f), colors.shade))
 
     // spinning vinyl disc
     val spin = (t * 360f) % 360f
     val discCx = 110f
     val discCy = 178f
-    sketchCircle(pt(discCx, discCy), 34f, colors.ink, width = 2.2f)
+    paintCircle(pt(discCx, discCy), 34f, colors.hair, colors.ink, 2.2f)
     sketchCircle(pt(discCx, discCy), 24f, colors.inkFaint, width = 1.4f)
     sketchCircle(pt(discCx, discCy), 14f, colors.inkFaint, width = 1.2f)
     sketchCircle(pt(discCx, discCy), 4f, colors.accent, filled = true)
@@ -121,13 +132,13 @@ internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
         moveTo(d(168f), d(146f))
         quadraticTo(d(150f), d(150f), d(126f), d(168f))
     }
-    stroke(arm, colors.ink, 2.2f)
-    sketchCircle(pt(168f, 146f), 6f, colors.ink, width = 2f)
+    limb(arm, colors.metal, colors.ink, 2.2f, thickness = 4.5f)
+    paintCircle(pt(168f, 146f), 6f, colors.metalDark, colors.ink, 2f)
 
     // speaker with rippling sound waves
     val speakerCx = 190f
     val speakerCy = 178f
-    sketchCircle(pt(speakerCx, speakerCy), 10f, colors.ink, width = 2.2f)
+    paintCircle(pt(speakerCx, speakerCy), 10f, colors.metalDark, colors.ink, 2.2f)
     for (i in 0..2) {
         val r = 22f + i * 16f
         val k = (1f + wave(t, i * 0.2f)) / 2f
@@ -142,11 +153,15 @@ internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
     }
 
     // person nodding along
-    sketchCircle(pt(250f, 140f), 19f, colors.ink, width = 2.4f)
+    paintCircle(pt(250f, 140f), 19f, colors.skin, colors.ink, 2.4f)
     val nod = 3f * wave(t, 0.1f)
     sketchLine(pt(244f, 142f + nod), pt(248f, 145f + nod), colors.ink, 1.6f)
     sketchLine(pt(252f, 142f + nod), pt(256f, 145f + nod), colors.ink, 1.6f)
-    sketchLine(pt(250f, 159f), pt(250f, 166f), colors.ink)
+    val pNeck = Path().apply {
+        moveTo(d(250f), d(159f))
+        lineTo(d(250f), d(166f))
+    }
+    limb(pNeck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val body = Path().apply {
         moveTo(d(250f), d(166f))
         quadraticTo(d(232f), d(170f), d(228f), d(186f))
@@ -156,7 +171,8 @@ internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(268f), d(170f), d(250f), d(166f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(166f, 232f, colors.fabric.lit(0.22f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(250f, 274f, colors.shade.a(0f), colors.shade))
 
     twinkle(60f, 120f, 3f, t, 0.4f, colors.accent)
     twinkle(288f, 90f, 3f, t, 0.7f, colors.inkSoft)

@@ -31,7 +31,6 @@ fun SketchyDetailScreen(
 ) {
     var animate by remember { mutableStateOf(true) }
     var colorful by remember(sketch) { mutableStateOf(false) }
-    val isFeatured = sketch.category == "Featured"
 
     Column(modifier = modifier.fillMaxSize()) {
         DetailHeader(title = sketch.displayName, subtitle = sketch.category, onBack = onBack)
@@ -60,9 +59,7 @@ fun SketchyDetailScreen(
                 }
             }
             SketchyToggleRow(label = "Animate", checked = animate, onCheckedChange = { animate = it })
-            if (isFeatured) {
-                SketchyToggleRow(label = "Colourful", checked = colorful, onCheckedChange = { colorful = it })
-            }
+            SketchyToggleRow(label = "Colourful", checked = colorful, onCheckedChange = { colorful = it })
             CodeSnippetCard(
                 code = "SketchyIllustration(\n    sketch = Sketch.${sketch.name}\n)",
                 modifier = Modifier.padding(top = 12.dp)

@@ -17,7 +17,9 @@ internal fun DrawScope.drawNoResults(t: Float, colors: SketchyStyle) {
         lineTo(d(84f), d(240f))
         close()
     }
-    stroke(page, colors.ink, 2.2f)
+    contactShadow(154f, 246f, 74f, 6f, colors.shade)
+    paint(page, vBrush(96f, 240f, colors.paper, colors.metal), colors.ink, 2.2f)
+    shade(page, hBrush(154f, 224f, colors.shade.a(0f), colors.shade))
     for (row in 0..3) {
         val y = 122f + row * 26f
         sketchLine(pt(102f, y), pt(206f, y), colors.inkFaint, 1.6f)
@@ -26,8 +28,14 @@ internal fun DrawScope.drawNoResults(t: Float, colors: SketchyStyle) {
     val sweep = 8f * wave(t, 0f)
     val sweepPivot = pt(180f, 150f)
     withTransform({ rotate(degrees = sweep, pivot = sweepPivot) }) {
-        sketchCircle(pt(172f, 142f), 30f, colors.accentBlue, width = 3f)
-        sketchLine(pt(193f, 163f), pt(214f, 184f), colors.accentBlue, 4f)
+        paintCircle(pt(172f, 142f), 30f, colors.sky.a(0.5f), colors.accentBlue, 3f)
+        limb(
+            Path().apply {
+                moveTo(d(193f), d(163f))
+                lineTo(d(214f), d(184f))
+            },
+            colors.metalDark, colors.accentBlue, 4f, thickness = 6f
+        )
     }
 
     twinkle(70f, 76f, 3f, t, 0.4f, colors.inkSoft)
@@ -83,14 +91,14 @@ internal fun DrawScope.drawNoComments(t: Float, colors: SketchyStyle) {
         quadraticTo(d(90f), d(100f + bounce), d(90f), d(100f + bounce))
         close()
     }
-    stroke(bubble, colors.ink, 2.4f)
+    paint(bubble, vBrush(100f + bounce, 206f + bounce, colors.paper, colors.metal), colors.ink, 2.4f)
 
     // pencil writing off to the side
     val pencil = Path().apply {
         moveTo(d(150f), d(140f + bounce))
         lineTo(d(190f), d(150f + bounce))
     }
-    stroke(pencil, colors.accent, 2.4f)
+    limb(pencil, colors.wood, colors.accent, 2.4f, thickness = 5f)
     sketchLine(pt(190f, 150f + bounce), pt(198f, 152f + bounce), colors.ink, 2f)
 
     twinkle(72f, 82f, 3f, t, 0.3f, colors.inkSoft)
@@ -114,7 +122,7 @@ internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyStyle) {
         quadraticTo(d(76f), d(160f), d(76f), d(150f))
         close()
     }
-    stroke(bubbleA, colors.ink, 2.2f)
+    paint(bubbleA, vBrush(108f, 178f, colors.fabric.lit(0.4f), colors.fabric), colors.ink, 2.2f)
 
     val bubbleB = Path().apply {
         moveTo(d(150f), d(180f))
@@ -128,7 +136,7 @@ internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyStyle) {
         quadraticTo(d(150f), d(220f), d(150f), d(212f))
         close()
     }
-    stroke(bubbleB, colors.inkFaint, 1.8f)
+    paint(bubbleB, vBrush(180f, 234f, colors.paper, colors.metal.lit(0.2f)), colors.inkFaint, 1.8f)
 
     // typing dots fading in sequence
     for (i in 0..2) {
@@ -146,7 +154,14 @@ internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyStyle) {
 //   A tilted, cracked signpost with a lost "?", swaying in the wind.
 
 internal fun DrawScope.drawPageNotFound(t: Float, colors: SketchyStyle) {
-    sketchLine(pt(160f, 240f), pt(160f, 130f), colors.ink, 3f)
+    contactShadow(160f, 244f, 26f, 5f, colors.shade)
+    limb(
+        Path().apply {
+            moveTo(d(160f), d(240f))
+            lineTo(d(160f), d(130f))
+        },
+        colors.woodDark, colors.ink, 3f, thickness = 8f
+    )
 
     val sway = 6f * wave(t, 0f)
     val signPivot = pt(160f, 130f)
@@ -158,7 +173,7 @@ internal fun DrawScope.drawPageNotFound(t: Float, colors: SketchyStyle) {
             lineTo(d(96f), d(150f))
             close()
         }
-        stroke(sign, colors.ink, 2.4f)
+        paint(sign, vBrush(96f, 150f, colors.wood.lit(0.3f), colors.wood), colors.ink, 2.4f)
         val crack = Path().apply {
             moveTo(d(150f), d(96f))
             lineTo(d(166f), d(118f))

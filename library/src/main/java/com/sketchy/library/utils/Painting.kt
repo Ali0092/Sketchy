@@ -211,6 +211,44 @@ internal fun DrawScope.paint(path: Path, color: Color, ink: Color, width: Float 
 }
 
 /**
+ * [paint] for the shapes that are drawn as circles rather than paths — heads,
+ * wheels, plates, badges, balloons.
+ */
+internal fun DrawScope.paintCircle(
+    center: Offset,
+    radius: Float,
+    color: Color,
+    ink: Color,
+    width: Float = 2.4f
+) {
+    if (!color.isHidden) sketchCircle(center, radius, color, filled = true)
+    sketchCircle(center, radius, ink, width = width)
+}
+
+/**
+ * An arm, a leg, a stem, a cable: one plain ink line when outlined, a rod with
+ * real thickness when painted.
+ *
+ * The branch is the point. [paintStroke] on its own would render the outlined
+ * version as a *hollow* two-edged rod, which is right for a mug handle but
+ * would quietly redraw every limb in the line-art scenes — those are meant to
+ * stay single strokes.
+ */
+internal fun DrawScope.limb(
+    path: Path,
+    color: Color,
+    ink: Color,
+    width: Float = 2.4f,
+    thickness: Float = 7f
+) {
+    if (color.isHidden) {
+        drawPath(path = path, color = ink, style = bold(width))
+    } else {
+        paintStroke(path, color, ink, width = thickness, outline = width * 0.8f)
+    }
+}
+
+/**
  * An open path drawn as a solid rod outlined on **both** edges — mug handles,
  * tails, cables. Stroking the fill and the ink along the same centreline would
  * instead run the outline straight down the middle of the rod, so the ink goes

@@ -29,6 +29,7 @@ fun EmptyStateDetailScreen(
     modifier: Modifier = Modifier
 ) {
     var animate by remember { mutableStateOf(true) }
+    var colorful by remember(state) { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
         DetailHeader(title = state.defaultTitle, subtitle = state.category, onBack = onBack)
@@ -51,11 +52,13 @@ fun EmptyStateDetailScreen(
                     SketchyEmptyState(
                         state = state,
                         animate = animate,
+                        colorful = colorful,
                         illustrationSize = 220.dp
                     )
                 }
             }
             SketchyToggleRow(label = "Animate", checked = animate, onCheckedChange = { animate = it })
+            SketchyToggleRow(label = "Colourful", checked = colorful, onCheckedChange = { colorful = it })
             CodeSnippetCard(
                 code = "SketchyEmptyState(\n    state = EmptyState.${state.name}\n)",
                 modifier = Modifier.padding(top = 12.dp)

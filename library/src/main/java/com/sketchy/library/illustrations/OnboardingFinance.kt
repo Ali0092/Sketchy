@@ -11,21 +11,27 @@ import com.sketchy.library.utils.*
 //   jar beside them.
 
 internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
+    contactShadow(122f, 264f, 46f, 6f, colors.shade)
+
     // head + hair
-    sketchCircle(pt(122f, 104f), 21f, colors.ink, width = 2.4f)
+    paintCircle(pt(122f, 104f), 21f, colors.skin, colors.ink, 2.4f)
     val hair = Path().apply {
         moveTo(d(104f), d(96f))
         quadraticTo(d(100f), d(80f), d(122f), d(78f))
         quadraticTo(d(144f), d(80f), d(140f), d(96f))
     }
-    stroke(hair, colors.ink)
+    limb(hair, colors.hair, colors.ink, 2.4f, thickness = 9f)
     sketchCircle(pt(128f, 104f), 1.5f, colors.ink, filled = true)
     val smile = Path().apply {
         moveTo(d(120f), d(111f))
         quadraticTo(d(123f), d(114f), d(126f), d(111f))
     }
     stroke(smile, colors.ink, 1.8f)
-    sketchLine(pt(122f, 125f), pt(122f, 133f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(122f), d(125f))
+        lineTo(d(122f), d(133f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
 
     // body leaning slightly forward, arms holding a phone up
     val body = Path().apply {
@@ -37,9 +43,18 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(144f), d(138f), d(122f), d(133f))
         close()
     }
-    stroke(body, colors.ink)
-    sketchLine(pt(96f, 220f), pt(90f, 260f), colors.ink)
-    sketchLine(pt(148f, 220f), pt(154f, 260f), colors.ink)
+    paint(body, vBrush(133f, 228f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(122f, 156f, colors.shade.a(0f), colors.shade))
+    listOf(
+        Path().apply {
+            moveTo(d(96f), d(220f))
+            lineTo(d(90f), d(260f))
+        },
+        Path().apply {
+            moveTo(d(148f), d(220f))
+            lineTo(d(154f), d(260f))
+        }
+    ).forEach { leg -> limb(leg, colors.fabricDark, colors.ink, 2.4f, thickness = 10f) }
     sketchLine(pt(84f, 260f), pt(100f, 260f), colors.ink)
     sketchLine(pt(146f, 260f), pt(162f, 260f), colors.ink)
 
@@ -52,8 +67,8 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
         moveTo(d(148f), d(150f))
         quadraticTo(d(168f), d(158f), d(178f), d(150f))
     }
-    stroke(armL, colors.ink)
-    stroke(armR, colors.ink)
+    limb(armL, colors.skin, colors.ink, 2.4f, thickness = 8f)
+    limb(armR, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     // phone with a bar chart that rises bar by bar, looping
     val phone = Path().apply {
@@ -63,7 +78,8 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
         lineTo(d(150f), d(160f))
         close()
     }
-    stroke(phone, colors.ink, 2.4f)
+    paint(phone, vBrush(96f, 160f, colors.metal.lit(0.35f), colors.metalDark), colors.ink, 2.4f)
+    sheen(phone, pt(152f, 156f), pt(200f, 100f), colors.paper.a(0.4f))
     val heights = listOf(14f, 24f, 34f)
     heights.forEachIndexed { i, h ->
         val growAt = 0.1f + i * 0.2f
@@ -81,7 +97,7 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(274f), d(258f), d(274f), d(250f))
         lineTo(d(274f), d(200f))
     }
-    stroke(jar, colors.ink, 2.2f)
+    paint(jar, vBrush(200f, 258f, colors.sky.a(0.45f), colors.skyDeep.a(0.55f)), colors.ink, 2.2f)
     val drop = t % 1f
     val coinY = 178f + drop * 60f
     val coinAlpha = if (drop < 0.85f) 1f else (1f - drop) / 0.15f
@@ -119,7 +135,9 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(190f), d(198f), d(160f), d(202f))
         close()
     }
-    stroke(piggy, colors.ink, 2.4f)
+    contactShadow(160f, 276f, 56f, 6f, colors.shade)
+    paint(piggy, vBrush(198f, 270f, colors.terracotta.lit(0.3f), colors.clay), colors.ink, 2.4f)
+    shade(piggy, hBrush(160f, 220f, colors.shade.a(0f), colors.shade))
     sketchLine(pt(150f, 218f), pt(166f, 214f), colors.ink, 2.4f)
     sketchCircle(pt(120f, 236f), 2f, colors.ink, filled = true)
     sketchLine(pt(112f, 262f), pt(116f, 274f), colors.ink)
@@ -130,26 +148,30 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(158f), d(214f))
         quadraticTo(d(154f), d(170f), d(160f), d(130f))
     }
-    stroke(trunk, colors.accentGreen, 2.4f)
+    limb(trunk, colors.woodDark, colors.accentGreen, 2.4f, thickness = 6f)
     val sway = 3f * wave(t, 0.2f)
     val leafPivot = pt(160f, 130f)
     withTransform({ rotate(degrees = sway, pivot = leafPivot) }) {
         val positions = listOf(140f to 118f, 160f to 100f, 182f to 120f, 160f to 140f)
         positions.forEach { (lx, ly) ->
-            sketchCircle(pt(lx, ly), 12f, colors.accentGreen, width = 2.2f)
+            paintCircle(pt(lx, ly), 12f, colors.leaf, colors.accentGreen, 2.2f)
             sketchLine(pt(lx - 4f, ly), pt(lx + 4f, ly), colors.accent, 1.6f)
             sketchLine(pt(lx, ly - 4f), pt(lx, ly + 4f), colors.accent, 1.6f)
         }
     }
 
     // person watering the tree
-    sketchCircle(pt(224f, 150f), 19f, colors.ink, width = 2.4f)
+    paintCircle(pt(224f, 150f), 19f, colors.skin, colors.ink, 2.4f)
     val faceSmile = Path().apply {
         moveTo(d(220f), d(157f))
         quadraticTo(d(223f), d(160f), d(226f), d(157f))
     }
     stroke(faceSmile, colors.ink, 1.6f)
-    sketchLine(pt(224f, 169f), pt(224f, 176f), colors.ink)
+    val pNeck = Path().apply {
+        moveTo(d(224f), d(169f))
+        lineTo(d(224f), d(176f))
+    }
+    limb(pNeck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val pBody = Path().apply {
         moveTo(d(224f), d(176f))
         quadraticTo(d(206f), d(180f), d(200f), d(196f))
@@ -159,9 +181,18 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(242f), d(180f), d(224f), d(176f))
         close()
     }
-    stroke(pBody, colors.ink)
-    sketchLine(pt(202f, 244f), pt(198f, 270f), colors.ink)
-    sketchLine(pt(246f, 244f), pt(250f, 270f), colors.ink)
+    paint(pBody, vBrush(176f, 250f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(pBody, hBrush(224f, 252f, colors.shade.a(0f), colors.shade))
+    listOf(
+        Path().apply {
+            moveTo(d(202f), d(244f))
+            lineTo(d(198f), d(270f))
+        },
+        Path().apply {
+            moveTo(d(246f), d(244f))
+            lineTo(d(250f), d(270f))
+        }
+    ).forEach { leg -> limb(leg, colors.fabricDark, colors.ink, 2.4f, thickness = 10f) }
 
     // watering can with a gentle stream toward the tree
     val can = Path().apply {
@@ -171,7 +202,7 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyStyle) {
         lineTo(d(192f), d(210f))
         close()
     }
-    stroke(can, colors.ink, 2f)
+    paint(can, vBrush(190f, 210f, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2f)
     val streamOn = (1f + wave(t, 0f)) / 2f > 0.4f
     if (streamOn) {
         sketchLine(pt(188f, 202f), pt(174f, 210f), colors.accentBlue.copy(alpha = 0.6f), 1.6f)

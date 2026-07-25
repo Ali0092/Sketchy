@@ -27,7 +27,7 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         lineTo(d(38f), d(140f))
         close()
     }
-    stroke(paper, colors.ink)
+    paint(paper, vBrush(30f, 140f, colors.paper, colors.metal), colors.ink, 2.4f)
 
     // little folded corner
     val fold = Path().apply {
@@ -62,21 +62,22 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
             sketchLine(pt(ccx - 0.5f, ccy + 4f * pop), pt(ccx + 6f * pop, ccy - 4f * pop), colors.accent, 2.4f)
         } else {
             // unchecked: plain outlined box
-            stroke(box, colors.ink, 1.8f)
+            paint(box, colors.paper.lit(0.4f), colors.ink, 1.8f)
         }
     }
 
     // ── person seated (center-left) ─────────────────────────
+    contactShadow(148f, 258f, 46f, 6f, colors.shade)
     // head
-    sketchCircle(pt(148f, 108f), 22f, colors.ink, width = 2.4f)
+    paintCircle(pt(148f, 108f), 22f, colors.skin, colors.ink, 2.4f)
     // top bun
-    sketchCircle(pt(148f, 84f), 8f, colors.ink, width = 2.2f)
+    paintCircle(pt(148f, 84f), 8f, colors.hair, colors.ink, 2.2f)
     // small hair strand
     val strand = Path().apply {
         moveTo(d(140f), d(88f))
         quadraticTo(d(132f), d(96f), d(130f), d(108f))
     }
-    stroke(strand, colors.ink, 2.0f)
+    limb(strand, colors.hair, colors.ink, 2.0f, thickness = 6f)
 
     // face – tiny features
     sketchCircle(pt(154f, 108f), 1.5f, colors.ink, filled = true)                          // eye
@@ -87,7 +88,13 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
     stroke(smile, colors.ink, 1.8f)
 
     // neck
-    sketchLine(pt(148f, 130f), pt(148f, 138f), colors.ink)
+    limb(
+        Path().apply {
+            moveTo(d(148f), d(130f))
+            lineTo(d(148f), d(138f))
+        },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
 
     // hoodie / torso (rounded trapezoid)
     val body = Path().apply {
@@ -99,7 +106,8 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(168f), d(140f), d(148f), d(138f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(138f, 212f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(148f, 180f, colors.shade.a(0f), colors.shade))
 
     // sleeve seam hint
     val seam = Path().apply {
@@ -114,16 +122,16 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         moveTo(d(174f), d(155f))
         quadraticTo(d(200f), d(160f), d(214f), d(178f))
     }
-    stroke(armR, colors.ink)
+    limb(armR, colors.fabric, colors.ink, 2.4f, thickness = 9f)
     // hand
-    sketchCircle(pt(216f, 180f), 4f, colors.ink, width = 2.0f)
+    paintCircle(pt(216f, 180f), 4f, colors.skin, colors.ink, 2.0f)
 
     // left arm resting
     val armL = Path().apply {
         moveTo(d(120f), d(154f))
         quadraticTo(d(108f), d(172f), d(114f), d(190f))
     }
-    stroke(armL, colors.ink)
+    limb(armL, colors.fabric, colors.ink, 2.4f, thickness = 9f)
 
     // legs (sitting)
     val legL = Path().apply {
@@ -134,8 +142,8 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         moveTo(d(166f), d(206f))
         quadraticTo(d(170f), d(230f), d(168f), d(252f))
     }
-    stroke(legL, colors.ink)
-    stroke(legR, colors.ink)
+    limb(legL, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    limb(legR, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
     // feet
     sketchLine(pt(116f, 252f), pt(132f, 252f), colors.ink)
     sketchLine(pt(162f, 252f), pt(178f, 252f), colors.ink)
@@ -146,9 +154,15 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         moveTo(d(190f), d(200f))
         lineTo(d(300f), d(190f))
     }
-    stroke(desk, colors.ink)
+    limb(desk, colors.wood, colors.ink, 2.4f, thickness = 8f)
     // desk right leg
-    sketchLine(pt(294f, 190f), pt(294f, 258f), colors.ink)
+    limb(
+        Path().apply {
+            moveTo(d(294f), d(190f))
+            lineTo(d(294f), d(258f))
+        },
+        colors.woodDark, colors.ink, 2.4f, thickness = 7f
+    )
 
     // laptop base
     val laptopBase = Path().apply {
@@ -158,7 +172,7 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         lineTo(d(213f), d(200f))
         close()
     }
-    stroke(laptopBase, colors.ink)
+    paint(laptopBase, vBrush(182f, 200f, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2.4f)
 
     // laptop screen
     val laptopScreen = Path().apply {
@@ -167,7 +181,7 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         lineTo(d(292f), d(140f))
         lineTo(d(285f), d(182f))
     }
-    stroke(laptopScreen, colors.ink)
+    paint(laptopScreen, vBrush(140f, 192f, colors.fabric, colors.fabricDark), colors.ink, 2.4f)
     // little on-screen content line — second line "types" itself in a loop
     sketchLine(pt(232f, 160f), pt(275f, 154f), colors.inkSoft, 1.8f)
     val typed = 22f + 7f * wave(t, 0.25f)
@@ -181,7 +195,7 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
         lineTo(d(26f), d(285f))
         close()
     }
-    stroke(pot, colors.accent, 2.4f)
+    paint(pot, vBrush(258f, 285f, colors.terracotta, colors.clay), colors.accent, 2.4f)
     sketchLine(pt(23f, 264f), pt(55f, 264f), colors.accent.copy(alpha = 0.6f), 1.6f)
     // teal leaves swaying gently from the pot's rim
     val leaf1 = Path().apply {
@@ -198,9 +212,9 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
     }
     val potTop = pt(39f, 258f)
     withTransform({ rotate(degrees = 2.5f * wave(t, 0.3f), pivot = potTop) }) {
-        stroke(leaf1, colors.accentGreen)
-        stroke(leaf2, colors.accentGreen)
-        stroke(leaf3, colors.accentGreen)
+        limb(leaf1, colors.leaf, colors.accentGreen, 2.4f, thickness = 6f)
+        limb(leaf2, colors.leaf, colors.accentGreen, 2.4f, thickness = 6f)
+        limb(leaf3, colors.leaf, colors.accentGreen, 2.4f, thickness = 6f)
     }
 
     // ── twinkling stars + ground ───────────────────────────
@@ -230,7 +244,7 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
     sketchLine(pt(swCx - 6f, swCy - swR - 14f), pt(swCx + 6f, swCy - swR - 14f), colors.ink)
     sketchLine(pt(swCx + 20f, swCy - 22f), pt(swCx + 26f, swCy - 28f), colors.ink)
     // body + inner rim
-    sketchCircle(pt(swCx, swCy), swR, colors.ink, width = 2.4f)
+    paintCircle(pt(swCx, swCy), swR, colors.paper, colors.ink, 2.4f)
     sketchCircle(pt(swCx, swCy), swR - 5f, colors.inkSoft, 1.4f)
     // quarter ticks
     sketchLine(pt(swCx, swCy - swR + 8f), pt(swCx, swCy - swR + 12f), colors.ink, 1.6f)
@@ -248,8 +262,9 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
 
     // ── person meditating (center) ──────────────────────────
     // head + top bun
-    sketchCircle(pt(160f, 142f), 20f, colors.ink, width = 2.4f)
-    sketchCircle(pt(160f, 118f), 7f, colors.ink, width = 2.2f)
+    contactShadow(160f, 250f, 74f, 7f, colors.shade)
+    paintCircle(pt(160f, 142f), 20f, colors.skin, colors.ink, 2.4f)
+    paintCircle(pt(160f, 118f), 7f, colors.hair, colors.ink, 2.2f)
     // closed eyes — two calm downward arcs
     val eyeL = Path().apply {
         moveTo(d(149f), d(140f))
@@ -269,7 +284,13 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
     stroke(calm, colors.ink, 1.8f)
 
     // neck
-    sketchLine(pt(160f, 162f), pt(160f, 170f), colors.ink)
+    limb(
+        Path().apply {
+            moveTo(d(160f), d(162f))
+            lineTo(d(160f), d(170f))
+        },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
 
     // torso — upright, slim, shoulders relaxed
     val fBody = Path().apply {
@@ -281,7 +302,8 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(180f), d(174f), d(160f), d(170f))
         close()
     }
-    stroke(fBody, colors.ink)
+    paint(fBody, vBrush(170f, 218f, colors.fabric.lit(0.34f), colors.fabricDark), colors.ink, 2.4f)
+    shade(fBody, hBrush(160f, 190f, colors.shade.a(0f), colors.shade))
 
     // folded legs — wide grounded base, knees out past the shoulders
     val fLegs = Path().apply {
@@ -292,7 +314,7 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(220f), d(240f), d(220f), d(228f))
         quadraticTo(d(218f), d(214f), d(190f), d(206f))
     }
-    stroke(fLegs, colors.ink)
+    paint(fLegs, vBrush(206f, 248f, colors.fabricDark.lit(0.2f), colors.fabricDark), colors.ink, 2.4f)
     // shin cross hint
     val shins = Path().apply {
         moveTo(d(126f), d(238f))
@@ -309,11 +331,11 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
         moveTo(d(182f), d(186f))
         quadraticTo(d(204f), d(200f), d(208f), d(220f))
     }
-    stroke(fArmL, colors.ink)
-    stroke(fArmR, colors.ink)
+    limb(fArmL, colors.skin, colors.ink, 2.4f, thickness = 8f)
+    limb(fArmR, colors.skin, colors.ink, 2.4f, thickness = 8f)
     // open palms
-    sketchCircle(pt(112f, 223f), 3.5f, colors.ink, width = 2.0f)
-    sketchCircle(pt(208f, 223f), 3.5f, colors.ink, width = 2.0f)
+    paintCircle(pt(112f, 223f), 3.5f, colors.skin, colors.ink, 2.0f)
+    paintCircle(pt(208f, 223f), 3.5f, colors.skin, colors.ink, 2.0f)
 
     // ── phone face-down, silenced (bottom-right) ────────────
     val phone = Path().apply {
@@ -323,7 +345,7 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
         lineTo(d(235f), d(266f))
         close()
     }
-    stroke(phone, colors.ink)
+    paint(phone, vBrush(252f, 266f, colors.metal, colors.metalDark), colors.ink, 2.4f)
     // camera strip peeking on the back
     sketchLine(pt(268f, 257f), pt(276f, 257f), colors.inkSoft, 1.6f)
     // zzz drifting up — each z fades in sequence
@@ -410,7 +432,7 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
             forceMoveTo = true
         )
     }
-    stroke(bellL, colors.ink)
+    paint(bellL, vBrush(cy - r - 26f, cy - r + 10f, colors.metal.lit(0.35f), colors.metalDark), colors.ink, 2.4f)
     // right bell dome
     val bellR = Path().apply {
         arcTo(
@@ -420,7 +442,7 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
             forceMoveTo = true
         )
     }
-    stroke(bellR, colors.ink)
+    paint(bellR, vBrush(cy - r - 26f, cy - r + 10f, colors.metal.lit(0.35f), colors.metalDark), colors.ink, 2.4f)
     // little "clanger" nubs
     sketchCircle(pt(cx - 40f, cy - r - 30f), 2.5f, colors.ink, filled = true)
     sketchCircle(pt(cx + 40f, cy - r - 30f), 2.5f, colors.ink, filled = true)
@@ -434,15 +456,27 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
             d(cx + 22f), d(cy - r - 8f)
         )
     }
-    stroke(handle, colors.ink)
+    limb(handle, colors.metalDark, colors.ink, 2.4f, thickness = 5f)
 
     // clock main face (outer + inner rim)
-    sketchCircle(pt(cx, cy), r, colors.ink, width = 2.6f)
+    contactShadow(cx, cy + r + 26f, 62f, 7f, colors.shade)
+    paintCircle(pt(cx, cy), r, colors.paper, colors.ink, 2.6f)
+    shade(
+        Path().apply { addOval(Rect(pt(cx - r, cy - r), Size(d(r * 2), d(r * 2)))) },
+        hBrush(cx, cx + r, colors.shade.a(0f), colors.shade)
+    )
     sketchCircle(pt(cx, cy), r - 6f, colors.inkSoft, 1.4f)
 
     // clock legs
-    sketchLine(pt(cx - 46f, cy + r - 8f), pt(cx - 60f, cy + r + 22f), colors.ink)
-    sketchLine(pt(cx + 46f, cy + r - 8f), pt(cx + 60f, cy + r + 22f), colors.ink)
+    listOf(-1f, 1f).forEach { side ->
+        limb(
+            Path().apply {
+                moveTo(d(cx + side * 46f), d(cy + r - 8f))
+                lineTo(d(cx + side * 60f), d(cy + r + 22f))
+            },
+            colors.metalDark, colors.ink, 2.4f, thickness = 6f
+        )
+    }
     // small foot pads
     sketchLine(pt(cx - 66f, cy + r + 22f), pt(cx - 54f, cy + r + 22f), colors.ink)
     sketchLine(pt(cx + 54f, cy + r + 22f), pt(cx + 66f, cy + r + 22f), colors.ink)
@@ -485,7 +519,7 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
         cubicTo(d(272f), d(82f), d(265f), d(80f), d(255f), d(80f))
         close()
     }
-    stroke(bubble, colors.ink)
+    paint(bubble, vBrush(80f, 120f, colors.paper, colors.metal), colors.ink, 2.4f)
     val markColor = if (ringing) colors.accent else colors.ink
     sketchLine(pt(255f, 90f), pt(255f, 100f), markColor, 2.4f)
     sketchCircle(pt(255f, 104f), 1.8f, markColor, filled = true)
@@ -499,7 +533,7 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
         lineTo(d(32f), d(282f))
         close()
     }
-    stroke(cal, colors.ink)
+    paint(cal, vBrush(240f, 282f, colors.paper, colors.metal), colors.ink, 2.4f)
     // header strip
     sketchLine(pt(32f, 250f), pt(72f, 250f), colors.ink)
     // rings
@@ -559,7 +593,7 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
         sketchLine(pt(fx, fy), pt(tx, ty), rayColor, 2.0f)
     }
     // bulb glass
-    sketchCircle(pt(bulbCx, bulbCy), 22f, colors.ink)
+    paintCircle(pt(bulbCx, bulbCy), 22f, colors.glow, colors.ink, 2.4f)
     // filament curl inside
     val filament = Path().apply {
         moveTo(d(bulbCx - 8f), d(bulbCy + 4f))
@@ -580,13 +614,14 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
 
     // ── person leaning over notebook (center) ───────────────
     // head
-    sketchCircle(pt(148f, 152f), 20f, colors.ink, width = 2.4f)
+    contactShadow(160f, 300f, 96f, 7f, colors.shade)
+    paintCircle(pt(148f, 152f), 20f, colors.skin, colors.ink, 2.4f)
     // side hair sweep
     val hairSweep = Path().apply {
         moveTo(d(132f), d(146f))
         quadraticTo(d(122f), d(158f), d(130f), d(172f))
     }
-    stroke(hairSweep, colors.ink)
+    limb(hairSweep, colors.hair, colors.ink, 2.4f, thickness = 8f)
     // face
     sketchCircle(pt(154f, 154f), 1.5f, colors.ink, filled = true)
     val focus = Path().apply {
@@ -596,7 +631,13 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
     stroke(focus, colors.ink, 1.8f)
 
     // neck
-    sketchLine(pt(148f, 172f), pt(148f, 180f), colors.ink)
+    limb(
+        Path().apply {
+            moveTo(d(148f), d(172f))
+            lineTo(d(148f), d(180f))
+        },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
 
     // body / hoodie — leaning forward
     val nBody = Path().apply {
@@ -607,27 +648,28 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(170f), d(180f), d(148f), d(180f))
         close()
     }
-    stroke(nBody, colors.ink)
+    paint(nBody, vBrush(180f, 230f, colors.terracotta.lit(0.25f), colors.clay), colors.ink, 2.4f)
+    shade(nBody, hBrush(148f, 190f, colors.shade.a(0f), colors.shade))
 
     // left arm resting on page
     val nArmL = Path().apply {
         moveTo(d(126f), d(210f))
         quadraticTo(d(115f), d(228f), d(130f), d(240f))
     }
-    stroke(nArmL, colors.ink)
+    limb(nArmL, colors.terracotta, colors.ink, 2.4f, thickness = 9f)
     // right arm holding pen
     val nArmR = Path().apply {
         moveTo(d(184f), d(210f))
         quadraticTo(d(210f), d(224f), d(214f), d(238f))
     }
-    stroke(nArmR, colors.ink)
+    limb(nArmR, colors.terracotta, colors.ink, 2.4f, thickness = 9f)
 
     // pen
     val pen = Path().apply {
         moveTo(d(212f), d(238f))
         lineTo(d(232f), d(244f))
     }
-    stroke(pen, colors.accent, 2.6f)
+    limb(pen, colors.wood, colors.accent, 2.6f, thickness = 5f)
     sketchLine(pt(232f, 244f), pt(238f, 246f), colors.ink, 2.2f)
 
     // ── open notebook (bottom) ─────────────────────────────
@@ -638,7 +680,7 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(160f), d(304f), d(44f), d(296f))
         close()
     }
-    stroke(book, colors.ink)
+    paint(book, vBrush(238f, 304f, colors.paper, colors.metal), colors.ink, 2.4f)
     // spine (center crease)
     val spine = Path().apply {
         moveTo(d(160f), d(242f))
@@ -696,13 +738,14 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
 
     // ── person running (center) ────────────────────────────
     // head
-    sketchCircle(pt(158f, 108f), 20f, colors.ink, width = 2.4f)
+    contactShadow(158f, 240f, 60f, 7f, colors.shade)
+    paintCircle(pt(158f, 108f), 20f, colors.skin, colors.ink, 2.4f)
     // ponytail streaming back
     val tail = Path().apply {
         moveTo(d(140f), d(102f))
         quadraticTo(d(120f), d(96f), d(108f), d(112f))
     }
-    stroke(tail, colors.ink)
+    limb(tail, colors.hair, colors.ink, 2.4f, thickness = 8f)
     // face
     sketchCircle(pt(166f, 108f), 1.6f, colors.ink, filled = true)
     val determined = Path().apply {
@@ -712,7 +755,13 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
     stroke(determined, colors.ink, 1.8f)
 
     // neck (angled forward)
-    sketchLine(pt(154f, 128f), pt(150f, 138f), colors.ink)
+    limb(
+        Path().apply {
+            moveTo(d(154f), d(128f))
+            lineTo(d(150f), d(138f))
+        },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
 
     // torso (leaning forward)
     val hBody = Path().apply {
@@ -722,7 +771,8 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(138f), d(158f), d(150f), d(138f))
         close()
     }
-    stroke(hBody, colors.ink)
+    paint(hBody, vBrush(138f, 190f, colors.terracotta.lit(0.3f), colors.clay), colors.ink, 2.4f)
+    shade(hBody, hBrush(150f, 172f, colors.shade.a(0f), colors.shade))
     // shirt seam
     val hSeam = Path().apply {
         moveTo(d(140f), d(158f))
@@ -735,7 +785,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(152f), d(144f))
         quadraticTo(d(178f), d(140f), d(196f), d(126f))
     }
-    stroke(hArmF, colors.ink)
+    limb(hArmF, colors.skin, colors.ink, 2.4f, thickness = 8f)
     // front hand
     sketchCircle(pt(198f, 124f), 3f, colors.ink, filled = true)
 
@@ -744,7 +794,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(140f), d(150f))
         quadraticTo(d(122f), d(158f), d(110f), d(174f))
     }
-    stroke(hArmB, colors.ink)
+    limb(hArmB, colors.skin, colors.ink, 2.4f, thickness = 8f)
     sketchCircle(pt(108f, 176f), 3f, colors.ink, filled = true)
 
     // front leg raised (knee up)
@@ -752,7 +802,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(166f), d(186f))
         quadraticTo(d(196f), d(198f), d(206f), d(220f))
     }
-    stroke(hLegF, colors.ink)
+    limb(hLegF, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
     // front foot
     sketchLine(pt(202f, 222f), pt(216f, 218f), colors.ink)
 
@@ -761,7 +811,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(148f), d(188f))
         quadraticTo(d(130f), d(210f), d(110f), d(232f))
     }
-    stroke(hLegB, colors.ink)
+    limb(hLegB, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
     sketchLine(pt(104f, 234f), pt(120f, 234f), colors.ink)
 
     // speed lines behind — drifting with the runner's motion
@@ -783,7 +833,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         cubicTo(d(284f), d(94f), d(276f), d(94f), d(272f), d(88f))
         close()
     }
-    stroke(flame, colors.ink)
+    paint(flame, vBrush(38f, 94f, colors.sun, colors.sunDeep), colors.ink, 2.4f)
     // inner flame
     val flameIn = Path().apply {
         moveTo(d(276f), d(84f))
@@ -792,7 +842,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         cubicTo(d(281f), d(88f), d(278f), d(88f), d(276f), d(84f))
         close()
     }
-    stroke(flameIn, colors.accent, 2.0f)
+    paint(flameIn, colors.sunDeep.lit(0.2f), colors.accent, 2.0f)
     }
 
     // ── little sprout (bottom-left) ────────────────────────
@@ -801,7 +851,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         moveTo(d(46f), d(290f))
         quadraticTo(d(48f), d(272f), d(52f), d(258f))
     }
-    stroke(stem, colors.ink)
+    limb(stem, colors.leafDark, colors.ink, 2.4f, thickness = 5f)
     // left leaf
     val leafA = Path().apply {
         moveTo(d(48f), d(268f))
@@ -809,7 +859,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(42f), d(252f), d(48f), d(266f))
         close()
     }
-    stroke(leafA, colors.ink)
+    paint(leafA, vBrush(250f, 268f, colors.leaf, colors.leafDark), colors.ink, 2.4f)
     // right leaf
     val leafB = Path().apply {
         moveTo(d(52f), d(262f))
@@ -817,7 +867,7 @@ internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(60f), d(248f), d(52f), d(260f))
         close()
     }
-    stroke(leafB, colors.ink)
+    paint(leafB, vBrush(246f, 262f, colors.leaf, colors.leafDark), colors.ink, 2.4f)
 
     // twinkling stars
     twinkle(230f, 240f, 4f, t, 0.4f, colors.accent)

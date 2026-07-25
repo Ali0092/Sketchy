@@ -18,14 +18,16 @@ internal fun DrawScope.drawEmptyInbox(t: Float, colors: SketchyStyle) {
         lineTo(d(84f), d(206f))
         close()
     }
-    stroke(envelope, colors.ink, 2.4f)
+    contactShadow(160f, 212f, 78f, 6f, colors.shade)
+    paint(envelope, vBrush(120f, 206f, colors.paper, colors.metal), colors.ink, 2.4f)
+    shade(envelope, hBrush(160f, 236f, colors.shade.a(0f), colors.shade))
     val flapOpen = 0.3f + 0.7f * (1f + wave(t, 0f)) / 2f
     val flap = Path().apply {
         moveTo(d(84f), d(120f))
         lineTo(d(160f), d(120f + 40f * flapOpen))
         lineTo(d(236f), d(120f))
     }
-    stroke(flap, colors.inkSoft, 2f)
+    paint(flap, vBrush(120f, 160f, colors.paper.shaded(0.08f), colors.metal), colors.inkSoft, 2f)
 
     val fly = t % 1f
     val planeX = 200f + fly * 60f
@@ -60,9 +62,16 @@ internal fun DrawScope.drawNoNotifications(t: Float, colors: SketchyStyle) {
             quadraticTo(d(198f), d(110f), d(198f), d(170f))
             close()
         }
-        stroke(bell, colors.ink, 2.4f)
-        sketchLine(pt(116f, 170f), pt(204f, 170f), colors.ink, 2.4f)
-        sketchCircle(pt(160f, 184f), 9f, colors.ink, width = 2.2f)
+        paint(bell, vBrush(96f, 170f, colors.sun, colors.sunDeep), colors.ink, 2.4f)
+        shade(bell, hBrush(160f, 198f, colors.shade.a(0f), colors.shade))
+        limb(
+            Path().apply {
+                moveTo(d(116f), d(170f))
+                lineTo(d(204f), d(170f))
+            },
+            colors.sunDeep, colors.ink, 2.4f, thickness = 5f
+        )
+        paintCircle(pt(160f, 184f), 9f, colors.sunDeep, colors.ink, 2.2f)
         sketchLine(pt(160f, 86f), pt(160f, 74f), colors.ink, 2.2f)
     }
 
@@ -89,7 +98,8 @@ internal fun DrawScope.drawEmptyCalendar(t: Float, colors: SketchyStyle) {
         lineTo(d(84f), d(226f))
         close()
     }
-    stroke(cal, colors.ink, 2.4f)
+    contactShadow(160f, 232f, 76f, 6f, colors.shade)
+    paint(cal, vBrush(102f, 226f, colors.paper, colors.metal), colors.ink, 2.4f)
     sketchLine(pt(84f, 130f), pt(236f, 130f), colors.ink, 2.2f)
     sketchCircle(pt(112f, 96f), 3f, colors.ink, filled = true)
     sketchCircle(pt(208f, 96f), 3f, colors.ink, filled = true)
@@ -124,7 +134,19 @@ internal fun DrawScope.drawNoPhotos(t: Float, colors: SketchyStyle) {
             lineTo(d(90f), d(210f))
             close()
         }
-        stroke(frame, colors.ink, 2.4f)
+        paint(frame, vBrush(110f, 210f, colors.wood.lit(0.3f), colors.woodDark), colors.ink, 2.4f)
+        // the print inside the mount — painted only, so the line drawing keeps
+        // its single clean frame
+        fill(
+            Path().apply {
+                moveTo(d(102f), d(122f))
+                lineTo(d(218f), d(122f))
+                lineTo(d(218f), d(198f))
+                lineTo(d(102f), d(198f))
+                close()
+            },
+            vBrush(122f, 198f, colors.sky.lit(0.3f), colors.paper)
+        )
 
         val mountains = Path().apply {
             moveTo(d(100f), d(196f))
@@ -152,7 +174,7 @@ internal fun DrawScope.drawAllDone(t: Float, colors: SketchyStyle) {
     val pivot = pt(cx, cy)
 
     withTransform({ scale(scaleX = scale, scaleY = scale, pivot = pivot) }) {
-        sketchCircle(pt(cx, cy), 64f, colors.ink, width = 2.6f)
+        paintCircle(pt(cx, cy), 64f, colors.leaf.lit(0.55f), colors.ink, 2.6f)
         sketchLine(pt(cx - 28f, cy), pt(cx - 8f, cy + 22f), colors.accentGreen, 4f)
         sketchLine(pt(cx - 8f, cy + 22f), pt(cx + 32f, cy - 22f), colors.accentGreen, 4f)
     }

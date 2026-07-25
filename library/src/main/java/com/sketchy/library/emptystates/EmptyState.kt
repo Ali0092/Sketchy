@@ -152,10 +152,10 @@ enum class EmptyState(val defaultTitle: String, val defaultSubtitle: String, val
  * Renders a single [EmptyState] with an optional title and subtitle beneath
  * it — a complete, drop-in empty-state view.
  *
- * Empty states are always hand-drawn outlines — ink lines and a few small
- * accent marks on a transparent canvas — so they sit inside a screen without
- * competing with it. (The `Featured` illustrations are the ones that can also
- * be painted in full colour; see `SketchyIllustration`.)
+ * The scene is a hand-drawn outline by default — ink lines and a few small
+ * accent marks on a transparent canvas — so it sits inside a screen without
+ * competing with it. Set [colorful] to true to have the same scene painted in
+ * full colour instead.
  *
  * Every visual aspect is generic and overridable: [colors] restyles the ink
  * and accent colors, [illustrationSize] controls how big the artwork is,
@@ -168,6 +168,7 @@ fun SketchyEmptyState(
     state: EmptyState,
     modifier: Modifier = Modifier,
     animate: Boolean = true,
+    colorful: Boolean = false,
     colors: SketchyColors = SketchyColors(),
     illustrationSize: Dp = 220.dp,
     title: String? = state.defaultTitle,
@@ -185,7 +186,7 @@ fun SketchyEmptyState(
     ),
     spacing: Dp = 16.dp,
 ) {
-    val style = remember(colors) { SketchyStyle(colors, outlined = true) }
+    val style = remember(colors, colorful) { SketchyStyle(colors, outlined = !colorful) }
     val t: Float = if (animate) {
         val transition = rememberInfiniteTransition(label = "sketchy_empty_state")
         val phase by transition.animateFloat(

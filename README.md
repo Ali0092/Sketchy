@@ -33,6 +33,11 @@ animated in a way that feels alive. Sketchy takes a different approach:
   a sweeping stopwatch hand, a ringing bell, a heartbeat pulse — not just a
   generic fade-in. Turn it off with a single `animate = false` when you want
   a static frame instead.
+- **Hand-drawn by default, painted on request.** Every scene renders as a
+  pure outline sketch — ink lines on a transparent canvas, nothing filled in,
+  lifted only by small accent marks. Pass `colorful = true` and the same
+  scene is painted in full: shaded surfaces, contact shadows, highlights. No
+  second set of artwork, and never a background of its own either way.
 - **Genuinely reskinnable.** Both catalogs take color, size, and copy as
   plain parameters (`SketchyColors`, `Dp`, `String`, `TextStyle`) — no XML
   theming, no design-system lock-in. It doesn't even depend on Material.
@@ -41,8 +46,8 @@ animated in a way that feels alive. Sketchy takes a different approach:
 
 | Catalog | Count | Entry point |
 |---|---|---|
-| **Onboarding illustrations** | 15, across 6 categories | `SketchyIllustration(modifier, sketch, animate, colors)` |
-| **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle)` |
+| **Onboarding illustrations** | 20, across 7 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle)` |
 
 A `:app` module ships alongside the library as a live, searchable catalog of
 every illustration and empty state — the fastest way to browse what's
@@ -92,11 +97,30 @@ Every `Sketch` scales to whatever size you give it and animates on a loop by
 default. Pass `animate = false` to freeze it on its resting frame — handy for
 lower-power devices or a still hero image.
 
+### The same illustration, in full colour
+
+```kotlin
+SketchyIllustration(
+    sketch = Sketch.MorningCoffee,
+    modifier = Modifier.size(280.dp),
+    colorful = true
+)
+```
+
+`colorful` works on every illustration and every empty state. Left alone it
+is `false`, and you get the hand-drawn outline Sketchy is built around.
+
 ### An illustration, restyled to match your theme
 
 `colors` is a plain `SketchyColors` parameter — override any subset of it and
 every stroke, fill, and sparkle in the scene repaints to match, no XML themes
-or design-system lock-in required:
+or design-system lock-in required.
+
+An outlined scene only ever draws from the first block of the palette — `ink`,
+`inkSoft`, `inkFaint` and the four accents (`accent`, `accentGreen`,
+`accentBlue`, `accentRed`). The surface, light and material slots below them
+are what the painted version fills with, so reskinning an outlined app means
+changing the ink and the accents and nothing else:
 
 ```kotlin
 import com.sketchy.library.SketchyColors
@@ -109,7 +133,7 @@ SketchyIllustration(
     colors = SketchyColors(
         ink = MaterialTheme.colorScheme.onSurface,
         accent = MaterialTheme.colorScheme.primary,
-        accentSecondary = MaterialTheme.colorScheme.secondary,
+        accentBlue = MaterialTheme.colorScheme.secondary,
     )
 )
 ```
@@ -147,6 +171,7 @@ one palette restyles your entire onboarding flow and empty-state set at once.
 
 | Category | Illustrations |
 |---|---|
+| Featured | A Slow Morning Coffee · Your Workspace at Home · The Weekly Grocery Run · A Quiet Reading Corner · Rainy Day Indoors |
 | Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
 | Fitness | Train Anywhere, Anytime · See Your Progress |
@@ -175,14 +200,17 @@ Sketchy/
 ├── library/    # The published artifact — pure Compose, no app dependencies
 │   └── src/main/java/com/sketchy/library/
 │       ├── SketchyColors.kt           # Shared reskinnable palette (both catalogs)
+│       ├── SketchyStyle.kt            # Outlined vs. painted — how one scene renders both ways
 │       ├── illustrations/
 │       │   ├── SketchyIllustrations.kt  # Sketch enum, SketchyIllustration composable
+│       │   ├── Featured*.kt             # …the elaborate full scenes, one file each
 │       │   └── Onboarding*.kt           # …grouped by category, 2-5 scenes each
 │       ├── emptystates/
 │       │   ├── EmptyState.kt            # EmptyState enum, SketchyEmptyState composable
 │       │   └── EmptyStates*.kt          # …grouped by category, 5 scenes each
 │       └── utils/
 │           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
+│           ├── Painting.kt              # Fills, shading, brushes, limbs — the painted half
 │           └── Utils.kt                 # Ink/accent color constants, wave(), DesignSize
 └── app/        # Demo app — searchable, categorized gallery of everything above
 ```
@@ -194,7 +222,7 @@ New illustrations are very welcome. A new scene is just an `internal`
 
 1. Pick a category (or propose a new one) and add an entry to the `Sketch`
    or `EmptyState` enum with its display copy and category.
-2. Write the scene as `internal fun DrawScope.drawYourScene(t: Float, colors: SketchyColors)`
+2. Write the scene as `internal fun DrawScope.drawYourScene(t: Float, colors: SketchyStyle)`
    in the matching `illustrations/Onboarding*.kt` or `emptystates/EmptyStates*.kt`
    file, reusing the shared extensions from `utils/Extensions.kt` (`stroke`,
    `sketchLine`, `sketchCircle`, `twinkle`, `wave`, `groundHint`/`groundLine`)

@@ -23,7 +23,9 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
         lineTo(d(88f), d(258f))
         close()
     }
-    stroke(caseBottom, colors.ink, 2.4f)
+    contactShadow(160f, 266f, 84f, 8f, colors.shade)
+    paint(caseBottom, vBrush(206f, 258f, colors.wood.lit(0.2f), colors.woodDark), colors.ink, 2.4f)
+    shade(caseBottom, hBrush(160f, 232f, colors.shade.a(0f), colors.shade))
     val lidOpen = 0.5f + 0.06f * wave(t, 0f)
     // the lid is a rectangle rotated open around the hinge at (88,206)
     val hinge = pt(88f, 206f)
@@ -35,21 +37,25 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
             lineTo(d(88f), d(158f))
             close()
         }
-        stroke(panel, colors.ink, 2.2f)
+        paint(panel, vBrush(158f, 206f, colors.wood.lit(0.34f), colors.wood), colors.ink, 2.2f)
         sketchLine(pt(110f, 172f), pt(210f, 172f), colors.inkFaint, 1.6f)
         sketchLine(pt(110f, 188f), pt(190f, 188f), colors.inkFaint, 1.6f)
     }
     sketchLine(pt(148f, 206f), pt(148f, 216f), colors.ink, 2f)
-    sketchCircle(pt(96f, 258f), 8f, colors.ink, width = 2f)
-    sketchCircle(pt(224f, 258f), 8f, colors.ink, width = 2f)
+    paintCircle(pt(96f, 258f), 8f, colors.metalDark, colors.ink, 2f)
+    paintCircle(pt(224f, 258f), 8f, colors.metalDark, colors.ink, 2f)
     // folded clothes inside the base
     sketchLine(pt(104f, 224f), pt(150f, 220f), colors.accentRed, 3f)
     sketchLine(pt(104f, 238f), pt(150f, 234f), colors.accent, 3f)
 
     // person kneeling beside the suitcase
-    sketchCircle(pt(258f, 176f), 19f, colors.ink, width = 2.4f)
+    paintCircle(pt(258f, 176f), 19f, colors.skin, colors.ink, 2.4f)
     sketchCircle(pt(264f, 176f), 1.5f, colors.ink, filled = true)
-    sketchLine(pt(258f, 195f), pt(258f, 202f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(258f), d(195f))
+        lineTo(d(258f), d(202f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val body = Path().apply {
         moveTo(d(258f), d(202f))
         quadraticTo(d(238f), d(206f), d(234f), d(222f))
@@ -59,12 +65,13 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(278f), d(206f), d(258f), d(202f))
         close()
     }
-    stroke(body, colors.ink)
+    paint(body, vBrush(202f, 260f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(258f, 282f, colors.shade.a(0f), colors.shade))
     val arm = Path().apply {
         moveTo(d(238f), d(222f))
         quadraticTo(d(216f), d(224f), d(206f), d(216f))
     }
-    stroke(arm, colors.ink)
+    limb(arm, colors.skin, colors.ink, 2.4f, thickness = 8f)
 
     // passport + ticket floating above
     val floatY = 6f * wave(t, 0.25f)
@@ -75,7 +82,7 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
         lineTo(d(156f), d(132f + floatY))
         close()
     }
-    stroke(passport, colors.accentBlue, 2.2f)
+    paint(passport, vBrush(90f, 132f, colors.fabric, colors.fabricDark), colors.accentBlue, 2.2f)
     sketchCircle(pt(167f, 108f + floatY), 5f, colors.accentBlue, width = 1.6f)
 
     val ticket = Path().apply {
@@ -85,7 +92,7 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
         lineTo(d(200f), d(108f - floatY))
         close()
     }
-    stroke(ticket, colors.accent, 2.2f)
+    paint(ticket, vBrush(78f, 108f, colors.paper, colors.metal), colors.accent, 2.2f)
     sketchLine(pt(206f, 92f - floatY), pt(226f, 89f - floatY), colors.accent, 1.4f)
 
     twinkle(60f, 130f, 3f, t, 0.4f, colors.inkSoft)
@@ -102,7 +109,11 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
     val gx = 130f
     val gy = 176f
     val gr = 70f
-    sketchCircle(pt(gx, gy), gr, colors.ink, width = 2.4f)
+    paintCircle(pt(gx, gy), gr, colors.sky.lit(0.2f), colors.ink, 2.4f)
+    shade(
+        Path().apply { addOval(Rect(pt(gx - gr, gy - gr), Size(d(gr * 2), d(gr * 2)))) },
+        hBrush(gx, gx + gr, colors.shade.a(0f), colors.shade)
+    )
     val ellipse = Rect(pt(gx - gr, gy - gr * 0.4f), Size(d(gr * 2), d(gr * 0.8f)))
     val equator = Path().apply {
         arcTo(ellipse, 0f, 360f, forceMoveTo = true)
@@ -119,9 +130,14 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
     stroke(landA, colors.accentGreen, 1.8f)
 
     // person with backpack, standing beside the globe
-    sketchCircle(pt(230f, 132f), 19f, colors.ink, width = 2.4f)
+    contactShadow(230f, 264f, 40f, 6f, colors.shade)
+    paintCircle(pt(230f, 132f), 19f, colors.skin, colors.ink, 2.4f)
     sketchCircle(pt(236f, 132f), 1.5f, colors.ink, filled = true)
-    sketchLine(pt(230f, 151f), pt(230f, 158f), colors.ink)
+    val neck = Path().apply {
+        moveTo(d(230f), d(151f))
+        lineTo(d(230f), d(158f))
+    }
+    limb(neck, colors.skinDark, colors.ink, 2.4f, thickness = 9f)
     val body = Path().apply {
         moveTo(d(230f), d(158f))
         quadraticTo(d(210f), d(162f), d(206f), d(178f))
@@ -131,9 +147,18 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
         quadraticTo(d(250f), d(162f), d(230f), d(158f))
         close()
     }
-    stroke(body, colors.ink)
-    sketchLine(pt(214f, 228f), pt(210f, 258f), colors.ink)
-    sketchLine(pt(248f, 228f), pt(252f, 258f), colors.ink)
+    paint(body, vBrush(158f, 232f, colors.terracotta.lit(0.25f), colors.clay), colors.ink, 2.4f)
+    shade(body, hBrush(230f, 254f, colors.shade.a(0f), colors.shade))
+    listOf(
+        Path().apply {
+            moveTo(d(214f), d(228f))
+            lineTo(d(210f), d(258f))
+        },
+        Path().apply {
+            moveTo(d(248f), d(228f))
+            lineTo(d(252f), d(258f))
+        }
+    ).forEach { leg -> limb(leg, colors.fabricDark, colors.ink, 2.4f, thickness = 10f) }
     // backpack
     val pack = Path().apply {
         moveTo(d(252f), d(172f))
@@ -142,12 +167,12 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
         lineTo(d(250f), d(212f))
         close()
     }
-    stroke(pack, colors.accent, 2.2f)
+    paint(pack, vBrush(172f, 214f, colors.sun, colors.sunDeep), colors.accent, 2.2f)
 
     // compass held up, needle spinning to settle
     val settle = (t % 1f)
     val needleDeg = 360f * settle * (1f - settle) * 4f
-    sketchCircle(pt(196f, 168f), 15f, colors.ink, width = 2.2f)
+    paintCircle(pt(196f, 168f), 15f, colors.paper, colors.ink, 2.2f)
     val rad = needleDeg * kotlin.math.PI.toFloat() / 180f
     val needleTip = pt(196f + 10f * cos(rad), 168f + 10f * sin(rad))
     drawLine(colors.accent, pt(196f, 168f), needleTip, strokeWidth = d(2.2f))
@@ -170,7 +195,7 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
             lineTo(d(planeX - 2f), d(planeY + 4f))
             close()
         }
-        stroke(plane, colors.ink, 1.8f)
+        paint(plane, colors.paper, colors.ink, 1.8f)
     }
 
     twinkle(70f, 96f, 3f, t, 0.3f, colors.accent)
