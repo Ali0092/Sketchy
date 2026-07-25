@@ -16,9 +16,7 @@ themeable to match your app.
 
 ---
 ## Demo
-https://github.com/user-attachments/assets/20713439-38bc-40af-ad9b-04a778d570cd
-
-
+https://github.com/user-attachments/assets/b5ab7d8a-45b9-43c3-ab53-1d2f6dc9a673
 
 ## Why Sketchy
 
@@ -101,7 +99,7 @@ Then add the dependency:
 ```groovy
 // app/build.gradle
 dependencies {
-    implementation 'com.github.Ali0092:Sketchy:1.0.1'
+    implementation 'com.github.Ali0092:Sketchy:1.0.2'
 }
 ```
 
