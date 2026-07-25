@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.DesignSize
 import com.sketchy.library.utils.wave
 
@@ -151,6 +152,11 @@ enum class EmptyState(val defaultTitle: String, val defaultSubtitle: String, val
  * Renders a single [EmptyState] with an optional title and subtitle beneath
  * it — a complete, drop-in empty-state view.
  *
+ * Empty states are always hand-drawn outlines — ink lines and a few small
+ * accent marks on a transparent canvas — so they sit inside a screen without
+ * competing with it. (The `Featured` illustrations are the ones that can also
+ * be painted in full colour; see `SketchyIllustration`.)
+ *
  * Every visual aspect is generic and overridable: [colors] restyles the ink
  * and accent colors, [illustrationSize] controls how big the artwork is,
  * and [title]/[subtitle] plus [titleStyle]/[subtitleStyle] let you supply
@@ -179,6 +185,7 @@ fun SketchyEmptyState(
     ),
     spacing: Dp = 16.dp,
 ) {
+    val style = remember(colors) { SketchyStyle(colors, outlined = true) }
     val t: Float = if (animate) {
         val transition = rememberInfiniteTransition(label = "sketchy_empty_state")
         val phase by transition.animateFloat(
@@ -212,7 +219,7 @@ fun SketchyEmptyState(
         ) {
             val fit = minOf(size.width, size.height) / DesignSize.toPx()
             withTransform({ scale(scaleX = fit, scaleY = fit, pivot = Offset.Zero) }) {
-                drawEmptyState(state, t, colors)
+                drawEmptyState(state, t, style)
             }
         }
         if (title != null) {
@@ -224,7 +231,7 @@ fun SketchyEmptyState(
     }
 }
 
-private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyColors) {
+private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
         EmptyState.NoInternet -> drawNoInternet(t, colors)
         EmptyState.ServerError -> drawServerError(t, colors)

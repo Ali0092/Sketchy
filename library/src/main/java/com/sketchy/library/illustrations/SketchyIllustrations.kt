@@ -20,23 +20,40 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.DesignSize
 import com.sketchy.library.utils.wave
 
 /**
- * Signature sketched illustrations, hand-drawn as line-art on Canvas.
- * Warm off-white ink against the dark page backgrounds.
+ * Signature sketched illustrations, hand-drawn on Canvas.
+ *
+ * Every scene is a line drawing by default: ink outlines on a transparent
+ * canvas, nothing filled in, with a few small accent marks for warmth. Ask for
+ * `colorful = true` and the very same scene is painted in full instead —
+ * gradient-shaded surfaces, cast shadows and specular highlights under the same
+ * outlines — still with no background of its own. See [SketchyStyle] for how
+ * one scene renders both ways.
  *
  * Every scene receives a looping phase `t` (0..1 over ~4s) that drives gentle
  * ambient motion — pulsing sparkles, ringing bells, a sweeping stopwatch needle —
  * on top of a soft entrance fade/scale and a slow whole-canvas float.
  *
- * The scenes themselves live one file per category (see `Onboarding*.kt`);
- * shared ink colors and Canvas drawing primitives live in `DrawingPrimitives.kt`.
+ * The scenes live one file per category (see `Onboarding*.kt`), drawn with the
+ * stroke primitives in `utils/Extensions.kt`. The **Featured** scenes are the
+ * elaborate ones — a scene rather than a motif, one file each (`Featured*.kt`),
+ * built from the shading primitives in `utils/Painting.kt`.
  */
 
 /** Every sketch currently available in the library, grouped by [category]. */
 enum class Sketch(val displayName: String, val category: String) {
+    // ── Featured · the elaborate, full-scene drawings ───────────────────
+    MorningCoffee("A Slow Morning Coffee", "Featured"),
+    HomeWorkspace("Your Workspace at Home", "Featured"),
+    GroceryRun("The Weekly Grocery Run", "Featured"),
+    ReadingNook("A Quiet Reading Corner", "Featured"),
+    RainyWindow("Rainy Day Indoors", "Featured"),
+
+    // ── Productivity ────────────────────────────────────────────────────
     PlanTasks("Plan Every Task", "Productivity"),
     FindFocus("Find Your Focus", "Productivity"),
     NeverMissMeeting("Never Miss a Meeting", "Productivity"),
@@ -72,14 +89,22 @@ enum class Sketch(val displayName: String, val category: String) {
  * to fit whatever size [modifier] gives it, so it works equally well as a
  * small gallery thumbnail or a full-bleed illustration. [colors] restyles the
  * ink and accent colors to fit your own design system.
+ *
+ * The scene is a hand-drawn outline by default — ink lines and a few small
+ * accent marks, nothing filled in. Set [colorful] to true to have the same
+ * scene painted in full colour instead; either way it draws on a transparent
+ * canvas, so it sits on whatever background your screen already has.
  */
 @Composable
 fun SketchyIllustration(
     modifier: Modifier = Modifier.size(DesignSize),
     sketch: Sketch,
     animate: Boolean = true,
+    colorful: Boolean = false,
     colors: SketchyColors = SketchyColors(),
 ) {
+    val style = remember(colors, colorful) { SketchyStyle(colors, outlined = !colorful) }
+
     // Looping phase driving all ambient motion inside the scenes.
     val t: Float = if (animate) {
         val transition = rememberInfiniteTransition(label = "sketchy_art")
@@ -111,13 +136,19 @@ fun SketchyIllustration(
         // Scale the 320dp design canvas uniformly to fit whatever size we were given.
         val fit = minOf(size.width, size.height) / DesignSize.toPx()
         withTransform({ scale(scaleX = fit, scaleY = fit, pivot = Offset.Zero) }) {
-            drawIllustration(sketch, t, colors)
+            drawIllustration(sketch, t, style)
         }
     }
 }
 
-private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyColors) {
+private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.MorningCoffee -> drawMorningCoffeeScene(t, colors)
+        Sketch.HomeWorkspace -> drawHomeWorkspaceScene(t, colors)
+        Sketch.GroceryRun -> drawGroceryRunScene(t, colors)
+        Sketch.ReadingNook -> drawReadingNookScene(t, colors)
+        Sketch.RainyWindow -> drawRainyWindowScene(t, colors)
+
         Sketch.PlanTasks -> drawTasksScene(t, colors)
         Sketch.FindFocus -> drawFocusScene(t, colors)
         Sketch.NeverMissMeeting -> drawMeetingsScene(t, colors)

@@ -70,6 +70,7 @@ private fun SketchyCard(sketch: Sketch, onClick: () -> Unit, modifier: Modifier 
         ) {
             SketchyIllustration(
                 sketch = sketch,
+                colorful = false,
                 modifier = Modifier.size(140.dp)
             )
         }

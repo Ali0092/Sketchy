@@ -5,13 +5,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── No Internet ─────────────────────────────────────────────────────────────
 //   Nested wifi arcs searching for a signal, with a small alert badge.
 
-internal fun DrawScope.drawNoInternet(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoInternet(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val domeY = 208f
     val radii = listOf(20f, 38f, 56f)
@@ -33,9 +33,9 @@ internal fun DrawScope.drawNoInternet(t: Float, colors: SketchyColors) {
     val badgePivot = pt(226f, 96f)
     val badgeScale = 1f + 0.15f * (1f + wave(t, 0.4f)) / 2f
     withTransform({ scale(scaleX = badgeScale, scaleY = badgeScale, pivot = badgePivot) }) {
-        sketchCircle(badgePivot, 16f, colors.accent, width = 2.4f)
-        sketchLine(pt(226f, 89f), pt(226f, 98f), colors.accent, 2.2f)
-        sketchCircle(pt(226f, 103f), 1.6f, colors.accent, filled = true)
+        sketchCircle(badgePivot, 16f, colors.accentRed, width = 2.4f)
+        sketchLine(pt(226f, 89f), pt(226f, 98f), colors.accentRed, 2.2f)
+        sketchCircle(pt(226f, 103f), 1.6f, colors.accentRed, filled = true)
     }
 
     twinkle(90f, 130f, 3f, t, 0.15f, colors.inkSoft)
@@ -46,7 +46,7 @@ internal fun DrawScope.drawNoInternet(t: Float, colors: SketchyColors) {
 // ─── Server Error ────────────────────────────────────────────────────────────
 //   A rack of servers with a crack running through it and a warning triangle.
 
-internal fun DrawScope.drawServerError(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawServerError(t: Float, colors: SketchyStyle) {
     val left = 96f
     val right = 224f
     for (row in 0..2) {
@@ -59,9 +59,9 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyColors) {
             close()
         }
         stroke(box, colors.ink, 2.2f)
-        val ledColor = if (row == 1) colors.accent.copy(
+        val ledColor = if (row == 1) colors.accentRed.copy(
             alpha = 0.4f + 0.6f * (1f + wave(t, 0.3f)) / 2f
-        ) else colors.accentSecondary
+        ) else colors.accentGreen
         sketchCircle(pt(right - 14f, y + 15f), 3f, ledColor, filled = true)
         sketchLine(pt(left + 12f, y + 15f), pt(right - 30f, y + 15f), colors.inkFaint, 1.6f)
     }
@@ -73,7 +73,7 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyColors) {
         lineTo(d(178f), d(210f))
     }
     val flicker = 0.5f + 0.5f * (1f + wave(t, 0f)) / 2f
-    drawPath(crack, color = colors.accent.copy(alpha = flicker), style = bold(2.6f))
+    drawPath(crack, color = colors.accentRed.copy(alpha = flicker), style = bold(2.6f))
 
     // warning triangle
     val warn = Path().apply {
@@ -83,8 +83,8 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyColors) {
         close()
     }
     stroke(warn, colors.ink, 2.2f)
-    sketchLine(pt(160f, 68f), pt(160f, 78f), colors.accent, 2.2f)
-    sketchCircle(pt(160f, 84f), 1.6f, colors.accent, filled = true)
+    sketchLine(pt(160f, 68f), pt(160f, 78f), colors.accentRed, 2.2f)
+    sketchCircle(pt(160f, 84f), 1.6f, colors.accentRed, filled = true)
 
     twinkle(70f, 100f, 3f, t, 0.5f, colors.inkSoft)
     groundLine(230f, colors.inkFaint)
@@ -94,7 +94,7 @@ internal fun DrawScope.drawServerError(t: Float, colors: SketchyColors) {
 //   A refresh loop that keeps struggling instead of spinning free, with an
 //   "x" at its center.
 
-internal fun DrawScope.drawSyncFailed(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawSyncFailed(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 150f
     val r = 56f
@@ -135,8 +135,8 @@ internal fun DrawScope.drawSyncFailed(t: Float, colors: SketchyColors) {
     }
 
     val xAlpha = 0.5f + 0.5f * (1f + wave(t, 0.25f)) / 2f
-    sketchLine(pt(cx - 12f, cy - 12f), pt(cx + 12f, cy + 12f), colors.accent.copy(alpha = xAlpha), 3f)
-    sketchLine(pt(cx - 12f, cy + 12f), pt(cx + 12f, cy - 12f), colors.accent.copy(alpha = xAlpha), 3f)
+    sketchLine(pt(cx - 12f, cy - 12f), pt(cx + 12f, cy + 12f), colors.accentRed.copy(alpha = xAlpha), 3f)
+    sketchLine(pt(cx - 12f, cy + 12f), pt(cx + 12f, cy - 12f), colors.accentRed.copy(alpha = xAlpha), 3f)
 
     twinkle(240f, 90f, 3f, t, 0.4f, colors.inkSoft)
     groundLine(238f, colors.inkFaint)
@@ -145,7 +145,7 @@ internal fun DrawScope.drawSyncFailed(t: Float, colors: SketchyColors) {
 // ─── Under Maintenance ─────────────────────────────────────────────────────────
 //   A slowly turning gear crossed by a static wrench.
 
-internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 150f
     val r = 46f
@@ -171,8 +171,8 @@ internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyColors) {
         lineTo(d(118f), d(218f))
         close()
     }
-    stroke(wrench, colors.accentSecondary, 2.2f)
-    sketchCircle(pt(104f, 216f), 12f, colors.accentSecondary, width = 2.2f)
+    stroke(wrench, colors.accentBlue, 2.2f)
+    sketchCircle(pt(104f, 216f), 12f, colors.accentBlue, width = 2.2f)
 
     twinkle(230f, 210f, 3f, t, 0.5f, colors.inkSoft)
     groundLine(250f, colors.inkFaint)
@@ -181,7 +181,7 @@ internal fun DrawScope.drawUnderMaintenance(t: Float, colors: SketchyColors) {
 // ─── Location Not Found ──────────────────────────────────────────────────────
 //   A map pin bobbing above a pulsing search radius, with a "?" inside it.
 
-internal fun DrawScope.drawLocationNotFound(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawLocationNotFound(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val bob = 6f * wave(t, 0f)
 
@@ -204,7 +204,7 @@ internal fun DrawScope.drawLocationNotFound(t: Float, colors: SketchyColors) {
         close()
     }
     stroke(pin, colors.ink, 2.6f)
-    sketchCircle(pt(cx, pinTop + 24f), 14f, colors.accent, width = 2.2f)
+    sketchCircle(pt(cx, pinTop + 24f), 14f, colors.accentRed, width = 2.2f)
 
     twinkle(96f, 100f, 3f, t, 0.3f, colors.inkSoft)
     twinkle(230f, 130f, 3f, t, 0.7f, colors.inkSoft)

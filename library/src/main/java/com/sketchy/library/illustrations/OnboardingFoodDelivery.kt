@@ -3,14 +3,14 @@ package com.sketchy.library.illustrations
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Order Your Favorites ────────────────────────────────────────────────────
 //   A person on a couch ordering from a phone, a burger floating above with
 //   rising steam and a "+" bubble popping in.
 
-internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyStyle) {
     // couch
     val couch = Path().apply {
         moveTo(d(70f), d(232f))
@@ -70,7 +70,7 @@ internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyColors) 
     val burgerY = 92f + bob
     sketchLine(pt(206f, burgerY - 10f), pt(238f, burgerY - 10f), colors.accent, 3f)
     sketchLine(pt(202f, burgerY), pt(242f, burgerY), colors.ink, 2.4f)
-    sketchLine(pt(204f, burgerY + 8f), pt(240f, burgerY + 8f), colors.accentSecondary, 2.2f)
+    sketchLine(pt(204f, burgerY + 8f), pt(240f, burgerY + 8f), colors.accentGreen, 2.2f)
     sketchLine(pt(206f, burgerY + 16f), pt(238f, burgerY + 16f), colors.accent, 3f)
     for (i in 0..1) {
         val sx = 216f + i * 12f
@@ -90,7 +90,7 @@ internal fun DrawScope.drawOrderFavoritesScene(t: Float, colors: SketchyColors) 
 //   A rider on a scooter with a food bag on the back, racing along a dashed
 //   route with a pin at the end.
 
-internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyStyle) {
     val bounce = 3f * wave(t, 0f)
     val roadY = 240f
 
@@ -131,9 +131,9 @@ internal fun DrawScope.drawFastDeliveryScene(t: Float, colors: SketchyColors) {
         lineTo(d(94f), d(scooterY - 10f))
         close()
     }
-    stroke(bag, colors.accentSecondary, 2.2f)
-    sketchLine(pt(100f, scooterY - 44f), pt(100f, scooterY - 52f), colors.accentSecondary, 2f)
-    sketchLine(pt(116f, scooterY - 44f), pt(116f, scooterY - 52f), colors.accentSecondary, 2f)
+    stroke(bag, colors.accentBlue, 2.2f)
+    sketchLine(pt(100f, scooterY - 44f), pt(100f, scooterY - 52f), colors.accentBlue, 2f)
+    sketchLine(pt(116f, scooterY - 44f), pt(116f, scooterY - 52f), colors.accentBlue, 2f)
 
     // rider
     sketchCircle(pt(140f, scooterY - 58f), 16f, colors.ink, width = 2.4f)

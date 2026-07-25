@@ -55,7 +55,7 @@ fun EmptyStateDetailScreen(
                     )
                 }
             }
-            AnimateToggleRow(animate = animate, onAnimateChange = { animate = it })
+            SketchyToggleRow(label = "Animate", checked = animate, onCheckedChange = { animate = it })
             CodeSnippetCard(
                 code = "SketchyEmptyState(\n    state = EmptyState.${state.name}\n)",
                 modifier = Modifier.padding(top = 12.dp)

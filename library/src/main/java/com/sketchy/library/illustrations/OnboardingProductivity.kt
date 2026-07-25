@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.lerp
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 import kotlin.math.cos
 import kotlin.math.sin
@@ -18,7 +18,7 @@ import kotlin.math.sin
 //   Person seated at a small desk with an open laptop, floating checklist,
 //   a leafy plant, and a scatter of sparkles.
 
-internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyStyle) {
     // ── floating checklist paper (upper left) ───────────────
     val paper = Path().apply {
         moveTo(d(30f), d(38f))
@@ -53,8 +53,8 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyColors) {
 
         val checkAt = 0.08f + row * 0.17f
         if (t > checkAt) {
-            // checked: box fills solid teal with a yellow tick popping on top
-            drawPath(box, color = colors.accentSecondary, style = Fill)
+            // checked: box fills solid green with a yellow tick popping on top
+            drawPath(box, color = colors.accentGreen, style = Fill)
             val pop = 1f + 0.5f * (1f - ((t - checkAt) / 0.10f).coerceAtMost(1f))
             val ccx = bx + 5f
             val ccy = y + 4f
@@ -198,9 +198,9 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyColors) {
     }
     val potTop = pt(39f, 258f)
     withTransform({ rotate(degrees = 2.5f * wave(t, 0.3f), pivot = potTop) }) {
-        stroke(leaf1, colors.accentSecondary)
-        stroke(leaf2, colors.accentSecondary)
-        stroke(leaf3, colors.accentSecondary)
+        stroke(leaf1, colors.accentGreen)
+        stroke(leaf2, colors.accentGreen)
+        stroke(leaf3, colors.accentGreen)
     }
 
     // ── twinkling stars + ground ───────────────────────────
@@ -216,7 +216,7 @@ internal fun DrawScope.drawTasksScene(t: Float, colors: SketchyColors) {
 //   a hovering stopwatch with a sweeping needle, and a phone set face-down
 //   drifting off to sleep ("zzz").
 
-internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyStyle) {
     // ── breathing aura rings around the person ──────────────
     sketchCircle(pt(160f, 186f), 104f + 5f * wave(t), colors.inkFaint, 1.4f)
     sketchCircle(pt(160f, 186f), 86f + 4f * wave(t, 0.12f), colors.inkFaint, 1.2f)
@@ -346,7 +346,7 @@ internal fun DrawScope.drawFocusScene(t: Float, colors: SketchyColors) {
 // ─── Never Miss a Meeting ───────────────────────────────────────────────────
 //   Big alarm clock with twin bells, ringing waves, and a floating calendar tag.
 
-internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 172f
     val r = 74f
@@ -530,7 +530,7 @@ internal fun DrawScope.drawMeetingsScene(t: Float, colors: SketchyColors) {
 // ─── Capture Every Thought ──────────────────────────────────────────────────
 //   A person writing in an open notebook with a light-bulb "idea" above.
 
-internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyStyle) {
     // ── light bulb (top center) ────────────────────────────
     val bulbCx = 160f
     val bulbCy = 72f
@@ -666,7 +666,7 @@ internal fun DrawScope.drawNotesScene(t: Float, colors: SketchyColors) {
 // ─── Build Better Habits ────────────────────────────────────────────────────
 //   A person mid-run, progress ring behind them, streak flame in a corner.
 
-internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawHabitsScene(t: Float, colors: SketchyStyle) {
     // big progress ring (background)
     val ringCx = 160f
     val ringCy = 165f

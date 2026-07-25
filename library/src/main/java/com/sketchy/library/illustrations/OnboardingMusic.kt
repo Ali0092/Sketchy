@@ -4,14 +4,14 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Your Soundtrack, Anywhere ───────────────────────────────────────────────
 //   A person walking with headphones on, floating music notes and a bouncing
 //   equalizer bar chart.
 
-internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyStyle) {
     val step = wave(t, 0f)
 
     // head + headphones
@@ -79,7 +79,7 @@ internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyColors) 
     bars.forEachIndexed { i, offset ->
         val h = 8f + 14f * (1f + wave(t, offset)) / 2f
         val x = 216f + i * 12f
-        sketchLine(pt(x, 200f), pt(x, 200f - h), colors.accentSecondary, 4f)
+        sketchLine(pt(x, 200f), pt(x, 200f - h), colors.accentBlue, 4f)
     }
 
     twinkle(70f, 90f, 3f, t, 0.5f, colors.inkSoft)
@@ -90,7 +90,7 @@ internal fun DrawScope.drawListenAnywhereScene(t: Float, colors: SketchyColors) 
 //   A person beside a record player, concentric sound waves rippling outward
 //   from the speaker.
 
-internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyStyle) {
     // record player base
     val base = Path().apply {
         moveTo(d(70f), d(200f))
@@ -138,7 +138,7 @@ internal fun DrawScope.drawDiscoverMusicScene(t: Float, colors: SketchyColors) {
         val arc = Path().apply {
             arcTo(arcRect, -40f, 80f, forceMoveTo = true)
         }
-        drawPath(arc, color = colors.accentSecondary.copy(alpha = 0.3f + 0.5f * k), style = thin(1.8f))
+        drawPath(arc, color = colors.accentBlue.copy(alpha = 0.3f + 0.5f * k), style = thin(1.8f))
     }
 
     // person nodding along

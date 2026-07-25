@@ -5,14 +5,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Train Anywhere, Anytime ────────────────────────────────────────────────
 //   A person mid-lunge with dumbbells, sweat drops flicking off, on a small
 //   workout mat.
 
-internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyStyle) {
     // mat
     val mat = Path().apply {
         moveTo(d(70f), d(270f))
@@ -21,7 +21,7 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyColors) {
         lineTo(d(80f), d(288f))
         close()
     }
-    stroke(mat, colors.accentSecondary, 2.2f)
+    stroke(mat, colors.accentBlue, 2.2f)
 
     val lunge = (1f + wave(t, 0f)) / 2f // 0..1 breathing effort
 
@@ -86,8 +86,8 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyColors) {
     // sweat drops flicking off on effort peaks
     if (lunge > 0.6f) {
         val a = (lunge - 0.6f) / 0.4f
-        sketchLine(pt(178f, 100f), pt(184f, 92f), colors.accentSecondary.copy(alpha = a), 2f)
-        sketchLine(pt(184f, 92f), pt(182f, 86f), colors.accentSecondary.copy(alpha = a), 2f)
+        sketchLine(pt(178f, 100f), pt(184f, 92f), colors.accentBlue.copy(alpha = a), 2f)
+        sketchLine(pt(184f, 92f), pt(182f, 86f), colors.accentBlue.copy(alpha = a), 2f)
     }
 
     twinkle(70f, 90f, 3f, t, 0.4f, colors.inkSoft)
@@ -97,7 +97,7 @@ internal fun DrawScope.drawTrainAnywhereScene(t: Float, colors: SketchyColors) {
 // ─── See Your Progress ───────────────────────────────────────────────────────
 //   A person flexing beside a progress ring and a sweeping heart-rate line.
 
-internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyStyle) {
     val ringCx = 130f
     val ringCy = 170f
     val ringR = 108f
@@ -112,7 +112,7 @@ internal fun DrawScope.drawTrackProgressScene(t: Float, colors: SketchyColors) {
             forceMoveTo = true
         )
     }
-    drawPath(arc, color = colors.accentSecondary, style = bold(3.4f))
+    drawPath(arc, color = colors.accentBlue, style = bold(3.4f))
 
     // person flexing, roughly centered in the ring
     sketchCircle(pt(ringCx, 108f), 20f, colors.ink, width = 2.4f)

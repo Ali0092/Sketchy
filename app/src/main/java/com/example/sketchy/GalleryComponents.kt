@@ -122,7 +122,12 @@ internal fun DetailHeader(title: String, subtitle: String, onBack: () -> Unit, m
 }
 
 @Composable
-internal fun AnimateToggleRow(animate: Boolean, onAnimateChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+internal fun SketchyToggleRow(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -130,10 +135,10 @@ internal fun AnimateToggleRow(animate: Boolean, onAnimateChange: (Boolean) -> Un
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Animate", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+        Text(text = label, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
         Switch(
-            checked = animate,
-            onCheckedChange = onAnimateChange,
+            checked = checked,
+            onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(checkedTrackColor = SketchyGold, checkedThumbColor = SketchyInk)
         )
     }

@@ -3,14 +3,14 @@ package com.sketchy.library.illustrations
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Track Every Expense ───────────────────────────────────────────────────────
 //   A person checking a phone with a rising bar chart, coins dropping into a
 //   jar beside them.
 
-internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyStyle) {
     // head + hair
     sketchCircle(pt(122f, 104f), 21f, colors.ink, width = 2.4f)
     val hair = Path().apply {
@@ -86,7 +86,7 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyColors) {
     val coinY = 178f + drop * 60f
     val coinAlpha = if (drop < 0.85f) 1f else (1f - drop) / 0.15f
     sketchCircle(pt(252f, coinY.coerceAtMost(236f)), 9f, colors.accent.copy(alpha = coinAlpha), width = 2.2f)
-    sketchLine(pt(248f, 216f), pt(256f, 216f), colors.accentSecondary.copy(alpha = 0.5f), 2f)
+    sketchLine(pt(248f, 216f), pt(256f, 216f), colors.accentBlue.copy(alpha = 0.5f), 2f)
 
     twinkle(60f, 90f, 3f, t, 0.3f, colors.inkSoft)
     twinkle(220f, 76f, 3f, t, 0.6f, colors.accent)
@@ -97,7 +97,7 @@ internal fun DrawScope.drawTrackSpendingScene(t: Float, colors: SketchyColors) {
 //   A person watering a money tree growing out of a piggy bank, a rising
 //   savings line drifting in the background.
 
-internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyStyle) {
     // background rising savings line
     val riseT = t * t * (3f - 2f * t)
     val line = Path().apply {
@@ -130,13 +130,13 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyColors) {
         moveTo(d(158f), d(214f))
         quadraticTo(d(154f), d(170f), d(160f), d(130f))
     }
-    stroke(trunk, colors.accentSecondary, 2.4f)
+    stroke(trunk, colors.accentGreen, 2.4f)
     val sway = 3f * wave(t, 0.2f)
     val leafPivot = pt(160f, 130f)
     withTransform({ rotate(degrees = sway, pivot = leafPivot) }) {
         val positions = listOf(140f to 118f, 160f to 100f, 182f to 120f, 160f to 140f)
         positions.forEach { (lx, ly) ->
-            sketchCircle(pt(lx, ly), 12f, colors.accentSecondary, width = 2.2f)
+            sketchCircle(pt(lx, ly), 12f, colors.accentGreen, width = 2.2f)
             sketchLine(pt(lx - 4f, ly), pt(lx + 4f, ly), colors.accent, 1.6f)
             sketchLine(pt(lx, ly - 4f), pt(lx, ly + 4f), colors.accent, 1.6f)
         }
@@ -174,8 +174,8 @@ internal fun DrawScope.drawGrowSavingsScene(t: Float, colors: SketchyColors) {
     stroke(can, colors.ink, 2f)
     val streamOn = (1f + wave(t, 0f)) / 2f > 0.4f
     if (streamOn) {
-        sketchLine(pt(188f, 202f), pt(174f, 210f), colors.accentSecondary.copy(alpha = 0.6f), 1.6f)
-        sketchLine(pt(184f, 208f), pt(170f, 216f), colors.accentSecondary.copy(alpha = 0.5f), 1.4f)
+        sketchLine(pt(188f, 202f), pt(174f, 210f), colors.accentBlue.copy(alpha = 0.6f), 1.6f)
+        sketchLine(pt(184f, 208f), pt(170f, 216f), colors.accentBlue.copy(alpha = 0.5f), 1.4f)
     }
 
     twinkle(70f, 90f, 3f, t, 0.4f, colors.accent)

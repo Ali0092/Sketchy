@@ -5,7 +5,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 import kotlin.math.cos
 import kotlin.math.sin
@@ -14,7 +14,7 @@ import kotlin.math.sin
 //   A person packing an open suitcase, a passport and ticket floating above,
 //   a paper airplane looping in the corner.
 
-internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyStyle) {
     // open suitcase
     val caseBottom = Path().apply {
         moveTo(d(88f), d(206f))
@@ -43,7 +43,7 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyColors) {
     sketchCircle(pt(96f, 258f), 8f, colors.ink, width = 2f)
     sketchCircle(pt(224f, 258f), 8f, colors.ink, width = 2f)
     // folded clothes inside the base
-    sketchLine(pt(104f, 224f), pt(150f, 220f), colors.accentSecondary, 3f)
+    sketchLine(pt(104f, 224f), pt(150f, 220f), colors.accentRed, 3f)
     sketchLine(pt(104f, 238f), pt(150f, 234f), colors.accent, 3f)
 
     // person kneeling beside the suitcase
@@ -75,8 +75,8 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyColors) {
         lineTo(d(156f), d(132f + floatY))
         close()
     }
-    stroke(passport, colors.accentSecondary, 2.2f)
-    sketchCircle(pt(167f, 108f + floatY), 5f, colors.accentSecondary, width = 1.6f)
+    stroke(passport, colors.accentBlue, 2.2f)
+    sketchCircle(pt(167f, 108f + floatY), 5f, colors.accentBlue, width = 1.6f)
 
     val ticket = Path().apply {
         moveTo(d(196f), d(84f - floatY))
@@ -97,7 +97,7 @@ internal fun DrawScope.drawPlanTripScene(t: Float, colors: SketchyColors) {
 //   A person with a backpack studying a compass while a plane loops along a
 //   dashed flight path overhead.
 
-internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyStyle) {
     // globe
     val gx = 130f
     val gy = 176f
@@ -115,8 +115,8 @@ internal fun DrawScope.drawExploreWorldScene(t: Float, colors: SketchyColors) {
         quadraticTo(d(gx - 10f), d(gy - 6f), d(gx - 34f), d(gy))
         close()
     }
-    drawPath(landA, color = colors.accentSecondary.copy(alpha = 0.3f), style = bold(2f))
-    stroke(landA, colors.accentSecondary, 1.8f)
+    drawPath(landA, color = colors.accentGreen.copy(alpha = 0.3f), style = bold(2f))
+    stroke(landA, colors.accentGreen, 1.8f)
 
     // person with backpack, standing beside the globe
     sketchCircle(pt(230f, 132f), 19f, colors.ink, width = 2.4f)

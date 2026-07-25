@@ -4,13 +4,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Empty Inbox ──────────────────────────────────────────────────────────────
 //   An open envelope with a paper airplane drifting away from it.
 
-internal fun DrawScope.drawEmptyInbox(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawEmptyInbox(t: Float, colors: SketchyStyle) {
     val envelope = Path().apply {
         moveTo(d(84f), d(120f))
         lineTo(d(236f), d(120f))
@@ -50,7 +50,7 @@ internal fun DrawScope.drawEmptyInbox(t: Float, colors: SketchyColors) {
 // ─── No Notifications ─────────────────────────────────────────────────────────
 //   A bell swinging like a pendulum, with a small "all caught up" check.
 
-internal fun DrawScope.drawNoNotifications(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoNotifications(t: Float, colors: SketchyStyle) {
     val pivot = pt(160f, 82f)
     val swing = 10f * wave(t, 0f)
     withTransform({ rotate(degrees = swing, pivot = pivot) }) {
@@ -69,9 +69,9 @@ internal fun DrawScope.drawNoNotifications(t: Float, colors: SketchyColors) {
     val checkPop = 1f + 0.2f * (1f - ((t % 1f) - 0.5f).let { if (it < 0) -it else it } * 2f)
     val checkPivot = pt(220f, 200f)
     withTransform({ scale(scaleX = checkPop, scaleY = checkPop, pivot = checkPivot) }) {
-        sketchCircle(pt(220f, 200f), 16f, colors.accentSecondary, width = 2.2f)
-        sketchLine(pt(213f, 200f), pt(218f, 206f), colors.accentSecondary, 2.4f)
-        sketchLine(pt(218f, 206f), pt(228f, 192f), colors.accentSecondary, 2.4f)
+        sketchCircle(pt(220f, 200f), 16f, colors.accentGreen, width = 2.2f)
+        sketchLine(pt(213f, 200f), pt(218f, 206f), colors.accentGreen, 2.4f)
+        sketchLine(pt(218f, 206f), pt(228f, 192f), colors.accentGreen, 2.4f)
     }
 
     twinkle(90f, 130f, 3f, t, 0.5f, colors.inkSoft)
@@ -81,7 +81,7 @@ internal fun DrawScope.drawNoNotifications(t: Float, colors: SketchyColors) {
 // ─── Empty Calendar ───────────────────────────────────────────────────────────
 //   A wide-open calendar page with a pulsing "today" ring and no events.
 
-internal fun DrawScope.drawEmptyCalendar(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawEmptyCalendar(t: Float, colors: SketchyStyle) {
     val cal = Path().apply {
         moveTo(d(84f), d(102f))
         lineTo(d(236f), d(102f))
@@ -113,7 +113,7 @@ internal fun DrawScope.drawEmptyCalendar(t: Float, colors: SketchyColors) {
 // ─── No Photos ────────────────────────────────────────────────────────────────
 //   A tilting picture frame around a faint, dashed mountain scene.
 
-internal fun DrawScope.drawNoPhotos(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoPhotos(t: Float, colors: SketchyStyle) {
     val tilt = 3f * wave(t, 0f)
     val framePivot = pt(160f, 160f)
     withTransform({ rotate(degrees = tilt, pivot = framePivot) }) {
@@ -144,7 +144,7 @@ internal fun DrawScope.drawNoPhotos(t: Float, colors: SketchyColors) {
 // ─── All Done ─────────────────────────────────────────────────────────────────
 //   A big checkmark that pops inside a ring, with confetti sparkles around it.
 
-internal fun DrawScope.drawAllDone(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawAllDone(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 160f
     val pop = (t % 1f)
@@ -153,15 +153,15 @@ internal fun DrawScope.drawAllDone(t: Float, colors: SketchyColors) {
 
     withTransform({ scale(scaleX = scale, scaleY = scale, pivot = pivot) }) {
         sketchCircle(pt(cx, cy), 64f, colors.ink, width = 2.6f)
-        sketchLine(pt(cx - 28f, cy), pt(cx - 8f, cy + 22f), colors.accent, 4f)
-        sketchLine(pt(cx - 8f, cy + 22f), pt(cx + 32f, cy - 22f), colors.accent, 4f)
+        sketchLine(pt(cx - 28f, cy), pt(cx - 8f, cy + 22f), colors.accentGreen, 4f)
+        sketchLine(pt(cx - 8f, cy + 22f), pt(cx + 32f, cy - 22f), colors.accentGreen, 4f)
     }
 
     val confetti = listOf(
         Triple(90f, 90f, colors.accent),
-        Triple(230f, 100f, colors.accentSecondary),
-        Triple(96f, 220f, colors.accentSecondary),
-        Triple(228f, 224f, colors.accent),
+        Triple(230f, 100f, colors.accentBlue),
+        Triple(96f, 220f, colors.accentGreen),
+        Triple(228f, 224f, colors.accentRed),
     )
     confetti.forEachIndexed { i, (x, y, c) -> twinkle(x, y, 4f, t, i * 0.2f, c) }
 

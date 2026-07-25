@@ -4,14 +4,14 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── Empty Cart ───────────────────────────────────────────────────────────────
 //   A shopping cart, bouncing gently, with dashed lines standing in for the
 //   goods it doesn't have.
 
-internal fun DrawScope.drawEmptyCart(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawEmptyCart(t: Float, colors: SketchyStyle) {
     val bounce = 5f * wave(t, 0f)
     val basket = Path().apply {
         moveTo(d(96f), d(120f + bounce))
@@ -40,7 +40,7 @@ internal fun DrawScope.drawEmptyCart(t: Float, colors: SketchyColors) {
 // ─── Empty Wishlist ───────────────────────────────────────────────────────────
 //   A single big star, twinkling like the sparkles that orbit it.
 
-internal fun DrawScope.drawEmptyWishlist(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawEmptyWishlist(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 156f
     val k = (1f + wave(t, 0f)) / 2f
@@ -77,7 +77,7 @@ internal fun DrawScope.drawEmptyWishlist(t: Float, colors: SketchyColors) {
 // ─── No Favorites ─────────────────────────────────────────────────────────────
 //   A heart outline with a gentle, real heartbeat pulse.
 
-internal fun DrawScope.drawNoFavorites(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoFavorites(t: Float, colors: SketchyStyle) {
     val cx = 160f
     val cy = 160f
     // sharp quick swell then a long rest — reads like an actual heartbeat
@@ -95,7 +95,7 @@ internal fun DrawScope.drawNoFavorites(t: Float, colors: SketchyColors) {
         }
         stroke(heart, colors.ink, 2.6f)
         if (beat > 0.01f) {
-            drawPath(heart, color = colors.accent.copy(alpha = 0.18f * beat), style = Fill)
+            drawPath(heart, color = colors.accentRed.copy(alpha = 0.18f * beat), style = Fill)
         }
     }
 
@@ -106,7 +106,7 @@ internal fun DrawScope.drawNoFavorites(t: Float, colors: SketchyColors) {
 // ─── No Bookmarks ─────────────────────────────────────────────────────────────
 //   A bookmark ribbon swaying like a real flag, with a floating sparkle.
 
-internal fun DrawScope.drawNoBookmarks(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoBookmarks(t: Float, colors: SketchyStyle) {
     val sway = 4f * wave(t, 0f)
     val pivot = pt(160f, 90f)
     withTransform({ rotate(degrees = sway, pivot = pivot) }) {
@@ -131,7 +131,7 @@ internal fun DrawScope.drawNoBookmarks(t: Float, colors: SketchyColors) {
 // ─── No Downloads ─────────────────────────────────────────────────────────────
 //   An arrow drops into an open tray on a loop, like a file about to land.
 
-internal fun DrawScope.drawNoDownloads(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoDownloads(t: Float, colors: SketchyStyle) {
     val trayY = 200f
     val tray = Path().apply {
         moveTo(d(96f), d(trayY))
@@ -144,9 +144,9 @@ internal fun DrawScope.drawNoDownloads(t: Float, colors: SketchyColors) {
     val drop = (t % 1f)
     val arrowY = 90f + drop * 90f
     val alpha = 1f - drop
-    sketchLine(pt(160f, 70f), pt(160f, arrowY), colors.accent.copy(alpha = alpha), 2.6f)
-    sketchLine(pt(148f, arrowY - 14f), pt(160f, arrowY), colors.accent.copy(alpha = alpha), 2.6f)
-    sketchLine(pt(172f, arrowY - 14f), pt(160f, arrowY), colors.accent.copy(alpha = alpha), 2.6f)
+    sketchLine(pt(160f, 70f), pt(160f, arrowY), colors.accentBlue.copy(alpha = alpha), 2.6f)
+    sketchLine(pt(148f, arrowY - 14f), pt(160f, arrowY), colors.accentBlue.copy(alpha = alpha), 2.6f)
+    sketchLine(pt(172f, arrowY - 14f), pt(160f, arrowY), colors.accentBlue.copy(alpha = alpha), 2.6f)
 
     sketchLine(pt(118f, trayY + 13f), pt(202f, trayY + 13f), colors.inkFaint, 1.6f)
 

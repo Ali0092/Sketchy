@@ -3,13 +3,13 @@ package com.sketchy.library.emptystates
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import com.sketchy.library.SketchyColors
+import com.sketchy.library.SketchyStyle
 import com.sketchy.library.utils.*
 
 // ─── No Results ──────────────────────────────────────────────────────────────
 //   A magnifying glass sweeping over a blank, faintly lined page.
 
-internal fun DrawScope.drawNoResults(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoResults(t: Float, colors: SketchyStyle) {
     val page = Path().apply {
         moveTo(d(84f), d(96f))
         lineTo(d(224f), d(96f))
@@ -26,8 +26,8 @@ internal fun DrawScope.drawNoResults(t: Float, colors: SketchyColors) {
     val sweep = 8f * wave(t, 0f)
     val sweepPivot = pt(180f, 150f)
     withTransform({ rotate(degrees = sweep, pivot = sweepPivot) }) {
-        sketchCircle(pt(172f, 142f), 30f, colors.accent, width = 3f)
-        sketchLine(pt(193f, 163f), pt(214f, 184f), colors.accent, 4f)
+        sketchCircle(pt(172f, 142f), 30f, colors.accentBlue, width = 3f)
+        sketchLine(pt(193f, 163f), pt(214f, 184f), colors.accentBlue, 4f)
     }
 
     twinkle(70f, 76f, 3f, t, 0.4f, colors.inkSoft)
@@ -37,7 +37,7 @@ internal fun DrawScope.drawNoResults(t: Float, colors: SketchyColors) {
 // ─── No Data ─────────────────────────────────────────────────────────────────
 //   A flat, dashed bar chart with a bobbing question mark above it.
 
-internal fun DrawScope.drawNoData(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoData(t: Float, colors: SketchyStyle) {
     val baseY = 220f
     sketchLine(pt(80f, baseY), pt(240f, baseY), colors.ink, 2.2f)
     sketchLine(pt(80f, 100f), pt(80f, baseY), colors.ink, 2.2f)
@@ -66,7 +66,7 @@ internal fun DrawScope.drawNoData(t: Float, colors: SketchyColors) {
 // ─── No Comments ─────────────────────────────────────────────────────────────
 //   An empty speech bubble bouncing gently, with a pencil hovering beside it.
 
-internal fun DrawScope.drawNoComments(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoComments(t: Float, colors: SketchyStyle) {
     val bounce = 4f * wave(t, 0f)
     val bubble = Path().apply {
         moveTo(d(90f), d(100f + bounce))
@@ -101,7 +101,7 @@ internal fun DrawScope.drawNoComments(t: Float, colors: SketchyColors) {
 // ─── No Messages ─────────────────────────────────────────────────────────────
 //   Two chat bubbles — one solid, one faint — with typing dots between them.
 
-internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyStyle) {
     val bubbleA = Path().apply {
         moveTo(d(76f), d(108f))
         lineTo(d(178f), d(108f))
@@ -135,7 +135,7 @@ internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyColors) {
         val k = (1f + wave(t, i * 0.2f)) / 2f
         sketchCircle(
             pt(112f + i * 16f, 134f), 3f,
-            colors.accent.copy(alpha = 0.3f + 0.7f * k), filled = true
+            colors.accentBlue.copy(alpha = 0.3f + 0.7f * k), filled = true
         )
     }
 
@@ -145,7 +145,7 @@ internal fun DrawScope.drawNoMessages(t: Float, colors: SketchyColors) {
 // ─── Page Not Found (404) ─────────────────────────────────────────────────────
 //   A tilted, cracked signpost with a lost "?", swaying in the wind.
 
-internal fun DrawScope.drawPageNotFound(t: Float, colors: SketchyColors) {
+internal fun DrawScope.drawPageNotFound(t: Float, colors: SketchyStyle) {
     sketchLine(pt(160f, 240f), pt(160f, 130f), colors.ink, 3f)
 
     val sway = 6f * wave(t, 0f)
@@ -165,15 +165,15 @@ internal fun DrawScope.drawPageNotFound(t: Float, colors: SketchyColors) {
             lineTo(d(148f), d(132f))
             lineTo(d(170f), d(150f))
         }
-        stroke(crack, colors.accent, 2f)
+        stroke(crack, colors.accentRed, 2f)
     }
 
     val bob = 5f * wave(t, 0.3f)
-    sketchCircle(pt(200f, 60f + bob), 14f, colors.accentSecondary, width = 2.2f)
-    sketchLine(pt(196f, 55f + bob), pt(200f, 51f + bob), colors.accentSecondary, 2f)
-    sketchLine(pt(200f, 51f + bob), pt(204f, 56f + bob), colors.accentSecondary, 2f)
-    sketchLine(pt(200f, 60f + bob), pt(200f, 64f + bob), colors.accentSecondary, 2.2f)
-    sketchCircle(pt(200f, 70f + bob), 1.6f, colors.accentSecondary, filled = true)
+    sketchCircle(pt(200f, 60f + bob), 14f, colors.accentBlue, width = 2.2f)
+    sketchLine(pt(196f, 55f + bob), pt(200f, 51f + bob), colors.accentBlue, 2f)
+    sketchLine(pt(200f, 51f + bob), pt(204f, 56f + bob), colors.accentBlue, 2f)
+    sketchLine(pt(200f, 60f + bob), pt(200f, 64f + bob), colors.accentBlue, 2.2f)
+    sketchCircle(pt(200f, 70f + bob), 1.6f, colors.accentBlue, filled = true)
 
     twinkle(80f, 70f, 3f, t, 0.5f, colors.inkSoft)
     groundLine(254f, colors.inkFaint)
