@@ -46,12 +46,38 @@ animated in a way that feels alive. Sketchy takes a different approach:
 
 | Catalog | Count | Entry point |
 |---|---|---|
-| **Onboarding illustrations** | 20, across 7 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle)` |
+| **Featured illustrations** | 5 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Onboarding illustrations** | 15, across 6 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+
+Every one of the 40 scenes draws two ways from the same code — a colourless
+hand-drawn outline by default, or fully painted with `colorful = true`.
 
 A `:app` module ships alongside the library as a live, searchable catalog of
 every illustration and empty state — the fastest way to browse what's
 available and copy the exact usage snippet for whatever you pick.
+
+## Two looks, one drawing
+
+Sketchy never ships two sets of artwork. Each scene is written once, and the
+`colorful` flag decides how the palette hands its colours back to the drawing
+code:
+
+| | `colorful = false` *(default)* | `colorful = true` |
+|---|---|---|
+| **Look** | Pure line-art — ink outlines, nothing filled in | Gradient-shaded surfaces, contact shadows, highlights, under the same outlines |
+| **Palette slots used** | `ink`, `inkSoft`, `inkFaint` + the four accents | All of the above **plus** the light and material slots |
+| **Colour** | Only small accent marks — a sparkle, a glint, one highlighted bar | Full colour throughout |
+| **Background** | Transparent | Transparent |
+| **Best for** | Minimal / monochrome UIs, dark mode, matching a single brand ink | Onboarding heroes, marketing screens, playful apps |
+
+Neither mode ever paints a background of its own, so a scene drops onto
+whatever surface your screen already has.
+
+How it works: when a scene is outlined, every surface, light and material slot
+of the palette reads back as `Color.Transparent`, so the fill simply isn't
+painted and what survives is the ink outline of the same shape. That's why
+`colorful` is one boolean and not a second catalog.
 
 ## Installation
 
@@ -97,18 +123,53 @@ Every `Sketch` scales to whatever size you give it and animates on a loop by
 default. Pass `animate = false` to freeze it on its resting frame — handy for
 lower-power devices or a still hero image.
 
-### The same illustration, in full colour
+### The same illustration, colourless or colourful
 
 ```kotlin
+// Colourless — the default. Ink outlines, a few accent marks, nothing filled in.
 SketchyIllustration(
     sketch = Sketch.MorningCoffee,
     modifier = Modifier.size(280.dp),
-    colorful = true
+)
+
+// Colourful — the same scene, painted: shaded surfaces, shadows, highlights.
+SketchyIllustration(
+    sketch = Sketch.MorningCoffee,
+    modifier = Modifier.size(280.dp),
+    colorful = true,
 )
 ```
 
-`colorful` works on every illustration and every empty state. Left alone it
-is `false`, and you get the hand-drawn outline Sketchy is built around.
+`colorful` works on every illustration and every empty state, and it's an
+ordinary parameter — drive it from a setting, from `isSystemInDarkTheme()`, or
+from a single app-wide constant:
+
+```kotlin
+SketchyEmptyState(
+    state = EmptyState.EmptyCart,
+    colorful = !isSystemInDarkTheme(),
+)
+```
+
+### A featured illustration
+
+The five **Featured** scenes are the elaborate ones — a whole scene rather
+than a single motif, one source file each, built on the shading primitives the
+painted mode uses. They're the ones worth giving a full-bleed hero slot:
+
+```kotlin
+SketchyIllustration(
+    sketch = Sketch.ReadingNook,   // or MorningCoffee, HomeWorkspace, GroceryRun, RainyWindow
+    modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+    colorful = true,
+)
+```
+
+They take exactly the same parameters as every other `Sketch` — `animate`,
+`colorful` and `colors` all behave identically — and they render colourless
+just as happily if that's your look. Because they carry the most detail, they
+also gain the most from `colorful = true`, so they're the best place to start
+if you're deciding between the two modes.
 
 ### An illustration, restyled to match your theme
 
@@ -116,11 +177,11 @@ is `false`, and you get the hand-drawn outline Sketchy is built around.
 every stroke, fill, and sparkle in the scene repaints to match, no XML themes
 or design-system lock-in required.
 
-An outlined scene only ever draws from the first block of the palette — `ink`,
+A colourless scene only ever draws from the first block of the palette — `ink`,
 `inkSoft`, `inkFaint` and the four accents (`accent`, `accentGreen`,
-`accentBlue`, `accentRed`). The surface, light and material slots below them
-are what the painted version fills with, so reskinning an outlined app means
-changing the ink and the accents and nothing else:
+`accentBlue`, `accentRed`). The light and material slots below them are what
+the colourful version fills with, so reskinning a colourless app means changing
+the ink and the accents and nothing else:
 
 ```kotlin
 import com.sketchy.library.SketchyColors
@@ -137,6 +198,19 @@ SketchyIllustration(
     )
 )
 ```
+
+If you use `colorful = true`, the rest of the palette is worth a look too —
+it's grouped so you can retint a whole painted scene a few slots at a time:
+
+| Block | Slots | What it paints |
+|---|---|---|
+| **Ink** | `ink`, `inkSoft`, `inkFaint` | Every outline, in both modes |
+| **Accents** | `accent`, `accentGreen`, `accentBlue`, `accentRed` | Small coloured marks, in both modes |
+| **Light & atmosphere** | `paper`, `sun`, `sunDeep`, `glow`, `sky`, `skyDeep`, `shade`, `shadeSoft` | Key light, bloom, shadows — colourful only |
+| **Materials** | `wood`, `woodDark`, `leaf`, `leafDark`, `terracotta`, `clay`, `fabric`, `fabricDark`, `metal`, `metalDark`, `skin`, `skinDark`, `hair`, `coffee` | The surfaces themselves — colourful only |
+
+Overriding a material slot while a scene is colourless is harmless — it's
+simply never read.
 
 ### An empty state, fully restyled
 
@@ -166,12 +240,27 @@ one palette restyles your entire onboarding flow and empty-state set at once.
 
 ## Catalog
 
+Every entry below draws both ways — colourless by default, painted with
+`colorful = true`.
+
+<details>
+<summary><strong>Featured illustrations (5)</strong></summary>
+
+| `Sketch` | Scene |
+|---|---|
+| `Sketch.MorningCoffee` | A Slow Morning Coffee |
+| `Sketch.HomeWorkspace` | Your Workspace at Home |
+| `Sketch.GroceryRun` | The Weekly Grocery Run |
+| `Sketch.ReadingNook` | A Quiet Reading Corner |
+| `Sketch.RainyWindow` | Rainy Day Indoors |
+
+</details>
+
 <details>
 <summary><strong>Onboarding illustrations (15)</strong></summary>
 
 | Category | Illustrations |
 |---|---|
-| Featured | A Slow Morning Coffee · Your Workspace at Home · The Weekly Grocery Run · A Quiet Reading Corner · Rainy Day Indoors |
 | Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
 | Fitness | Train Anywhere, Anytime · See Your Progress |
