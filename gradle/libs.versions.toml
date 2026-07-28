@@ -3,23 +3,25 @@ agp = "9.3.0-alpha06"
 coreKtx = "1.19.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
-kotlin = "2.2.10"
-composeBom = "2026.02.01"
+# Compose Multiplatform 1.11.1 ships klibs built with Kotlin 2.3.20 (abi_version
+# 2.3.0). An older compiler cannot read them, so the iOS and wasm targets fail
+# to resolve any Compose symbol unless Kotlin is >= 2.3.20.
+kotlin = "2.3.21"
+composeMultiplatform = "1.11.1"
+# Publishes :library to Maven Central. 0.35.0+ is required for KMP libraries
+# built with com.android.kotlin.multiplatform.library (AGP 9's KMP-native
+# Android target); 0.37.0 also needs AGP >= 8.13.0 and Gradle >= 9.0.0.
+mavenPublish = "0.37.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
-androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }

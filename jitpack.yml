@@ -1,2 +1,3 @@
+# Must match the Gradle toolchain (gradle/gradle-daemon-jvm.properties, jvmToolchain(21)).
 jdk:
-  - openjdk17
+  - openjdk21
