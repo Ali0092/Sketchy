@@ -15,7 +15,10 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // PREFER_PROJECT rather than FAIL_ON_PROJECT_REPOS: the wasmJs target's
+    // binaryen toolchain registers its own GitHub releases repository on the
+    // project, which the stricter modes either reject or ignore.
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         google()
         mavenCentral()
@@ -23,5 +26,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Sketchy"
-include(":app")
+include(":androidApp")
+include(":composeApp")
 include(":library")

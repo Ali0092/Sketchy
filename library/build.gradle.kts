@@ -1,53 +1,89 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
-android {
-    namespace = "com.sketchy.library"
-    compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
-    }
+group = "io.github.ali0092"
+// CI overrides this via -PlibraryVersion when auto-tagging a release; the
+// literal here is only the fallback for local builds and the first release.
+version = (findProperty("libraryVersion") as String?) ?: "0.1.0"
 
-    defaultConfig {
+kotlin {
+    jvmToolchain(21)
+
+    androidLibrary {
+        namespace = "com.sketchy.library"
+        compileSdk = 37
         minSdk = 26
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    buildFeatures {
-        compose = true
+    jvm()
+
+    // No iosX64: Compose Multiplatform no longer ships artifacts for the Intel
+    // simulator. Apple-silicon Macs use iosSimulatorArm64.
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { target ->
+        target.binaries.framework {
+            baseName = "Sketchy"
+            isStatic = true
+        }
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            // `api`, not `implementation`: Modifier, TextStyle and Dp appear in the
+            // public signatures of SketchyIllustration/SketchyEmptyState, so consumers
+            // need these on their compile classpath.
+            api(compose.runtime)
+            api(compose.foundation)
+            api(compose.ui)
         }
     }
 }
 
-dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.foundation)
-}
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
 
-afterEvaluate {
-    publishing {
-        publications {
-            register<MavenPublication>("release") {
-                from(components["release"])
+    coordinates(group.toString(), "sketchy", version.toString())
 
-                groupId = "com.github.Ali0092"
-                artifactId = "Sketchy"
-                version = "1.0.2"
+    pom {
+        name.set("Sketchy")
+        description.set("Hand-drawn, animated illustrations and empty states for Compose Multiplatform.")
+        url.set("https://github.com/Ali0092/Sketchy")
+
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+                distribution.set("repo")
             }
+        }
+
+        developers {
+            developer {
+                id.set("Ali0092")
+                name.set("Muhammad Ali")
+                url.set("https://github.com/Ali0092")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/Ali0092/Sketchy")
+            connection.set("scm:git:git://github.com/Ali0092/Sketchy.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Ali0092/Sketchy.git")
         }
     }
 }

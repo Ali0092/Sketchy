@@ -1,18 +1,32 @@
 # Sketchy
 
-**Hand-drawn, animated illustrations & empty states for Jetpack Compose.**
+**Hand-drawn, animated illustrations & empty states for Compose Multiplatform.**
 
-Sketchy is a Kotlin/Compose library of sketch-style, line-art artwork — the
-kind of warm, human illustration you'd want for onboarding flows and empty
+Sketchy is a Kotlin Multiplatform library of sketch-style, line-art artwork —
+the kind of warm, human illustration you'd want for onboarding flows and empty
 states — drawn entirely on `Canvas`, animated out of the box, and fully
-themeable to match your app.
+themeable to match your app. It runs on Android, iOS, desktop and the web from
+one `commonMain` source set.
 
 [![](https://jitpack.io/v/Ali0092/Sketchy.svg)](https://jitpack.io/#Ali0092/Sketchy)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Kotlin](https://img.shields.io/badge/kotlin-2.2.10-7F52FF?logo=kotlin&logoColor=white)
-![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-BOM%202026.02.01-4285F4?logo=jetpackcompose&logoColor=white)
+![Kotlin](https://img.shields.io/badge/kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
+![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.11.1-4285F4?logo=jetpackcompose&logoColor=white)
+![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Desktop%20%7C%20Web-orange)
 ![Min SDK](https://img.shields.io/badge/minSdk-26-brightgreen)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)
+
+## Supported platforms
+
+| Target | Status |
+|---|---|
+| **Android** | `minSdk 26` |
+| **iOS** | `iosArm64`, `iosSimulatorArm64` |
+| **Desktop (JVM)** | Windows, macOS, Linux |
+| **Web** | `wasmJs` (browser) |
+
+`iosX64` (the Intel simulator) is not supported — Compose Multiplatform no
+longer publishes artifacts for it.
 
 ---
 ## Demo
@@ -51,9 +65,17 @@ animated in a way that feels alive. Sketchy takes a different approach:
 Every one of the 40 scenes draws two ways from the same code — a colourless
 hand-drawn outline by default, or fully painted with `colorful = true`.
 
-A `:app` module ships alongside the library as a live, searchable catalog of
-every illustration and empty state — the fastest way to browse what's
-available and copy the exact usage snippet for whatever you pick.
+A demo ships alongside the library as a live, searchable catalog of every
+illustration and empty state — the fastest way to browse what's available and
+copy the exact usage snippet for whatever you pick. Its UI lives in
+`:composeApp` and is shared across all four platforms:
+
+```bash
+./gradlew :composeApp:run                          # desktop
+./gradlew :androidApp:installDebug                 # Android
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun  # web
+open iosApp/iosApp.xcodeproj                       # iOS (run from Xcode)
+```
 
 ## Two looks, one drawing
 
@@ -79,27 +101,51 @@ painted and what survives is the ink outline of the same shape. That's why
 
 ## Installation
 
-Sketchy is published on [JitPack](https://jitpack.io/#Ali0092/Sketchy).
+> **Note** — Maven Central publishing is set up in the build but the first
+> release hasn't gone live yet. Until then, use it from source (`includeBuild`
+> or a `:library` module copy), or stay on the older Android-only `1.0.2`
+> JitPack artifact if you only need Android.
 
-Add the JitPack repository:
+Once published, a multiplatform consumer adds it to `commonMain` — `mavenCentral()`
+is already declared by default in a Kotlin Multiplatform project's repositories,
+no extra repository setup required:
 
-```groovy
-// settings.gradle
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
+```kotlin
+// build.gradle.kts
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("io.github.ali0092:sketchy:<version>")
+        }
     }
 }
 ```
 
-Then add the dependency:
+An Android-only consumer adds it the usual way:
 
-```groovy
-// app/build.gradle
+```kotlin
+// app/build.gradle.kts
 dependencies {
-    implementation 'com.github.Ali0092:Sketchy:1.0.2'
+    implementation("io.github.ali0092:sketchy:<version>")
+}
+```
+
+The older Android-only `1.0.2` artifact remains available via JitPack:
+
+```kotlin
+dependencies {
+    implementation("com.github.Ali0092:Sketchy:1.0.2")
+}
+```
+
+with the JitPack repository declared in `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
 }
 ```
 
@@ -285,7 +331,7 @@ Every entry below draws both ways — colourless by default, painted with
 ```
 Sketchy/
 ├── library/    # The published artifact — pure Compose, no app dependencies
-│   └── src/main/java/com/sketchy/library/
+│   └── src/commonMain/kotlin/com/sketchy/library/
 │       ├── SketchyColors.kt           # Shared reskinnable palette (both catalogs)
 │       ├── SketchyStyle.kt            # Outlined vs. painted — how one scene renders both ways
 │       ├── illustrations/
@@ -299,7 +345,17 @@ Sketchy/
 │           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
 │           ├── Painting.kt              # Fills, shading, brushes, limbs — the painted half
 │           └── Utils.kt                 # Ink/accent color constants, wave(), DesignSize
-└── app/        # Demo app — searchable, categorized gallery of everything above
+├── composeApp/ # Demo UI — searchable, categorized gallery of everything above,
+│   │           # shared across all four platforms
+│   ├── src/commonMain/kotlin/   # The catalog screens
+│   ├── src/androidMain/kotlin/  # Clipboard + Material You actuals
+│   ├── src/jvmMain/kotlin/      # Desktop entry point (main.kt)
+│   ├── src/iosMain/kotlin/      # iOS entry point (MainViewController.kt)
+│   └── src/wasmJsMain/kotlin/   # Web entry point (main.kt)
+├── androidApp/ # Thin Android shell — Activity, manifest, launcher resources.
+│               # Separate because AGP 9 won't apply com.android.application
+│               # alongside the Kotlin Multiplatform plugin.
+└── iosApp/     # Xcode project hosting the shared Compose UI
 ```
 
 ## Contributing
