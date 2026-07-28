@@ -1,0 +1,62 @@
+name: Auto-tag and publish on merge
+
+# Fires right after a merge lands on main and touches the library. It figures
+# out the next patch version from the latest `v*` tag (or falls back to the
+# version already in library/build.gradle.kts if no tag exists yet), creates
+# and pushes that tag, then publishes straight to Maven Central under it.
+#
+# Tags are pushed with the default GITHUB_TOKEN, which by design does not
+# re-trigger other workflows - so this job also runs the publish steps itself
+# rather than relying on publish.yml's tag trigger to pick it up.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "library/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next version and tag
+        id: release
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          if [ -z "$LATEST_TAG" ]; then
+            VERSION=$(grep -m1 '^version = (' library/build.gradle.kts | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')
+          else
+            BASE="${LATEST_TAG#v}"
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
+            VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          fi
+          TAG="v$VERSION"
+          echo "Releasing $TAG"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish library to Maven Central
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}
+        run: |
+          ./gradlew :library:publishToMavenCentral --no-configuration-cache \
+            -PlibraryVersion="${{ steps.release.outputs.version }}"
