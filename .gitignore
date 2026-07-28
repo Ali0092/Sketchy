@@ -31,9 +31,25 @@ release/
 *.jks
 *.keystore
 
+# Maven Central / GPG signing material — never commit private keys
+*.gpg
+*.asc
+*.pem
+secring.gpg
+secrets.properties
+publish.properties
+
 # Logs & crash reports
 *.log
 *.hprof
+
+# Xcode
+xcuserdata/
+*.xcworkspace/xcshareddata/
+DerivedData/
+
+# Kotlin/Native
+.konan/
 
 # OS
 .DS_Store
