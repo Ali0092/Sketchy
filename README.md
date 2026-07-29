@@ -8,6 +8,7 @@ states — drawn entirely on `Canvas`, animated out of the box, and fully
 themeable to match your app. It runs on Android, iOS, desktop and the web from
 one `commonMain` source set.
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ali0092/sketchy.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ali0092/sketchy)
 [![](https://jitpack.io/v/Ali0092/Sketchy.svg)](https://jitpack.io/#Ali0092/Sketchy)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Kotlin](https://img.shields.io/badge/kotlin-2.3.21-7F52FF?logo=kotlin&logoColor=white)
@@ -101,21 +102,19 @@ painted and what survives is the ink outline of the same shape. That's why
 
 ## Installation
 
-> **Note** — Maven Central publishing is set up in the build but the first
-> release hasn't gone live yet. Until then, use it from source (`includeBuild`
-> or a `:library` module copy), or stay on the older Android-only `1.0.2`
-> JitPack artifact if you only need Android.
+Sketchy is live on Maven Central as `io.github.ali0092:sketchy` — the version
+badge above always reflects the latest published release.
 
-Once published, a multiplatform consumer adds it to `commonMain` — `mavenCentral()`
-is already declared by default in a Kotlin Multiplatform project's repositories,
-no extra repository setup required:
+A multiplatform consumer adds it to `commonMain` — `mavenCentral()` is already
+declared by default in a Kotlin Multiplatform project's repositories, no extra
+repository setup required:
 
 ```kotlin
 // build.gradle.kts
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.ali0092:sketchy:<version>")
+            implementation("io.github.ali0092:sketchy:1.0.4")
         }
     }
 }
@@ -126,15 +125,17 @@ An Android-only consumer adds it the usual way:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("io.github.ali0092:sketchy:<version>")
+    implementation("io.github.ali0092:sketchy:1.0.4")
 }
 ```
 
-The older Android-only `1.0.2` artifact remains available via JitPack:
+Sketchy is also mirrored on JitPack, kept at the same version and coordinate
+as Maven Central, as a fallback in case Maven Central isn't reachable from
+your network:
 
 ```kotlin
 dependencies {
-    implementation("com.github.Ali0092:Sketchy:1.0.2")
+    implementation("io.github.ali0092:sketchy:1.0.4")
 }
 ```
 
