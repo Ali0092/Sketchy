@@ -3,7 +3,9 @@ name: Auto-tag and publish on merge
 # Fires right after a merge lands on main and touches the library. It figures
 # out the next patch version from the latest `v*` tag (or falls back to the
 # version already in library/build.gradle.kts if no tag exists yet), creates
-# and pushes that tag, then publishes straight to Maven Central under it.
+# and pushes that tag, publishes to Maven Central under it, triggers and waits
+# on the matching JitPack build so both registries serve the same version,
+# cuts a GitHub Release for it, and bumps the versions shown in README.md.
 #
 # Tags are pushed with the default GITHUB_TOKEN, which by design does not
 # re-trigger other workflows - so this job also runs the publish steps itself
@@ -43,6 +45,7 @@ jobs:
           git tag "$TAG"
           git push origin "$TAG"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-java@v4
         with:
@@ -60,3 +63,56 @@ jobs:
         run: |
           ./gradlew :library:publishToMavenCentral --no-configuration-cache \
             -PlibraryVersion="${{ steps.release.outputs.version }}"
+
+      - name: Trigger and verify matching JitPack build
+        # JitPack never builds proactively - it only builds a version the
+        # first time someone requests it, then caches the result. This forces
+        # that first request right now so JitPack ends up on the same version
+        # as Maven Central instead of sitting on whatever was last requested.
+        # Non-fatal: JitPack is a mirror, Maven Central is the release of
+        # record, so a flaky/slow JitPack build shouldn't fail the release.
+        continue-on-error: true
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          echo "Requesting JitPack build for io.github.ali0092:sketchy:$VERSION"
+          curl -s -A "Mozilla/5.0" -o /dev/null \
+            "https://jitpack.io/io/github/ali0092/sketchy/$VERSION/sketchy-$VERSION.pom" || true
+
+          STATUS=""
+          for i in $(seq 1 40); do
+            RESPONSE=$(curl -s -A "Mozilla/5.0" "https://jitpack.io/api/builds/io.github.ali0092/sketchy/$VERSION")
+            STATUS=$(echo "$RESPONSE" | sed -n 's/.*"status" *: *"\([A-Za-z]*\)".*/\1/p')
+            echo "Attempt $i/40: status=$STATUS"
+            case "$STATUS" in
+              ok|Error|error) break ;;
+            esac
+            sleep 15
+          done
+
+          if [ "$STATUS" != "ok" ]; then
+            echo "::warning::JitPack build for sketchy $VERSION finished with status '$STATUS' - check https://jitpack.io/com/github/Ali0092/Sketchy/$VERSION/build.log"
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.release.outputs.tag }}" \
+            --title "${{ steps.release.outputs.tag }}" \
+            --generate-notes
+
+      - name: Bump version shown in README
+        # Maven Central and JitPack now share the same coordinate
+        # (io.github.ali0092:sketchy), so this one substitution updates both
+        # usage examples in README.md.
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          sed -i '' -E "s#(io\.github\.ali0092:sketchy:)[^\"]+#\1$VERSION#g" README.md
+          if ! git diff --quiet -- README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "docs: bump README to Sketchy ${{ steps.release.outputs.tag }}"
+            git push origin HEAD:main
+          fi

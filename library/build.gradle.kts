@@ -9,9 +9,14 @@ plugins {
 }
 
 group = "io.github.ali0092"
-// CI overrides this via -PlibraryVersion when auto-tagging a release; the
-// literal here is only the fallback for local builds and the first release.
-version = (findProperty("libraryVersion") as String?) ?: "0.1.0"
+// Our own CI overrides this via -PlibraryVersion when auto-tagging a release;
+// JitPack also sets a VERSION env var when it builds a given tag on demand,
+// which we need to honor too or every JitPack build silently publishes as
+// this fallback instead of the requested tag. The literal here is only the
+// fallback for local builds and the first release.
+version = (findProperty("libraryVersion") as String?)
+    ?: System.getenv("VERSION")
+    ?: "0.1.0"
 
 kotlin {
     jvmToolchain(21)
@@ -55,7 +60,13 @@ kotlin {
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+    // Signing needs real credentials, which only our own Maven Central CI run
+    // has. JitPack builds this same repo/tag with `publishToMavenLocal` to
+    // mirror the version and has no signing secrets - skip signing there so
+    // its build doesn't fail on `signKotlinMultiplatformPublication`.
+    if (findProperty("signingInMemoryKey") != null) {
+        signAllPublications()
+    }
 
     coordinates(group.toString(), "sketchy", version.toString())
 
