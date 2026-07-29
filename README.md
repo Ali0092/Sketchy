@@ -114,7 +114,7 @@ repository setup required:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.ali0092:sketchy:1.0.4")
+            implementation("io.github.ali0092:sketchy:1.0.5")
         }
     }
 }
@@ -125,7 +125,7 @@ An Android-only consumer adds it the usual way:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.4")
+    implementation("io.github.ali0092:sketchy:1.0.5")
 }
 ```
 
@@ -135,7 +135,7 @@ your network:
 
 ```kotlin
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.4")
+    implementation("io.github.ali0092:sketchy:1.0.5")
 }
 ```
 
