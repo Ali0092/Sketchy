@@ -93,6 +93,14 @@ class SketchyStyle internal constructor(
     val lineOnly: Color get() = if (outlined) ink else Color.Transparent
 
     /**
+     * The soft duplicate-outline "shadow" a hero shape can draw behind itself in line-art mode —
+     * `inkFaint` outlined, nothing at all painted. Painted scenes already get real depth from
+     * [com.sketchy.library.utils.shade]/[com.sketchy.library.utils.contactShadow], so this stays a
+     * no-op there. Pass it to [com.sketchy.library.utils.inkShadow].
+     */
+    val outlineShadow: Color get() = if (outlined) inkFaint else Color.Transparent
+
+    /**
      * The outline of a small object that is allowed to keep its colour in a
      * line drawing: ink when painted, the accent nearest [hue] when outlined.
      * Use it sparingly — a leaf, a flame, a coin, not a whole armchair.

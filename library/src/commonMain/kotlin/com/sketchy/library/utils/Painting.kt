@@ -383,6 +383,25 @@ internal fun DrawScope.brushStroke(path: Path, brush: Brush, width: Float = 2f) 
     drawPath(path = path, brush = brush, style = thin(width))
 }
 
+/**
+ * A soft duplicate of [path]'s outline, offset by ([dx], [dy]) and drawn *before* the shape itself
+ * — the outline-mode equivalent of a cast shadow, for scenes with nothing filled in to shade.
+ * Pass [color] as `colors.outlineShadow` so it only ever shows up outlined: colorful scenes already
+ * get real depth from [shade]/[contactShadow] and this collapses to a no-op there.
+ */
+internal fun DrawScope.inkShadow(
+    path: Path,
+    color: Color,
+    dx: Float = 3f,
+    dy: Float = 4f,
+    width: Float = 2.2f
+) {
+    if (color.isHidden) return
+    translate(left = d(dx), top = d(dy)) {
+        drawPath(path = path, color = color, style = bold(width))
+    }
+}
+
 /** A directional shadow raked away from the light across a flat surface. */
 internal fun DrawScope.castShadow(
     x: Float,

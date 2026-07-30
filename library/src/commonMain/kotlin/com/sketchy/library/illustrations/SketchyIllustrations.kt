@@ -44,8 +44,28 @@ import com.sketchy.library.utils.wave
  * built from the shading primitives in `utils/Painting.kt`.
  */
 
-/** Every sketch currently available in the library, grouped by [category]. */
-enum class Sketch(val displayName: String, val category: String) {
+/**
+ * Every sketch currently available in the library, grouped by [category].
+ *
+ * [style] is a second, independent tag defaulted to `"Classic"` for every scene that predates
+ * theming — a cross-cutting theme (e.g. Panda) sets [category] to the theme's name (so it groups
+ * and searches exactly like any other category) and [style] to the shared rendering style it was
+ * drawn in (e.g. "Cartoony"), so searching the *style* surfaces every theme that shares it. See
+ * the `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
+ */
+enum class Sketch(val displayName: String, val category: String, val style: String = "Classic") {
+    // ── Panda (Cartoony) · ten original daily-life moments ──────────────
+    PandaMorningBamboo("A Panda's Morning Bamboo", "Panda", "Cartoony"),
+    PandaParkWalk("A Panda's Park Walk", "Panda", "Cartoony"),
+    PandaNapTime("A Panda's Nap Time", "Panda", "Cartoony"),
+    PandaRainyDay("A Panda's Rainy Errand", "Panda", "Cartoony"),
+    PandaBathTime("A Panda's Bath Time", "Panda", "Cartoony"),
+    PandaReadingLantern("An Evening With a Good Book", "Panda", "Cartoony"),
+    PandaBaking("Baking Bamboo Cookies", "Panda", "Cartoony"),
+    PandaBikeRide("An Afternoon Bike Ride", "Panda", "Cartoony"),
+    PandaStargazing("Stargazing on the Blanket", "Panda", "Cartoony"),
+    PandaGarden("Tending the Garden", "Panda", "Cartoony"),
+
     // ── Featured · the elaborate, full-scene drawings ───────────────────
     MorningCoffee("A Slow Morning Coffee", "Featured"),
     HomeWorkspace("Your Workspace at Home", "Featured"),
@@ -143,6 +163,17 @@ fun SketchyIllustration(
 
 private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.PandaMorningBamboo -> drawPandaMorningBambooScene(t, colors)
+        Sketch.PandaParkWalk -> drawPandaParkWalkScene(t, colors)
+        Sketch.PandaNapTime -> drawPandaNapTimeScene(t, colors)
+        Sketch.PandaRainyDay -> drawPandaRainyDayScene(t, colors)
+        Sketch.PandaBathTime -> drawPandaBathTimeScene(t, colors)
+        Sketch.PandaReadingLantern -> drawPandaReadingLanternScene(t, colors)
+        Sketch.PandaBaking -> drawPandaBakingScene(t, colors)
+        Sketch.PandaBikeRide -> drawPandaBikeRideScene(t, colors)
+        Sketch.PandaStargazing -> drawPandaStargazingScene(t, colors)
+        Sketch.PandaGarden -> drawPandaGardenScene(t, colors)
+
         Sketch.MorningCoffee -> drawMorningCoffeeScene(t, colors)
         Sketch.HomeWorkspace -> drawHomeWorkspaceScene(t, colors)
         Sketch.GroceryRun -> drawGroceryRunScene(t, colors)

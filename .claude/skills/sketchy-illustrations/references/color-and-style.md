@@ -48,6 +48,7 @@ few things need a third behavior. Reach for these instead of hand-rolling the br
 | `lineOnly` | `ink` | `Color.Transparent` | The opposite case: an edge that exists *only* in the line drawing — the ridge of distant hills a painted scene renders as pure haze (no line), which would otherwise leave a gap in the outline version. |
 | `inkOf(hue)` | `accentFor(hue)` | `ink` | The outline of one small object allowed to keep color in the line drawing — a leaf, a flame, a coin. Sparingly: one object, never a whole armchair. |
 | `touch(hue, alpha)` | `accentFor(hue)` at `alpha` | `hue` | A small colored mark — sparkle, glint, highlighted bar. |
+| `outlineShadow` | `inkFaint` | `Color.Transparent` | The soft duplicate-outline "shadow" behind an outlined hero shape (rule 11 in `SKILL.md`) — pass it to `inkShadow(path, color)` in `Painting.kt`. Invisible once painted, since colorful mode already gets real shading from `shade`/`contactShadow`. |
 
 ### `accentFor(hue)` — mapping an arbitrary material color to one of the four accents
 

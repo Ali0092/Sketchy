@@ -33,10 +33,16 @@ import com.sketchy.library.illustrations.Sketch
 /** Shared building blocks used by the gallery and detail screens. */
 
 internal fun Sketch.matches(query: String) =
-    query.isBlank() || displayName.contains(query, ignoreCase = true) || category.contains(query, ignoreCase = true)
+    query.isBlank() ||
+        displayName.contains(query, ignoreCase = true) ||
+        category.contains(query, ignoreCase = true) ||
+        style.contains(query, ignoreCase = true)
 
 internal fun EmptyState.matches(query: String) =
-    query.isBlank() || defaultTitle.contains(query, ignoreCase = true) || category.contains(query, ignoreCase = true)
+    query.isBlank() ||
+        defaultTitle.contains(query, ignoreCase = true) ||
+        category.contains(query, ignoreCase = true) ||
+        style.contains(query, ignoreCase = true)
 
 @Composable
 internal fun CategoryHeader(category: String, count: Int, modifier: Modifier = Modifier) {

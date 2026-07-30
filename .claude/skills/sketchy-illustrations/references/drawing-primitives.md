@@ -88,6 +88,11 @@ places that convert. Never call `.dp.toPx()` directly in scene code.
   mug rims, pot lips, lamp shades, screen bezels.
 - `castShadow(x, y, w, h, skew, color)` — a directional parallelogram shadow raked away from the
   light across a flat surface.
+- `inkShadow(path, color, dx = 3f, dy = 4f, width = 2.2f)` — draws a faint duplicate of `path`'s
+  outline offset by `(dx, dy)`, *before* the shape itself. The outline-mode equivalent of a cast
+  shadow: call it with `colors.outlineShadow` (see `references/color-and-style.md`) on a hero shape
+  right before its normal `paint()` call — it's a no-op (`isHidden` short-circuit) once painted, since
+  colorful mode already gets real shading. New scenes only (rule 11 in `SKILL.md`).
 - `steam(x, y, t, offset = 0f, color, height = 46f)` — a rising, curling, fading wisp, phase-shifted
   a quarter turn so `t = 0` (the `animate = false` resting frame) shows a fully formed wisp instead of
   nothing. Copy this phase-shift trick for any other looping effect that must not freeze on "nothing

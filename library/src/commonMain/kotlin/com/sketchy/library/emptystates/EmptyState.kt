@@ -37,8 +37,121 @@ import com.sketchy.library.utils.wave
  * Every empty state currently available in the library, with sensible
  * default copy that [SketchyEmptyState] uses unless you override it, grouped
  * by [category].
+ *
+ * [style] is a second, independent tag defaulted to `"Classic"` for every scene that predates
+ * theming — a cross-cutting theme (e.g. Panda) sets [category] to the theme's name (so it groups
+ * and searches exactly like any other category) and [style] to the shared rendering style it was
+ * drawn in (e.g. "Cartoony"), so searching the *style* surfaces every theme that shares it. See
+ * the `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
  */
-enum class EmptyState(val defaultTitle: String, val defaultSubtitle: String, val category: String) {
+enum class EmptyState(
+    val defaultTitle: String,
+    val defaultSubtitle: String,
+    val category: String,
+    val style: String = "Classic",
+) {
+    // ── Panda (Cartoony) — a complete themed set, one per use case below ──
+    PandaNoInternet(
+        "No Signal, No Bamboo",
+        "Even pandas lose Wi-Fi sometimes. Try again in a bit.",
+        "Panda", "Cartoony"
+    ),
+    PandaServerError(
+        "Our Servers Tripped on a Root",
+        "Give them a moment to get back on their paws.",
+        "Panda", "Cartoony"
+    ),
+    PandaSyncFailed(
+        "Sync Didn't Take",
+        "That crank needs one more turn — try syncing again.",
+        "Panda", "Cartoony"
+    ),
+    PandaUnderMaintenance(
+        "Bamboo Under Repair",
+        "We're tightening a few bolts. Back shortly.",
+        "Panda", "Cartoony"
+    ),
+    PandaLocationNotFound(
+        "Lost the Trail",
+        "We couldn't find that place. Try another search.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoResults(
+        "Nothing Turned Up",
+        "Try adjusting your search or filters.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoData(
+        "Nothing to Chart Yet",
+        "There's nothing to display right now.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoComments(
+        "No Comments Yet",
+        "Be the first to leave a note.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoMessages(
+        "Quiet as a Bamboo Grove",
+        "Start a conversation to see it here.",
+        "Panda", "Cartoony"
+    ),
+    PandaPageNotFound(
+        "Wrong Trail",
+        "The page you're looking for doesn't exist.",
+        "Panda", "Cartoony"
+    ),
+    PandaEmptyCart(
+        "Cart's Still Empty",
+        "Looks like you haven't added anything yet.",
+        "Panda", "Cartoony"
+    ),
+    PandaEmptyWishlist(
+        "Wish Tag's Blank",
+        "Tap the star on items you wish for.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoFavorites(
+        "Nothing Hugged Yet",
+        "Tap the heart on items you love.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoBookmarks(
+        "Ribbon's Still Loose",
+        "Save items to find them here later.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoDownloads(
+        "Nothing's Landed Yet",
+        "Files you download will show up here.",
+        "Panda", "Cartoony"
+    ),
+    PandaEmptyInbox(
+        "Inbox Is Peaceful",
+        "New messages will show up here.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoNotifications(
+        "All Caught Up",
+        "Not a peep — you're all caught up.",
+        "Panda", "Cartoony"
+    ),
+    PandaEmptyCalendar(
+        "Wide Open Day",
+        "Your calendar is wide open.",
+        "Panda", "Cartoony"
+    ),
+    PandaNoPhotos(
+        "No Photos Yet",
+        "Photos you add will appear here.",
+        "Panda", "Cartoony"
+    ),
+    PandaAllDone(
+        "All Done!",
+        "You've finished everything on your list — well earned.",
+        "Panda", "Cartoony"
+    ),
+
     // ── Connectivity & errors ──────────────────────────────────────────
     NoInternet(
         "No Internet Connection",
@@ -234,6 +347,27 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.PandaNoInternet -> drawPandaNoInternet(t, colors)
+        EmptyState.PandaServerError -> drawPandaServerError(t, colors)
+        EmptyState.PandaSyncFailed -> drawPandaSyncFailed(t, colors)
+        EmptyState.PandaUnderMaintenance -> drawPandaUnderMaintenance(t, colors)
+        EmptyState.PandaLocationNotFound -> drawPandaLocationNotFound(t, colors)
+        EmptyState.PandaNoResults -> drawPandaNoResults(t, colors)
+        EmptyState.PandaNoData -> drawPandaNoData(t, colors)
+        EmptyState.PandaNoComments -> drawPandaNoComments(t, colors)
+        EmptyState.PandaNoMessages -> drawPandaNoMessages(t, colors)
+        EmptyState.PandaPageNotFound -> drawPandaPageNotFound(t, colors)
+        EmptyState.PandaEmptyCart -> drawPandaEmptyCart(t, colors)
+        EmptyState.PandaEmptyWishlist -> drawPandaEmptyWishlist(t, colors)
+        EmptyState.PandaNoFavorites -> drawPandaNoFavorites(t, colors)
+        EmptyState.PandaNoBookmarks -> drawPandaNoBookmarks(t, colors)
+        EmptyState.PandaNoDownloads -> drawPandaNoDownloads(t, colors)
+        EmptyState.PandaEmptyInbox -> drawPandaEmptyInbox(t, colors)
+        EmptyState.PandaNoNotifications -> drawPandaNoNotifications(t, colors)
+        EmptyState.PandaEmptyCalendar -> drawPandaEmptyCalendar(t, colors)
+        EmptyState.PandaNoPhotos -> drawPandaNoPhotos(t, colors)
+        EmptyState.PandaAllDone -> drawPandaAllDone(t, colors)
+
         EmptyState.NoInternet -> drawNoInternet(t, colors)
         EmptyState.ServerError -> drawServerError(t, colors)
         EmptyState.SyncFailed -> drawSyncFailed(t, colors)
