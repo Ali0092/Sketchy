@@ -68,6 +68,7 @@ class SketchyStyle internal constructor(
     val skinDark: Color get() = material(palette.skinDark)
     val hair: Color get() = material(palette.hair)
     val coffee: Color get() = material(palette.coffee)
+    val charcoal: Color get() = material(palette.charcoal)
 
     // ── Lines that change colour instead of disappearing ─────────────────
 

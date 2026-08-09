@@ -65,6 +65,8 @@ data class SketchyColors(
     val skinDark: Color = Color(0xFFCE9A70),
     val hair: Color = Color(0xFF3E2A22),
     val coffee: Color = Color(0xFF6B4229),
+    /** True near-black fur/ink-black material, not to be confused with the browner [hair]. */
+    val charcoal: Color = Color(0xFF23211E),
 ) {
     @Deprecated(
         "Renamed — the accents are now accent, accentGreen, accentBlue and accentRed.",

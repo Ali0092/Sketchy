@@ -51,15 +51,18 @@ These are what actually break (silently, and often only in one of the two render
 8. **Register the scene twice**: an enum entry (`Sketch` or `EmptyState`, with display copy and
    `category`) and a branch in the `when` dispatcher (`drawIllustration` in `SketchyIllustrations.kt`,
    or `drawEmptyState` in `EmptyState.kt`).
-9. **A theme is a `(category, style)` pair applied to a matched set across *both* catalogs.** E.g.
-   Panda/Cartoony: every scene in the theme sets `category = "Panda"` (reuses the existing
-   grouping/search machinery — a theme is just a category that happens to span both `Sketch` and
-   `EmptyState`) *and* `style = "Cartoony"` (a second, style-level tag — see rule 10 in
-   `references/theming.md` for exactly what it's for). A theme ships **at minimum 10 illustrations and
-   10 empty states** — uncapped, and ideally full parity with the existing `EmptyState` catalog (a
-   themed version of every use case) rather than a token handful. See `references/theming.md` before
-   starting a new theme — it also covers building a reusable character rig so a multi-scene theme stays
-   visually consistent instead of each scene freehanding the subject from scratch.
+9. **A theme is a `(category, style)` pair applied to a matched set across *both* catalogs.** E.g. a
+   Fox/Cartoony theme would set `category = "Fox"` on every scene (reuses the existing grouping/search
+   machinery — a theme is just a category that happens to span both `Sketch` and `EmptyState`) *and*
+   `style = "Cartoony"` (a second, style-level tag — see rule 10 in `references/theming.md` for exactly
+   what it's for). A theme ships **at minimum 10 illustrations and 10 empty states** — uncapped, and
+   ideally full parity with the existing `EmptyState` catalog (a themed version of every use case)
+   rather than a token handful. See `references/theming.md` before starting a new theme — it also covers
+   building a reusable character rig so a multi-scene theme stays visually consistent instead of each
+   scene freehanding the subject from scratch. A plain new *category* that doesn't introduce a new
+   `style` (e.g. `"Network"`, alongside `"Connectivity & Errors"`, `"Content & Search"`) is not a theme
+   under this rule — it's exempt from the 10-illustrations/10-empty-states parity bar, though it can
+   still carry its own content restriction (see "Empty-state categories" below).
 10. **Newest work goes on top.** The gallery's grouping (`groupBy { it.category }` in
     `SketchyGalleryScreen.kt` / `EmptyStateGalleryScreen.kt`) preserves first-occurrence order of the
     source list — which is just enum declaration order; there's no sort step. So: declare a brand-new
@@ -72,6 +75,31 @@ These are what actually break (silently, and often only in one of the two render
     shape itself — invisible once painted (colorful mode already gets real shading), a bit of hand-inked
     depth outlined. Use it on new scenes' hero shapes; the existing 40 scenes aren't being retrofitted.
 
+## Empty-state categories
+
+`EmptyState` (`emptystates/EmptyState.kt`) groups its ~30 scenes into a handful of `category` blocks,
+each its own file under `emptystates/EmptyStates<Category>.kt`. Most categories are open — any prop
+that fits the use case — but a category can also carry its own **visual-vocabulary restriction**,
+declared here and enforced by every scene in it:
+
+- **`"Network"`** (`EmptyStatesNetwork.kt`) — network hardware only: routers, servers/racks, switches,
+  modems, phones, laptops, cables, a satellite dish. **No abstract icon/sign glyphs** — no wifi-bar
+  arcs-as-the-whole-motif, no padlocks, no warning triangles, no magnifying glasses, no "?" bubbles. A
+  device's own hardware features carry the status instead: a blinking/dim LED, an unplugged or frayed
+  cable, an empty drive bay or port, a cracked screen, a signal that fades to nothing. Exactly 10 scenes,
+  capped (not a theme under rule 9 — `style` stays `"Classic"`): `NetworkNoInternet` (router, weak/fading
+  signal search, unplugged cable), `NetworkPageNotFound` (404 — a cable hunting for a wall jack it never
+  reaches), `NetworkBadGateway` (502 — two gateway boxes, the link between them snapped and sparking),
+  `NetworkServerError` (400+/500+ generic — a server tower overheating, frayed power cord), `NetworkUnsecureWifi`
+  (a cable stripped bare in the middle, exposed copper strands), `NetworkNoData` (a storage box, drive bay
+  slid open and empty), `NetworkNoList` (a switch with every port empty), `NetworkNoMessages` (two phones,
+  dark screens, an idle dashed link), `NetworkNoComments` (a silent intercom speaker, LED barely glowing),
+  `NetworkNoResults` (a satellite dish sweeping, finding nothing). When adding an 11th Network scene,
+  don't — this category is capped at 10 by design; start a new category instead.
+- **`"Connectivity & Errors"` / `"Content & Search"` / `"Saved & Commerce"` / `"Everyday & Productivity"`**
+  — the original catalog, no vocabulary restriction; pick whatever prop best sells the use case
+  (a signpost for 404, a magnifying glass for no-results, etc.).
+
 ## Reference files (load as needed)
 
 | File | Load it when you need... |
@@ -80,7 +108,7 @@ These are what actually break (silently, and often only in one of the two render
 | `references/drawing-primitives.md` | The catalog of shared drawing functions in `utils/Extensions.kt` and `utils/Painting.kt` — path builders, fill/paint/limb helpers, shading, shadows, `inkShadow` — with when to use which. |
 | `references/animation.md` | The timing model: the looping phase `t`, `wave`/`pulse`/`loop`/`smooth01`/`hash01`, entrance motion, and patterns for per-element desync so nothing looks metronomic. |
 | `references/composition.md` | Canvas layout conventions, depth-by-outline-weight, shadow/ground-line grounding, scene anatomy (background → midground → foreground), and a pre-flight checklist for a new scene. |
-| `references/theming.md` | How to stand up a new cross-cutting theme (like Panda/Cartoony): the `category`+`style` tagging contract, minimum content bar, building a shared character rig, and the worked Panda/Cartoony brief. |
+| `references/theming.md` | How to stand up a new cross-cutting theme (a character + style spanning both catalogs, e.g. a Fox/Cartoony theme): the `category`+`style` tagging contract, minimum content bar, and building a shared character rig. |
 
 ## Workflow: adding a new scene
 
