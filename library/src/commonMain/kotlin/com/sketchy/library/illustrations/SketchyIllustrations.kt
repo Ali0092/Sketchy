@@ -55,6 +55,10 @@ import com.sketchy.library.utils.wave
  * `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
  */
 enum class Sketch(val displayName: String, val category: String, val style: String = "Classic") {
+    // ── Signboards — road signage as the scene's setting, not just its subject ──
+    RoadWorkAhead("Road Work Ahead", "Signboards"),
+    Crossroads("Every Path Leads Somewhere", "Signboards"),
+
     // ── Featured · the elaborate, full-scene drawings ───────────────────
     MorningCoffee("A Slow Morning Coffee", "Featured"),
     HomeWorkspace("Your Workspace at Home", "Featured"),
@@ -155,6 +159,9 @@ fun SketchyIllustration(
 
 private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.RoadWorkAhead -> drawRoadWorkScene(t, colors)
+        Sketch.Crossroads -> drawCrossroadsScene(t, colors)
+
         Sketch.MorningCoffee -> drawMorningCoffeeScene(t, colors)
         Sketch.HomeWorkspace -> drawHomeWorkspaceScene(t, colors)
         Sketch.GroceryRun -> drawGroceryRunScene(t, colors)

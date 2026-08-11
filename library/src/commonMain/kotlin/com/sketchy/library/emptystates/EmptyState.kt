@@ -52,6 +52,36 @@ enum class EmptyState(
     val style: String = "Classic",
 ) {
     // ── Signboards — traffic & road signage: signals, warning/stop signs, cones, boards ──
+    SignboardPageNotFound(
+        "Page Not Found",
+        "The page you're looking for doesn't exist.",
+        "Signboards"
+    ),
+    SignboardNetworkError(
+        "Network Error",
+        "We couldn't reach the server. Check your connection.",
+        "Signboards"
+    ),
+    SignboardNoData(
+        "No Data Available",
+        "There's nothing to show here yet.",
+        "Signboards"
+    ),
+    SignboardUnauthorized(
+        "Sign In Required",
+        "You need to be signed in to view this.",
+        "Signboards"
+    ),
+    SignboardForbidden(
+        "Access Denied",
+        "You don't have permission to view this page.",
+        "Signboards"
+    ),
+    SignboardMaintenance(
+        "Under Maintenance",
+        "We're working on it — please check back soon.",
+        "Signboards"
+    ),
     SignboardAllClear(
         "All Clear",
         "Nothing new to signal right now.",
@@ -328,6 +358,12 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.SignboardPageNotFound -> drawSignboardPageNotFound(t, colors)
+        EmptyState.SignboardNetworkError -> drawSignboardNetworkError(t, colors)
+        EmptyState.SignboardNoData -> drawSignboardNoData(t, colors)
+        EmptyState.SignboardUnauthorized -> drawSignboardUnauthorized(t, colors)
+        EmptyState.SignboardForbidden -> drawSignboardForbidden(t, colors)
+        EmptyState.SignboardMaintenance -> drawSignboardMaintenance(t, colors)
         EmptyState.SignboardAllClear -> drawSignboardAllClear(t, colors)
         EmptyState.SignboardNoWarnings -> drawSignboardNoWarnings(t, colors)
         EmptyState.SignboardComingSoon -> drawSignboardComingSoon(t, colors)

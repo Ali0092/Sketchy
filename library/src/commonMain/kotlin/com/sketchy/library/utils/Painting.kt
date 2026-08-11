@@ -189,6 +189,34 @@ internal fun DrawScope.ellipsePath(cx: Float, cy: Float, rx: Float, ry: Float): 
         close()
     }
 
+/**
+ * A straight-edged polygon through design-space [points], each corner clipped by a short curve of
+ * radius [r] — road-sign shapes (a stop-sign octagon, a warning triangle, a work-zone diamond)
+ * hand-round their corners this way instead of meeting at a sharp point.
+ */
+internal fun DrawScope.roundedPolygonPath(points: List<Pair<Float, Float>>, r: Float): Path {
+    val n = points.size
+    fun corner(i: Int) = points[(i + n) % n]
+    val path = Path()
+    for (i in 0 until n) {
+        val (cx, cy) = corner(i)
+        val (px, py) = corner(i - 1)
+        val (nx, ny) = corner(i + 1)
+        val toPrev = kotlin.math.hypot((px - cx).toDouble(), (py - cy).toDouble()).toFloat()
+        val toNext = kotlin.math.hypot((nx - cx).toDouble(), (ny - cy).toDouble()).toFloat()
+        val f1 = (r / toPrev).coerceIn(0f, 0.5f)
+        val f2 = (r / toNext).coerceIn(0f, 0.5f)
+        val startX = cx + (px - cx) * f1
+        val startY = cy + (py - cy) * f1
+        val endX = cx + (nx - cx) * f2
+        val endY = cy + (ny - cy) * f2
+        if (i == 0) path.moveTo(d(startX), d(startY)) else path.lineTo(d(startX), d(startY))
+        path.quadraticTo(d(cx), d(cy), d(endX), d(endY))
+    }
+    path.close()
+    return path
+}
+
 // ── Fills & outlines ─────────────────────────────────────────────────────────
 
 internal fun DrawScope.fill(path: Path, color: Color) {
