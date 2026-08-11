@@ -465,6 +465,46 @@ internal fun DrawScope.deviceLabel(
     )
 }
 
+/**
+ * Bold lettering painted onto a free-standing sign or board's own face — a stop sign, a
+ * noticeboard, a caution triangle — as opposed to [deviceLabel], which is for a device's own
+ * screen/LED/engraved plate. Bold and sans-serif so it reads as hand-painted signage rather than
+ * a gadget's status readout; wraps to [maxWidth] design-space units when given.
+ */
+internal fun DrawScope.signLabel(
+    measurer: TextMeasurer?,
+    text: String,
+    cx: Float,
+    cy: Float,
+    color: Color,
+    fontSize: Float = 16f,
+    maxWidth: Float? = null,
+    letterSpacing: Float = 0.5f
+) {
+    if (measurer == null || color.isHidden) return
+    val style = TextStyle(
+        color = color,
+        fontSize = fontSize.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.SansSerif,
+        letterSpacing = letterSpacing.sp,
+        textAlign = TextAlign.Center
+    )
+    val result = measurer.measure(
+        text,
+        style,
+        constraints = if (maxWidth != null) {
+            androidx.compose.ui.unit.Constraints(maxWidth = d(maxWidth).toInt())
+        } else {
+            androidx.compose.ui.unit.Constraints()
+        }
+    )
+    drawText(
+        result,
+        topLeft = Offset(d(cx) - result.size.width / 2f, d(cy) - result.size.height / 2f)
+    )
+}
+
 /** A directional shadow raked away from the light across a flat surface. */
 internal fun DrawScope.castShadow(
     x: Float,

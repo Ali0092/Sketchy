@@ -109,7 +109,7 @@ internal fun DrawScope.drawSignboardNoWarnings(t: Float, colors: SketchyStyle) {
         val inner = listOf(cx to 82f, cx + 50f to postTopY - 14f, cx - 50f to postTopY - 14f)
         stroke(roundedPolygonPath(inner, r = 10f), colors.line(colors.paper).a(0.6f), 2.6f)
 
-        deviceLabel(colors.textMeasurer, "CAUTION", cx, 172f, colors.ink, fontSize = 13f)
+        signLabel(colors.textMeasurer, "CAUTION", cx, 172f, colors.ink, fontSize = 14f, maxWidth = 86f)
     }
 
     twinkle(68f, 110f, 3f, t, 0.3f, colors.inkSoft)
@@ -218,9 +218,10 @@ internal fun DrawScope.drawSignboardNoPosts(t: Float, colors: SketchyStyle) {
         val py = boardY + 22f + fy * (boardH - 44f)
         sketchCircle(pt(px, py), 1.6f, colors.faint(colors.charcoal), filled = true)
     }
+    signLabel(colors.textMeasurer, "NOTHING POSTED YET", cx, boardY + boardH * 0.4f, colors.ink, fontSize = 12f, maxWidth = boardW - 48f)
     // one lone pin, waiting for the first post
     val pinAlpha = 0.7f + 0.3f * pulse(t, 0f)
-    paintCircle(pt(cx, boardY + boardH / 2f), 3.4f, colors.touch(colors.accentRed, pinAlpha), colors.ink, 1.6f)
+    paintCircle(pt(cx, boardY + boardH * 0.74f), 3.4f, colors.touch(colors.accentRed, pinAlpha), colors.ink, 1.6f)
 
     twinkle(64f, boardY - 8f, 3f, t, 0.3f, colors.inkSoft)
     twinkle(256f, boardY + 30f, 3f, t, 0.7f, colors.inkSoft)
@@ -255,7 +256,7 @@ internal fun DrawScope.drawSignboardEndOfRoad(t: Float, colors: SketchyStyle) {
     val innerPts = outerPts.map { (x, y) -> (cx + (x - cx) * 0.86f) to (cy + (y - cy) * 0.86f) }
     stroke(roundedPolygonPath(innerPts, r = 8f), colors.line(colors.paper).a(0.7f), 3.2f)
 
-    deviceLabel(colors.textMeasurer, "STOP", cx, cy, colors.line(colors.paper), fontSize = 24f)
+    signLabel(colors.textMeasurer, "STOP", cx, cy, colors.line(colors.paper), fontSize = 27f, letterSpacing = 1.5f)
 
     // low barrier gate across the dead end, diagonal hazard stripes clipped to its face
     val barY = 248f
