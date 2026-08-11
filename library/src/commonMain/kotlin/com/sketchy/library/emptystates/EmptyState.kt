@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,33 @@ enum class EmptyState(
     val category: String,
     val style: String = "Classic",
 ) {
+    // ── Signboards — traffic & road signage: signals, warning/stop signs, cones, boards ──
+    SignboardAllClear(
+        "All Clear",
+        "Nothing new to signal right now.",
+        "Signboards"
+    ),
+    SignboardNoWarnings(
+        "No Warnings",
+        "Nothing here needs your attention.",
+        "Signboards"
+    ),
+    SignboardComingSoon(
+        "Coming Soon",
+        "This feature is on its way — check back soon.",
+        "Signboards"
+    ),
+    SignboardNoPosts(
+        "Nothing Posted Yet",
+        "New posts will show up on this board.",
+        "Signboards"
+    ),
+    SignboardEndOfRoad(
+        "End of the Road",
+        "You've reached the end — nothing more to load.",
+        "Signboards"
+    ),
+
     // ── Network — network hardware only: routers, servers, cables, no icons ──
     NetworkNoInternet(
         "No Internet Connection",
@@ -249,7 +277,10 @@ fun SketchyEmptyState(
     ),
     spacing: Dp = 16.dp,
 ) {
-    val style = remember(colors, colorful) { SketchyStyle(colors, outlined = !colorful) }
+    val textMeasurer = rememberTextMeasurer()
+    val style = remember(colors, colorful, textMeasurer) {
+        SketchyStyle(colors, outlined = !colorful, textMeasurer = textMeasurer)
+    }
     val t: Float = if (animate) {
         val transition = rememberInfiniteTransition(label = "sketchy_empty_state")
         val phase by transition.animateFloat(
@@ -297,6 +328,12 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.SignboardAllClear -> drawSignboardAllClear(t, colors)
+        EmptyState.SignboardNoWarnings -> drawSignboardNoWarnings(t, colors)
+        EmptyState.SignboardComingSoon -> drawSignboardComingSoon(t, colors)
+        EmptyState.SignboardNoPosts -> drawSignboardNoPosts(t, colors)
+        EmptyState.SignboardEndOfRoad -> drawSignboardEndOfRoad(t, colors)
+
         EmptyState.NetworkNoInternet -> drawNetworkNoInternet(t, colors)
         EmptyState.NetworkPageNotFound -> drawNetworkPageNotFound(t, colors)
         EmptyState.NetworkBadGateway -> drawNetworkBadGateway(t, colors)

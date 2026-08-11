@@ -12,6 +12,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 
 /**
  * Painting primitives for the fully colored illustrations: gradient brushes,
@@ -400,6 +407,62 @@ internal fun DrawScope.inkShadow(
     translate(left = d(dx), top = d(dy)) {
         drawPath(path = path, color = color, style = bold(width))
     }
+}
+
+/**
+ * A light corner-weighted grey wash inside [path]'s own silhouette — outline mode's stand-in for
+ * real material shading, more hand-inked weight than [inkShadow]'s thin duplicate stroke without
+ * turning the shape into a fully painted fill. A radial gradient centred on the shape clamps to
+ * [color] past [halfExtent], so tuning [halfExtent] to sit between the shape's flat-edge distance
+ * and its corner distance makes the corners read heavier than the edges, with no per-corner
+ * geometry. Pass [color] as `colors.outlineShadow` (lightened via [a]) so it only ever shows up
+ * outlined: colorful scenes already get real shading from [shade]/[contactShadow].
+ */
+internal fun DrawScope.cornerShade(
+    path: Path,
+    cx: Float,
+    cy: Float,
+    halfExtent: Float,
+    color: Color
+) {
+    if (color.isHidden) return
+    shade(
+        path,
+        Brush.radialGradient(
+            colors = listOf(color.a(0f), color.a(color.alpha * 0.5f), color),
+            center = pt(cx, cy),
+            radius = d(halfExtent)
+        )
+    )
+}
+
+/**
+ * Text baked into a device's own screen, LED strip, or engraved plate — never a free-standing
+ * sign. A no-op if [measurer] is null (the caller composable didn't supply one) or [color] is
+ * hidden, so it's always safe to call unconditionally. Small and plain by design: a status
+ * readout, not a headline.
+ */
+internal fun DrawScope.deviceLabel(
+    measurer: TextMeasurer?,
+    text: String,
+    cx: Float,
+    cy: Float,
+    color: Color,
+    fontSize: Float = 11f
+) {
+    if (measurer == null || color.isHidden) return
+    val style = TextStyle(
+        color = color,
+        fontSize = fontSize.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = FontFamily.Monospace,
+        textAlign = TextAlign.Center
+    )
+    val result = measurer.measure(text, style)
+    drawText(
+        result,
+        topLeft = Offset(d(cx) - result.size.width / 2f, d(cy) - result.size.height / 2f)
+    )
 }
 
 /** A directional shadow raked away from the light across a flat surface. */

@@ -1,6 +1,7 @@
 package com.sketchy.library
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextMeasurer
 
 /**
  * The palette as the drawing code sees it, in one of the two ways a scene can
@@ -30,6 +31,12 @@ class SketchyStyle internal constructor(
     private val palette: SketchyColors,
     /** True when the scene is drawn as pure line-art with nothing filled in. */
     val outlined: Boolean,
+    /**
+     * Lets a scene draw text baked into a device's own screen/LED-strip/engraved plate via
+     * [com.sketchy.library.utils.deviceLabel] — never a free-standing sign. Null (and therefore a
+     * no-op) unless the caller composable supplied one via `rememberTextMeasurer()`.
+     */
+    val textMeasurer: TextMeasurer? = null,
 ) {
     /** Everything a painted scene fills with collapses to this when outlined. */
     private fun material(color: Color) = if (outlined) Color.Transparent else color

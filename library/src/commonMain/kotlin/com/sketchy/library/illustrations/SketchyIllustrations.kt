@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import com.sketchy.library.SketchyColors
 import com.sketchy.library.SketchyStyle
@@ -111,7 +112,10 @@ fun SketchyIllustration(
     colorful: Boolean = false,
     colors: SketchyColors = SketchyColors(),
 ) {
-    val style = remember(colors, colorful) { SketchyStyle(colors, outlined = !colorful) }
+    val textMeasurer = rememberTextMeasurer()
+    val style = remember(colors, colorful, textMeasurer) {
+        SketchyStyle(colors, outlined = !colorful, textMeasurer = textMeasurer)
+    }
 
     // Looping phase driving all ambient motion inside the scenes.
     val t: Float = if (animate) {
