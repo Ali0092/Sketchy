@@ -60,6 +60,7 @@ enum class Sketch(val displayName: String, val category: String, val style: Stri
     Crossroads("Every Path Leads Somewhere", "Signboards"),
 
     // ── Featured · the elaborate, full-scene drawings ───────────────────
+    WarmWelcome("A Warm Welcome", "Featured"),
     MorningCoffee("A Slow Morning Coffee", "Featured"),
     HomeWorkspace("Your Workspace at Home", "Featured"),
     GroceryRun("The Weekly Grocery Run", "Featured"),
@@ -162,6 +163,7 @@ private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: Sketchy
         Sketch.RoadWorkAhead -> drawRoadWorkScene(t, colors)
         Sketch.Crossroads -> drawCrossroadsScene(t, colors)
 
+        Sketch.WarmWelcome -> drawWarmWelcomeScene(t, colors)
         Sketch.MorningCoffee -> drawMorningCoffeeScene(t, colors)
         Sketch.HomeWorkspace -> drawHomeWorkspaceScene(t, colors)
         Sketch.GroceryRun -> drawGroceryRunScene(t, colors)
