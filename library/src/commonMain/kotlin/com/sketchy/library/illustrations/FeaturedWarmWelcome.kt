@@ -29,6 +29,7 @@ internal fun DrawScope.drawWarmWelcomeScene(t: Float, colors: SketchyStyle) {
             cubicTo(d(194.3f), d(152.7f), d(195.7f), d(149.9f), d(197.8f), d(149.9f))
             close()
         }
+        inkShadow(rightArm, colors.outlineShadow)
         paint(rightArm, colors.skin, colors.ink, 2.2f)
         val rightHand = Path().apply {
             moveTo(d(197.1f), d(197.5f))
@@ -70,6 +71,7 @@ internal fun DrawScope.drawWarmWelcomeScene(t: Float, colors: SketchyStyle) {
             cubicTo(d(125.7f), d(152.7f), d(124.3f), d(149.9f), d(122.2f), d(149.9f))
             close()
         }
+        inkShadow(leftArm, colors.outlineShadow)
         paint(leftArm, colors.skin, colors.ink, 2.2f)
         val leftHand = Path().apply {
             moveTo(d(122.9f), d(197.5f))
@@ -108,6 +110,7 @@ internal fun DrawScope.drawWarmWelcomeScene(t: Float, colors: SketchyStyle) {
             close()
         }
         inkShadow(torso, colors.outlineShadow)
+        cornerShade(torso, 160f, 184f, 48f, colors.outlineShadow.a(colors.outlineShadow.alpha * 0.6f))
         paint(torso, colors.terracotta, colors.ink, 2.4f)
         val torsoShade = Path().apply {
             moveTo(d(170.5f), d(144.3f))
@@ -151,6 +154,7 @@ internal fun DrawScope.drawWarmWelcomeScene(t: Float, colors: SketchyStyle) {
             cubicTo(d(129.2f), d(298.3f), d(124.3f), d(294.8f), d(125.0f), d(288.5f))
             close()
         }
+        inkShadow(trousers, colors.outlineShadow)
         paint(trousers, colors.fabric, colors.ink, 2.4f)
         val trousersShade = Path().apply {
             moveTo(d(171.9f), d(247.9f))
@@ -230,10 +234,13 @@ internal fun DrawScope.drawWarmWelcomeScene(t: Float, colors: SketchyStyle) {
             cubicTo(d(132.0f), d(104.4f), d(126.4f), d(113.5f), d(123.6f), d(121.9f))
             close()
         }
+        inkShadow(hair, colors.outlineShadow)
         paint(hair, colors.hair, colors.ink, 2.2f)
 
         // ── Head ─────────────────────────────────────────────────────────
-        paint(ellipsePath(160f, 110.7f, 35f, 39.2f), colors.skin, colors.ink, 2.4f)
+        val head = ellipsePath(160f, 110.7f, 35f, 39.2f)
+        inkShadow(head, colors.outlineShadow)
+        paint(head, colors.skin, colors.ink, 2.4f)
 
         // ── Face ─────────────────────────────────────────────────────────
         val eyebrowL = Path().apply {
