@@ -53,7 +53,7 @@ enum class EmptyState(
 ) {
     // ── Lined Man — a minimal single-outline standing figure, same body every time,
     //    only the eyes and mouth change to carry the mood ──
-    LinedMan(
+    LinedManAllCaughtUp(
         "All Caught Up",
         "Nothing new here right now — check back later.",
         "Lined Man"
@@ -416,7 +416,7 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
-        EmptyState.LinedMan -> drawLinedManAllCaughtUp(t, colors)
+        EmptyState.LinedManAllCaughtUp -> drawLinedManAllCaughtUp(t, colors)
         EmptyState.LinedManSomethingWrong -> drawLinedManSomethingWrong(t, colors)
         EmptyState.LinedManLoading -> drawLinedManLoading(t, colors)
         EmptyState.LinedManNoConnection -> drawLinedManNoConnection(t, colors)
