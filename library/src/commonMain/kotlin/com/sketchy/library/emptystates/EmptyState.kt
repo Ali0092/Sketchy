@@ -51,6 +51,64 @@ enum class EmptyState(
     val category: String,
     val style: String = "Classic",
 ) {
+    // ── Lined Man — a minimal single-outline standing figure, same body every time,
+    //    only the eyes and mouth change to carry the mood ──
+    LinedMan(
+        "All Caught Up",
+        "Nothing new here right now — check back later.",
+        "Lined Man"
+    ),
+    LinedManSomethingWrong(
+        "Something Went Wrong",
+        "An unexpected error occurred. Please try again.",
+        "Lined Man"
+    ),
+    LinedManLoading(
+        "Loading",
+        "Hang tight, this won't take long.",
+        "Lined Man"
+    ),
+    LinedManNoConnection(
+        "No Connection",
+        "Check your internet connection and try again.",
+        "Lined Man"
+    ),
+    LinedManAccessDenied(
+        "Access Denied",
+        "You don't have permission to view this.",
+        "Lined Man"
+    ),
+    LinedManAllDone(
+        "All Done",
+        "You've finished everything on your list.",
+        "Lined Man"
+    ),
+    LinedManNoResults(
+        "No Results Found",
+        "Try adjusting your search or filters.",
+        "Lined Man"
+    ),
+    LinedManEmptyInbox(
+        "Your Inbox is Empty",
+        "New messages will show up here.",
+        "Lined Man"
+    ),
+    LinedManWelcome(
+        "Welcome!",
+        "Let's get you started.",
+        "Lined Man"
+    ),
+    LinedManThinking(
+        "Just a Moment",
+        "We're working out the details.",
+        "Lined Man"
+    ),
+    LinedManSleepy(
+        "Taking a Break",
+        "Nothing's happening right now — check back soon.",
+        "Lined Man"
+    ),
+
     // ── Signboards — traffic & road signage: signals, warning/stop signs, cones, boards ──
     SignboardPageNotFound(
         "Page Not Found",
@@ -358,6 +416,18 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.LinedMan -> drawLinedManAllCaughtUp(t, colors)
+        EmptyState.LinedManSomethingWrong -> drawLinedManSomethingWrong(t, colors)
+        EmptyState.LinedManLoading -> drawLinedManLoading(t, colors)
+        EmptyState.LinedManNoConnection -> drawLinedManNoConnection(t, colors)
+        EmptyState.LinedManAccessDenied -> drawLinedManAccessDenied(t, colors)
+        EmptyState.LinedManAllDone -> drawLinedManAllDone(t, colors)
+        EmptyState.LinedManNoResults -> drawLinedManNoResults(t, colors)
+        EmptyState.LinedManEmptyInbox -> drawLinedManEmptyInbox(t, colors)
+        EmptyState.LinedManWelcome -> drawLinedManWelcome(t, colors)
+        EmptyState.LinedManThinking -> drawLinedManThinking(t, colors)
+        EmptyState.LinedManSleepy -> drawLinedManSleepy(t, colors)
+
         EmptyState.SignboardPageNotFound -> drawSignboardPageNotFound(t, colors)
         EmptyState.SignboardNetworkError -> drawSignboardNetworkError(t, colors)
         EmptyState.SignboardNoData -> drawSignboardNoData(t, colors)
