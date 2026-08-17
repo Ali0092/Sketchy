@@ -1,6 +1,7 @@
 package com.sketchy.library
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextMeasurer
 
 /**
  * The palette as the drawing code sees it, in one of the two ways a scene can
@@ -30,6 +31,12 @@ class SketchyStyle internal constructor(
     private val palette: SketchyColors,
     /** True when the scene is drawn as pure line-art with nothing filled in. */
     val outlined: Boolean,
+    /**
+     * Lets a scene draw text baked into a device's own screen/LED-strip/engraved plate via
+     * [com.sketchy.library.utils.deviceLabel] — never a free-standing sign. Null (and therefore a
+     * no-op) unless the caller composable supplied one via `rememberTextMeasurer()`.
+     */
+    val textMeasurer: TextMeasurer? = null,
 ) {
     /** Everything a painted scene fills with collapses to this when outlined. */
     private fun material(color: Color) = if (outlined) Color.Transparent else color
@@ -68,6 +75,7 @@ class SketchyStyle internal constructor(
     val skinDark: Color get() = material(palette.skinDark)
     val hair: Color get() = material(palette.hair)
     val coffee: Color get() = material(palette.coffee)
+    val charcoal: Color get() = material(palette.charcoal)
 
     // ── Lines that change colour instead of disappearing ─────────────────
 
@@ -91,6 +99,14 @@ class SketchyStyle internal constructor(
      * a hole in the outline.
      */
     val lineOnly: Color get() = if (outlined) ink else Color.Transparent
+
+    /**
+     * The soft duplicate-outline "shadow" a hero shape can draw behind itself in line-art mode —
+     * `inkFaint` outlined, nothing at all painted. Painted scenes already get real depth from
+     * [com.sketchy.library.utils.shade]/[com.sketchy.library.utils.contactShadow], so this stays a
+     * no-op there. Pass it to [com.sketchy.library.utils.inkShadow].
+     */
+    val outlineShadow: Color get() = if (outlined) inkFaint else Color.Transparent
 
     /**
      * The outline of a small object that is allowed to keep its colour in a

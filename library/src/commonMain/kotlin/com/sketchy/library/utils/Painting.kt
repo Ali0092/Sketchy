@@ -12,6 +12,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 
 /**
  * Painting primitives for the fully colored illustrations: gradient brushes,
@@ -181,6 +188,34 @@ internal fun DrawScope.ellipsePath(cx: Float, cy: Float, rx: Float, ry: Float): 
         )
         close()
     }
+
+/**
+ * A straight-edged polygon through design-space [points], each corner clipped by a short curve of
+ * radius [r] — road-sign shapes (a stop-sign octagon, a warning triangle, a work-zone diamond)
+ * hand-round their corners this way instead of meeting at a sharp point.
+ */
+internal fun DrawScope.roundedPolygonPath(points: List<Pair<Float, Float>>, r: Float): Path {
+    val n = points.size
+    fun corner(i: Int) = points[(i + n) % n]
+    val path = Path()
+    for (i in 0 until n) {
+        val (cx, cy) = corner(i)
+        val (px, py) = corner(i - 1)
+        val (nx, ny) = corner(i + 1)
+        val toPrev = kotlin.math.hypot((px - cx).toDouble(), (py - cy).toDouble()).toFloat()
+        val toNext = kotlin.math.hypot((nx - cx).toDouble(), (ny - cy).toDouble()).toFloat()
+        val f1 = (r / toPrev).coerceIn(0f, 0.5f)
+        val f2 = (r / toNext).coerceIn(0f, 0.5f)
+        val startX = cx + (px - cx) * f1
+        val startY = cy + (py - cy) * f1
+        val endX = cx + (nx - cx) * f2
+        val endY = cy + (ny - cy) * f2
+        if (i == 0) path.moveTo(d(startX), d(startY)) else path.lineTo(d(startX), d(startY))
+        path.quadraticTo(d(cx), d(cy), d(endX), d(endY))
+    }
+    path.close()
+    return path
+}
 
 // ── Fills & outlines ─────────────────────────────────────────────────────────
 
@@ -381,6 +416,121 @@ internal fun DrawScope.innerRim(
 /** Strokes a path with a brush — for anything that should taper away or fade out. */
 internal fun DrawScope.brushStroke(path: Path, brush: Brush, width: Float = 2f) {
     drawPath(path = path, brush = brush, style = thin(width))
+}
+
+/**
+ * A soft duplicate of [path]'s outline, offset by ([dx], [dy]) and drawn *before* the shape itself
+ * — the outline-mode equivalent of a cast shadow, for scenes with nothing filled in to shade.
+ * Pass [color] as `colors.outlineShadow` so it only ever shows up outlined: colorful scenes already
+ * get real depth from [shade]/[contactShadow] and this collapses to a no-op there.
+ */
+internal fun DrawScope.inkShadow(
+    path: Path,
+    color: Color,
+    dx: Float = 3f,
+    dy: Float = 4f,
+    width: Float = 2.2f
+) {
+    if (color.isHidden) return
+    translate(left = d(dx), top = d(dy)) {
+        drawPath(path = path, color = color, style = bold(width))
+    }
+}
+
+/**
+ * A light corner-weighted grey wash inside [path]'s own silhouette — outline mode's stand-in for
+ * real material shading, more hand-inked weight than [inkShadow]'s thin duplicate stroke without
+ * turning the shape into a fully painted fill. A radial gradient centred on the shape clamps to
+ * [color] past [halfExtent], so tuning [halfExtent] to sit between the shape's flat-edge distance
+ * and its corner distance makes the corners read heavier than the edges, with no per-corner
+ * geometry. Pass [color] as `colors.outlineShadow` (lightened via [a]) so it only ever shows up
+ * outlined: colorful scenes already get real shading from [shade]/[contactShadow].
+ */
+internal fun DrawScope.cornerShade(
+    path: Path,
+    cx: Float,
+    cy: Float,
+    halfExtent: Float,
+    color: Color
+) {
+    if (color.isHidden) return
+    shade(
+        path,
+        Brush.radialGradient(
+            colors = listOf(color.a(0f), color.a(color.alpha * 0.5f), color),
+            center = pt(cx, cy),
+            radius = d(halfExtent)
+        )
+    )
+}
+
+/**
+ * Text baked into a device's own screen, LED strip, or engraved plate — never a free-standing
+ * sign. A no-op if [measurer] is null (the caller composable didn't supply one) or [color] is
+ * hidden, so it's always safe to call unconditionally. Small and plain by design: a status
+ * readout, not a headline.
+ */
+internal fun DrawScope.deviceLabel(
+    measurer: TextMeasurer?,
+    text: String,
+    cx: Float,
+    cy: Float,
+    color: Color,
+    fontSize: Float = 11f
+) {
+    if (measurer == null || color.isHidden) return
+    val style = TextStyle(
+        color = color,
+        fontSize = fontSize.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = FontFamily.Monospace,
+        textAlign = TextAlign.Center
+    )
+    val result = measurer.measure(text, style)
+    drawText(
+        result,
+        topLeft = Offset(d(cx) - result.size.width / 2f, d(cy) - result.size.height / 2f)
+    )
+}
+
+/**
+ * Bold lettering painted onto a free-standing sign or board's own face — a stop sign, a
+ * noticeboard, a caution triangle — as opposed to [deviceLabel], which is for a device's own
+ * screen/LED/engraved plate. Bold and sans-serif so it reads as hand-painted signage rather than
+ * a gadget's status readout; wraps to [maxWidth] design-space units when given.
+ */
+internal fun DrawScope.signLabel(
+    measurer: TextMeasurer?,
+    text: String,
+    cx: Float,
+    cy: Float,
+    color: Color,
+    fontSize: Float = 16f,
+    maxWidth: Float? = null,
+    letterSpacing: Float = 0.5f
+) {
+    if (measurer == null || color.isHidden) return
+    val style = TextStyle(
+        color = color,
+        fontSize = fontSize.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.SansSerif,
+        letterSpacing = letterSpacing.sp,
+        textAlign = TextAlign.Center
+    )
+    val result = measurer.measure(
+        text,
+        style,
+        constraints = if (maxWidth != null) {
+            androidx.compose.ui.unit.Constraints(maxWidth = d(maxWidth).toInt())
+        } else {
+            androidx.compose.ui.unit.Constraints()
+        }
+    )
+    drawText(
+        result,
+        topLeft = Offset(d(cx) - result.size.width / 2f, d(cy) - result.size.height / 2f)
+    )
 }
 
 /** A directional shadow raked away from the light across a flat surface. */

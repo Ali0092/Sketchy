@@ -59,11 +59,11 @@ animated in a way that feels alive. Sketchy takes a different approach:
 
 | Catalog | Count | Entry point |
 |---|---|---|
-| **Featured illustrations** | 5 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Onboarding illustrations** | 15, across 6 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Empty states** | 20, across 4 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+| **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Onboarding illustrations** | 17, across 7 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Empty states** | 52, across 7 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
 
-Every one of the 40 scenes draws two ways from the same code — a colourless
+Every one of the 75 scenes draws two ways from the same code — a colourless
 hand-drawn outline by default, or fully painted with `colorful = true`.
 
 A demo ships alongside the library as a live, searchable catalog of every
@@ -198,13 +198,13 @@ SketchyEmptyState(
 
 ### A featured illustration
 
-The five **Featured** scenes are the elaborate ones — a whole scene rather
+The six **Featured** scenes are the elaborate ones — a whole scene rather
 than a single motif, one source file each, built on the shading primitives the
 painted mode uses. They're the ones worth giving a full-bleed hero slot:
 
 ```kotlin
 SketchyIllustration(
-    sketch = Sketch.ReadingNook,   // or MorningCoffee, HomeWorkspace, GroceryRun, RainyWindow
+    sketch = Sketch.ReadingNook,   // or WarmWelcome, MorningCoffee, HomeWorkspace, GroceryRun, RainyWindow
     modifier = Modifier.fillMaxWidth().aspectRatio(1f),
     colorful = true,
 )
@@ -283,16 +283,68 @@ sensible default. Omit `title`/`subtitle` entirely (pass `null`) for an
 icon-only illustration. `SketchyColors` is the same type for both catalogs, so
 one palette restyles your entire onboarding flow and empty-state set at once.
 
+## Same situation, different families
+
+A handful of situations — a network error, an empty result set, "all caught
+up" — are drawn in more than one visual family, so you pick whichever fits
+your app instead of being stuck with one look:
+
+- **The original catalog** — no prefix (`NoInternet`, `EmptyCart`, `AllDone`,
+  …). The default, general-purpose style, covering four categories:
+  Connectivity & Errors, Content & Search, Saved & Commerce, and Everyday &
+  Productivity.
+- **`Signboard*`** — road signage as the scene's setting: signals, warning
+  and stop signs, cones, boards.
+- **`Network*`** — network hardware only: routers, servers, cables — no
+  abstract icon glyphs.
+- **`LinedMan*`** — a single minimal outline figure. The body never changes;
+  only the eyes and mouth do, to carry the mood.
+
+Every prefixed family names its entries `{Family}{Situation}`, so the family
+is right there in the enum: `LinedManLoading`, `NetworkNoInternet`,
+`SignboardNetworkError`. Where a situation is covered by more than one
+family, here's the cross-reference:
+
+| Situation | Original catalog | Signboards | Network | Lined Man |
+|---|---|---|---|---|
+| Page not found (404) | `PageNotFound` | `SignboardPageNotFound` | `NetworkPageNotFound` | — |
+| Network / connection error | `NoInternet` · `ServerError` | `SignboardNetworkError` | `NetworkNoInternet` · `NetworkBadGateway` · `NetworkServerError` · `NetworkUnsecureWifi` | `LinedManNoConnection` · `LinedManSomethingWrong` |
+| No data / no results | `NoResults` · `NoData` | `SignboardNoData` | `NetworkNoData` · `NetworkNoResults` | `LinedManNoResults` |
+| Access denied | — | `SignboardUnauthorized` · `SignboardForbidden` | — | `LinedManAccessDenied` |
+| Under maintenance / coming soon | `UnderMaintenance` | `SignboardMaintenance` · `SignboardComingSoon` | — | — |
+| No messages / comments | `NoMessages` · `NoComments` | — | `NetworkNoMessages` · `NetworkNoComments` | — |
+| Empty inbox | `EmptyInbox` | — | — | `LinedManEmptyInbox` |
+| All caught up / all clear | `AllDone` · `NoNotifications` | `SignboardAllClear` · `SignboardNoWarnings` | — | `LinedManAllDone` · `LinedManAllCaughtUp` |
+
+Swapping styles is a one-line change — same parameters, same `colors`
+override, same optional `title`/`subtitle`:
+
+```kotlin
+// The default style
+SketchyEmptyState(state = EmptyState.NoInternet)
+
+// The same situation, drawn as network hardware instead
+SketchyEmptyState(state = EmptyState.NetworkNoInternet)
+
+// ...or as the minimal Lined Man figure
+SketchyEmptyState(state = EmptyState.LinedManNoConnection)
+```
+
+Every other entry (`EmptyCart`, `LinedManWelcome`, `NetworkNoList`, …) is
+currently exclusive to its family — a good spot to contribute a matching
+scene in a different style.
+
 ## Catalog
 
 Every entry below draws both ways — colourless by default, painted with
 `colorful = true`.
 
 <details>
-<summary><strong>Featured illustrations (5)</strong></summary>
+<summary><strong>Featured illustrations (6)</strong></summary>
 
 | `Sketch` | Scene |
 |---|---|
+| `Sketch.WarmWelcome` | A Warm Welcome |
 | `Sketch.MorningCoffee` | A Slow Morning Coffee |
 | `Sketch.HomeWorkspace` | Your Workspace at Home |
 | `Sketch.GroceryRun` | The Weekly Grocery Run |
@@ -302,10 +354,11 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Onboarding illustrations (15)</strong></summary>
+<summary><strong>Onboarding illustrations (17)</strong></summary>
 
 | Category | Illustrations |
 |---|---|
+| Signboards | Road Work Ahead · Every Path Leads Somewhere |
 | Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
 | Fitness | Train Anywhere, Anytime · See Your Progress |
@@ -316,7 +369,28 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Empty states (20)</strong></summary>
+<summary><strong>Empty states (52)</strong></summary>
+
+A minimal single-outline standing figure — the same body every time, only
+the eyes and mouth change to carry the mood:
+
+| Category | Empty states |
+|---|---|
+| Lined Man | All Caught Up · Something Went Wrong · Loading · No Connection · Access Denied · All Done · No Results Found · Your Inbox is Empty · Welcome! · Just a Moment · Taking a Break |
+
+Road signage as the scene's setting — signals, warning/stop signs, cones, boards:
+
+| Category | Empty states |
+|---|---|
+| Signboards | Page Not Found · Network Error · No Data Available · Sign In Required · Access Denied · Under Maintenance · All Clear · No Warnings · Coming Soon · Nothing Posted Yet · End of the Road |
+
+Network hardware only — routers, servers, cables, no abstract icons:
+
+| Category | Empty states |
+|---|---|
+| Network | No Internet Connection · Page Not Found · Bad Gateway · Something Went Wrong · Unsecured Connection · No Data Available · Nothing Connected · No Messages Yet · No Comments Yet · No Results Found |
+
+And the original catalog:
 
 | Category | Empty states |
 |---|---|
@@ -341,7 +415,7 @@ Sketchy/
 │       │   └── Onboarding*.kt           # …grouped by category, 2-5 scenes each
 │       ├── emptystates/
 │       │   ├── EmptyState.kt            # EmptyState enum, SketchyEmptyState composable
-│       │   └── EmptyStates*.kt          # …grouped by category, 5 scenes each
+│       │   └── EmptyStates*.kt          # …grouped by category
 │       └── utils/
 │           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
 │           ├── Painting.kt              # Fills, shading, brushes, limbs — the painted half

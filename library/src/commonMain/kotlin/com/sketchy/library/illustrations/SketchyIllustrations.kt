@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import com.sketchy.library.SketchyColors
 import com.sketchy.library.SketchyStyle
@@ -44,9 +45,22 @@ import com.sketchy.library.utils.wave
  * built from the shading primitives in `utils/Painting.kt`.
  */
 
-/** Every sketch currently available in the library, grouped by [category]. */
-enum class Sketch(val displayName: String, val category: String) {
+/**
+ * Every sketch currently available in the library, grouped by [category].
+ *
+ * [style] is a second, independent tag defaulted to `"Classic"` for every scene that predates
+ * theming — a cross-cutting theme sets [category] to the theme's name (so it groups and searches
+ * exactly like any other category) and [style] to the shared rendering style it was drawn in
+ * (e.g. "Cartoony"), so searching the *style* surfaces every theme that shares it. See the
+ * `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
+ */
+enum class Sketch(val displayName: String, val category: String, val style: String = "Classic") {
+    // ── Signboards — road signage as the scene's setting, not just its subject ──
+    RoadWorkAhead("Road Work Ahead", "Signboards"),
+    Crossroads("Every Path Leads Somewhere", "Signboards"),
+
     // ── Featured · the elaborate, full-scene drawings ───────────────────
+    WarmWelcome("A Warm Welcome", "Featured"),
     MorningCoffee("A Slow Morning Coffee", "Featured"),
     HomeWorkspace("Your Workspace at Home", "Featured"),
     GroceryRun("The Weekly Grocery Run", "Featured"),
@@ -103,7 +117,10 @@ fun SketchyIllustration(
     colorful: Boolean = false,
     colors: SketchyColors = SketchyColors(),
 ) {
-    val style = remember(colors, colorful) { SketchyStyle(colors, outlined = !colorful) }
+    val textMeasurer = rememberTextMeasurer()
+    val style = remember(colors, colorful, textMeasurer) {
+        SketchyStyle(colors, outlined = !colorful, textMeasurer = textMeasurer)
+    }
 
     // Looping phase driving all ambient motion inside the scenes.
     val t: Float = if (animate) {
@@ -143,6 +160,10 @@ fun SketchyIllustration(
 
 private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.RoadWorkAhead -> drawRoadWorkScene(t, colors)
+        Sketch.Crossroads -> drawCrossroadsScene(t, colors)
+
+        Sketch.WarmWelcome -> drawWarmWelcomeScene(t, colors)
         Sketch.MorningCoffee -> drawMorningCoffeeScene(t, colors)
         Sketch.HomeWorkspace -> drawHomeWorkspaceScene(t, colors)
         Sketch.GroceryRun -> drawGroceryRunScene(t, colors)
