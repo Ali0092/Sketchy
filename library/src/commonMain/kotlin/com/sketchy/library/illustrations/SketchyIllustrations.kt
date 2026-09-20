@@ -55,6 +55,9 @@ import com.sketchy.library.utils.wave
  * `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
  */
 enum class Sketch(val displayName: String, val category: String, val style: String = "Classic") {
+    // ── Weather — a full outdoor downpour scene ──
+    RainyDay("A Rainy Day", "Weather"),
+
     // ── Plants and Things — a full desert scene, real cacti and succulents ──
     DesertBloom("A Desert in Bloom", "Plants and Things"),
 
@@ -163,6 +166,8 @@ fun SketchyIllustration(
 
 private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.RainyDay -> drawRainyDayScene(t, colors)
+
         Sketch.DesertBloom -> drawDesertBloomScene(t, colors)
 
         Sketch.RoadWorkAhead -> drawRoadWorkScene(t, colors)

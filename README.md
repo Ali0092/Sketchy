@@ -60,10 +60,10 @@ animated in a way that feels alive. Sketchy takes a different approach:
 | Catalog | Count | Entry point |
 |---|---|---|
 | **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Onboarding illustrations** | 17, across 7 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Empty states** | 52, across 7 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+| **Onboarding illustrations** | 19, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Empty states** | 80, across 10 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
 
-Every one of the 75 scenes draws two ways from the same code — a colourless
+Every one of the 105 scenes draws two ways from the same code — a colourless
 hand-drawn outline by default, or fully painted with `colorful = true`.
 
 A demo ships alongside the library as a live, searchable catalog of every
@@ -354,10 +354,12 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Onboarding illustrations (17)</strong></summary>
+<summary><strong>Onboarding illustrations (19)</strong></summary>
 
 | Category | Illustrations |
 |---|---|
+| Weather | A Rainy Day |
+| Plants and Things | A Desert in Bloom |
 | Signboards | Road Work Ahead · Every Path Leads Somewhere |
 | Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
@@ -369,7 +371,28 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Empty states (52)</strong></summary>
+<summary><strong>Empty states (80)</strong></summary>
+
+The same cloud mascot every time — only its face and the sky around it (a
+peeking sun, a crescent moon, rain, lightning, a rainbow) change:
+
+| Category | Empty states |
+|---|---|
+| Weather | No Connection · Something Went Wrong · All Caught Up · All Quiet · No Results Found · Just a Moment · Nothing Scheduled Tonight · Welcome! · Your Inbox is Empty · Under Maintenance |
+
+The same twin-bell alarm clock every time — only its face, hands and the
+small prop beside it change:
+
+| Category | Empty states |
+|---|---|
+| Clock and Time | All Quiet · No Alarms Set · Nothing Scheduled · No Reminders Yet · Session Expired · Time's Up · All Caught Up · Coming Soon |
+
+A small garden world built only from potted plants and garden props —
+terracotta pots, watering cans, plant markers:
+
+| Category | Empty states |
+|---|---|
+| Plants and Things | No Data Yet · No Favorites Yet · No Results Found · Nothing To Do · All Quiet · All Caught Up · No Messages Yet · Your Cart is Empty · Let's Get Growing · Under Maintenance |
 
 A minimal single-outline standing figure — the same body every time, only
 the eyes and mouth change to carry the mood:

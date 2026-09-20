@@ -51,6 +51,59 @@ enum class EmptyState(
     val category: String,
     val style: String = "Classic",
 ) {
+    // ── Weather — the same cloud mascot throughout, only its face and the
+    //    sky around it (sun, moon, rain, lightning, rainbow) change ──
+    WeatherNoConnection(
+        "No Connection",
+        "The storm knocked out your signal — check back soon.",
+        "Weather"
+    ),
+    WeatherSomethingWrong(
+        "Something Went Wrong",
+        "A little static in the sky — please try again.",
+        "Weather"
+    ),
+    WeatherAllCaughtUp(
+        "All Caught Up",
+        "Clear skies — nothing left to do.",
+        "Weather"
+    ),
+    WeatherAllQuiet(
+        "All Quiet",
+        "No new notifications right now.",
+        "Weather"
+    ),
+    WeatherNoResults(
+        "No Results Found",
+        "We searched every cloud and found nothing.",
+        "Weather"
+    ),
+    WeatherLoading(
+        "Just a Moment",
+        "Gathering the clouds — hang tight.",
+        "Weather"
+    ),
+    WeatherQuietNight(
+        "Nothing Scheduled Tonight",
+        "Nothing on the calendar under these stars.",
+        "Weather"
+    ),
+    WeatherWelcome(
+        "Welcome!",
+        "Let's get started — clear skies ahead.",
+        "Weather"
+    ),
+    WeatherEmptyInbox(
+        "Your Inbox is Empty",
+        "New messages will rain in here.",
+        "Weather"
+    ),
+    WeatherMaintenance(
+        "Under Maintenance",
+        "We're clearing the skies — check back soon.",
+        "Weather"
+    ),
+
     // ── Clock and Time — the same twin-bell alarm clock throughout, only its
     //    face, hands and the small prop beside it change ──
     ClockAllQuiet(
@@ -512,6 +565,17 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.WeatherNoConnection -> drawWeatherNoConnection(t, colors)
+        EmptyState.WeatherSomethingWrong -> drawWeatherSomethingWrong(t, colors)
+        EmptyState.WeatherAllCaughtUp -> drawWeatherAllCaughtUp(t, colors)
+        EmptyState.WeatherAllQuiet -> drawWeatherAllQuiet(t, colors)
+        EmptyState.WeatherNoResults -> drawWeatherNoResults(t, colors)
+        EmptyState.WeatherLoading -> drawWeatherLoading(t, colors)
+        EmptyState.WeatherQuietNight -> drawWeatherQuietNight(t, colors)
+        EmptyState.WeatherWelcome -> drawWeatherWelcome(t, colors)
+        EmptyState.WeatherEmptyInbox -> drawWeatherEmptyInbox(t, colors)
+        EmptyState.WeatherMaintenance -> drawWeatherMaintenance(t, colors)
+
         EmptyState.ClockAllQuiet -> drawClockAllQuiet(t, colors)
         EmptyState.ClockNoAlarms -> drawClockNoAlarms(t, colors)
         EmptyState.ClockNothingScheduled -> drawClockNothingScheduled(t, colors)

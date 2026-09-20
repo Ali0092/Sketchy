@@ -80,7 +80,7 @@ fun EmptyStateDetailScreen(
                             state = familyStates[page],
                             animate = animate,
                             colorful = colorful,
-                            illustrationSize = 220.dp
+                            illustrationSize = 350.dp
                         )
                     }
                 }
