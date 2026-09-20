@@ -60,11 +60,15 @@ animated in a way that feels alive. Sketchy takes a different approach:
 | Catalog | Count | Entry point |
 |---|---|---|
 | **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Onboarding illustrations** | 19, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Onboarding illustrations** | 24, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
 | **Empty states** | 80, across 10 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+| **Icons** | 20, across 1 category | `SketchyIcon(icon, modifier, style, tint, animate)` |
 
-Every one of the 105 scenes draws two ways from the same code — a colourless
-hand-drawn outline by default, or fully painted with `colorful = true`.
+Every one of the 110 illustrations and empty states draws two ways from the same code — a
+colourless hand-drawn outline by default, or fully painted with `colorful = true`. Icons are a
+different, simpler model: monochrome by design (a single `tint` rather than the full palette), each
+one rendering in five families off the same hand-drawn geometry — `Default`, `Outlined`, `Sharp`,
+`Filled` and `TwoTone`.
 
 A demo ships alongside the library as a live, searchable catalog of every
 illustration and empty state — the fastest way to browse what's available and
@@ -354,14 +358,14 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Onboarding illustrations (19)</strong></summary>
+<summary><strong>Onboarding illustrations (24)</strong></summary>
 
 | Category | Illustrations |
 |---|---|
 | Weather | A Rainy Day |
 | Plants and Things | A Desert in Bloom |
 | Signboards | Road Work Ahead · Every Path Leads Somewhere |
-| Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
+| Productivity | Know What Matters Most · Make Time For What Matters · Get More Done Together · Let Automation Handle It · Reflect, Then Reset · Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
 | Fitness | Train Anywhere, Anytime · See Your Progress |
 | Food Delivery | Order Your Favorites · Fast, Fresh Delivery |
@@ -424,6 +428,18 @@ And the original catalog:
 
 </details>
 
+<details>
+<summary><strong>Icons (20)</strong></summary>
+
+Monochrome, hand-drawn glyphs on the standard 24×24 icon grid — pass any `IconStyle` to
+`SketchyIcon` to switch families:
+
+| Category | Icons |
+|---|---|
+| General | Home · Search · Heart · Star · Bell · Settings · User · Mail · Calendar · Clock · Cart · Edit · Trash · Camera · Image · Folder · Download · Upload · Share · Lock |
+
+</details>
+
 ## Project structure
 
 ```
@@ -439,6 +455,10 @@ Sketchy/
 │       ├── emptystates/
 │       │   ├── EmptyState.kt            # EmptyState enum, SketchyEmptyState composable
 │       │   └── EmptyStates*.kt          # …grouped by category
+│       ├── icons/
+│       │   ├── Icons.kt                 # Icon enum, IconStyle, SketchyIcon composable
+│       │   ├── IconPainting.kt          # Shared stroke/fill/hole rendering per IconStyle
+│       │   └── Icons*.kt                # …grouped by category
 │       └── utils/
 │           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
 │           ├── Painting.kt              # Fills, shading, brushes, limbs — the painted half

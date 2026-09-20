@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -30,10 +31,12 @@ import androidx.compose.ui.unit.sp
 import com.example.sketchy.ui.theme.SketchyGold
 import com.example.sketchy.ui.theme.SketchyTeal
 import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.icons.Icon
 import com.sketchy.library.illustrations.Sketch
 
 const val TabIllustrations = 0
 const val TabEmptyStates = 1
+const val TabIcons = 2
 
 @Composable
 fun HomeScreen(
@@ -43,6 +46,10 @@ fun HomeScreen(
     onQueryChange: (String) -> Unit,
     onSelectSketch: (Sketch) -> Unit,
     onSelectEmptyState: (EmptyState) -> Unit,
+    onSelectIcon: (Icon) -> Unit,
+    illustrationsGridState: LazyGridState,
+    emptyStatesGridState: LazyGridState,
+    iconsGridState: LazyGridState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -50,7 +57,11 @@ fun HomeScreen(
         SketchySearchField(
             query = query,
             onQueryChange = onQueryChange,
-            placeholder = if (tab == TabIllustrations) "Search illustrations…" else "Search empty states…",
+            placeholder = when (tab) {
+                TabIllustrations -> "Search illustrations…"
+                TabEmptyStates -> "Search empty states…"
+                else -> "Search icons…"
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
@@ -67,18 +78,33 @@ fun HomeScreen(
                 onClick = { onTabSelected(TabEmptyStates) },
                 text = { Text("Empty States · ${EmptyState.entries.size}") }
             )
+            Tab(
+                selected = tab == TabIcons,
+                onClick = { onTabSelected(TabIcons) },
+                text = { Text("Icons · ${Icon.entries.size}") }
+            )
         }
         when (tab) {
             TabIllustrations -> SketchyGalleryScreen(
                 query = query,
                 onSelect = onSelectSketch,
+                gridState = illustrationsGridState,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             )
-            else -> EmptyStateGalleryScreen(
+            TabEmptyStates -> EmptyStateGalleryScreen(
                 query = query,
                 onSelect = onSelectEmptyState,
+                gridState = emptyStatesGridState,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+            else -> IconGalleryScreen(
+                query = query,
+                onSelect = onSelectIcon,
+                gridState = iconsGridState,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()

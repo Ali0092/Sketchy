@@ -74,6 +74,11 @@ enum class Sketch(val displayName: String, val category: String, val style: Stri
     RainyWindow("Rainy Day Indoors", "Featured"),
 
     // ── Productivity ────────────────────────────────────────────────────
+    PrioritizeTasks("Know What Matters Most", "Productivity"),
+    MasterYourTime("Make Time For What Matters", "Productivity"),
+    WorkBetterTogether("Get More Done Together", "Productivity"),
+    AutomateBusywork("Let Automation Handle It", "Productivity"),
+    ReflectAndReset("Reflect, Then Reset", "Productivity"),
     PlanTasks("Plan Every Task", "Productivity"),
     FindFocus("Find Your Focus", "Productivity"),
     NeverMissMeeting("Never Miss a Meeting", "Productivity"),
@@ -180,6 +185,11 @@ private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: Sketchy
         Sketch.ReadingNook -> drawReadingNookScene(t, colors)
         Sketch.RainyWindow -> drawRainyWindowScene(t, colors)
 
+        Sketch.PrioritizeTasks -> drawPrioritizeTasksScene(t, colors)
+        Sketch.MasterYourTime -> drawMasterYourTimeScene(t, colors)
+        Sketch.WorkBetterTogether -> drawWorkBetterTogetherScene(t, colors)
+        Sketch.AutomateBusywork -> drawAutomateBusyworkScene(t, colors)
+        Sketch.ReflectAndReset -> drawReflectAndResetScene(t, colors)
         Sketch.PlanTasks -> drawTasksScene(t, colors)
         Sketch.FindFocus -> drawFocusScene(t, colors)
         Sketch.NeverMissMeeting -> drawMeetingsScene(t, colors)
