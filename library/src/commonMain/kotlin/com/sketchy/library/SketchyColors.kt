@@ -59,6 +59,8 @@ data class SketchyColors(
     val clay: Color = Color(0xFFB8503A),
     val fabric: Color = Color(0xFF4C6FA5),
     val fabricDark: Color = Color(0xFF33507E),
+    val plum: Color = Color(0xFF5E3B8C),
+    val plumDark: Color = Color(0xFF3B2560),
     val metal: Color = Color(0xFFB9C3CB),
     val metalDark: Color = Color(0xFF7E8B96),
     val skin: Color = Color(0xFFF0C39B),

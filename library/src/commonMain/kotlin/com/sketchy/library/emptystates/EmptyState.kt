@@ -51,6 +51,49 @@ enum class EmptyState(
     val category: String,
     val style: String = "Classic",
 ) {
+    // ── Clock and Time — the same twin-bell alarm clock throughout, only its
+    //    face, hands and the small prop beside it change ──
+    ClockAllQuiet(
+        "All Quiet",
+        "No reminders right now — rest easy.",
+        "Clock and Time"
+    ),
+    ClockNoAlarms(
+        "No Alarms Set",
+        "Add an alarm to wake up on time.",
+        "Clock and Time"
+    ),
+    ClockNothingScheduled(
+        "Nothing Scheduled",
+        "Your day is wide open.",
+        "Clock and Time"
+    ),
+    ClockNoReminders(
+        "No Reminders Yet",
+        "Reminders you add will show up here.",
+        "Clock and Time"
+    ),
+    ClockSessionExpired(
+        "Session Expired",
+        "Your session timed out — please sign in again.",
+        "Clock and Time"
+    ),
+    ClockTimeUp(
+        "Time's Up",
+        "The timer's finished — nothing left to wait for.",
+        "Clock and Time"
+    ),
+    ClockAllCaughtUp(
+        "All Caught Up",
+        "Everything's done — nothing left on the clock.",
+        "Clock and Time"
+    ),
+    ClockComingSoon(
+        "Coming Soon",
+        "It's on the calendar — just not yet.",
+        "Clock and Time"
+    ),
+
     // ── Plants and Things — a small garden world built only from potted plants and
     //    garden props: terracotta pots, watering cans, plant markers, a greenhouse ──
     PlantsNoData(
@@ -469,6 +512,15 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.ClockAllQuiet -> drawClockAllQuiet(t, colors)
+        EmptyState.ClockNoAlarms -> drawClockNoAlarms(t, colors)
+        EmptyState.ClockNothingScheduled -> drawClockNothingScheduled(t, colors)
+        EmptyState.ClockNoReminders -> drawClockNoReminders(t, colors)
+        EmptyState.ClockSessionExpired -> drawClockSessionExpired(t, colors)
+        EmptyState.ClockTimeUp -> drawClockTimeUp(t, colors)
+        EmptyState.ClockAllCaughtUp -> drawClockAllCaughtUp(t, colors)
+        EmptyState.ClockComingSoon -> drawClockComingSoon(t, colors)
+
         EmptyState.PlantsNoData -> drawPlantsNoData(t, colors)
         EmptyState.PlantsNoFavorites -> drawPlantsNoFavorites(t, colors)
         EmptyState.PlantsEmptySearch -> drawPlantsEmptySearch(t, colors)
