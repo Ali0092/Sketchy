@@ -51,6 +51,59 @@ enum class EmptyState(
     val category: String,
     val style: String = "Classic",
 ) {
+    // ── Plants and Things — a small garden world built only from potted plants and
+    //    garden props: terracotta pots, watering cans, plant markers, a greenhouse ──
+    PlantsNoData(
+        "No Data Yet",
+        "Nothing's been planted here yet.",
+        "Plants and Things"
+    ),
+    PlantsNoFavorites(
+        "No Favorites Yet",
+        "Tap the star on plants you love to save them here.",
+        "Plants and Things"
+    ),
+    PlantsEmptySearch(
+        "No Results Found",
+        "We couldn't dig up anything matching your search.",
+        "Plants and Things"
+    ),
+    PlantsNoTasks(
+        "Nothing To Do",
+        "Your task list is as clear as a freshly tended bed.",
+        "Plants and Things"
+    ),
+    PlantsNoNotifications(
+        "All Quiet",
+        "No new notifications — enjoy the stillness.",
+        "Plants and Things"
+    ),
+    PlantsAllCaughtUp(
+        "All Caught Up",
+        "Everything's tended to — nothing left to do.",
+        "Plants and Things"
+    ),
+    PlantsNoMessages(
+        "No Messages Yet",
+        "New messages will bloom here when they arrive.",
+        "Plants and Things"
+    ),
+    PlantsEmptyCart(
+        "Your Cart is Empty",
+        "Add something and let's get growing.",
+        "Plants and Things"
+    ),
+    PlantsWelcome(
+        "Let's Get Growing",
+        "Plant your first seed to get started.",
+        "Plants and Things"
+    ),
+    PlantsMaintenance(
+        "Under Maintenance",
+        "We're tending to a few things — check back soon.",
+        "Plants and Things"
+    ),
+
     // ── Lined Man — a minimal single-outline standing figure, same body every time,
     //    only the eyes and mouth change to carry the mood ──
     LinedManAllCaughtUp(
@@ -416,6 +469,17 @@ fun SketchyEmptyState(
 
 private fun DrawScope.drawEmptyState(state: EmptyState, t: Float, colors: SketchyStyle) {
     when (state) {
+        EmptyState.PlantsNoData -> drawPlantsNoData(t, colors)
+        EmptyState.PlantsNoFavorites -> drawPlantsNoFavorites(t, colors)
+        EmptyState.PlantsEmptySearch -> drawPlantsEmptySearch(t, colors)
+        EmptyState.PlantsNoTasks -> drawPlantsNoTasks(t, colors)
+        EmptyState.PlantsNoNotifications -> drawPlantsNoNotifications(t, colors)
+        EmptyState.PlantsAllCaughtUp -> drawPlantsAllCaughtUp(t, colors)
+        EmptyState.PlantsNoMessages -> drawPlantsNoMessages(t, colors)
+        EmptyState.PlantsEmptyCart -> drawPlantsEmptyCart(t, colors)
+        EmptyState.PlantsWelcome -> drawPlantsWelcome(t, colors)
+        EmptyState.PlantsMaintenance -> drawPlantsMaintenance(t, colors)
+
         EmptyState.LinedManAllCaughtUp -> drawLinedManAllCaughtUp(t, colors)
         EmptyState.LinedManSomethingWrong -> drawLinedManSomethingWrong(t, colors)
         EmptyState.LinedManLoading -> drawLinedManLoading(t, colors)
