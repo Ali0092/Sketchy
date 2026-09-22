@@ -31,7 +31,9 @@ longer publishes artifacts for it.
 
 ---
 ## Demo
-https://github.com/user-attachments/assets/b5ab7d8a-45b9-43c3-ab53-1d2f6dc9a673
+https://github.com/user-attachments/assets/2db98caf-7201-4e06-97de-919f964268de
+
+
 
 ## Why Sketchy
 
