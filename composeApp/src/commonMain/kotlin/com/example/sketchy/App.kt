@@ -16,11 +16,7 @@ import com.sketchy.library.emptystates.EmptyState
 import com.sketchy.library.icons.Icon
 import com.sketchy.library.illustrations.Sketch
 
-/**
- * The whole catalog, theme and scaffold included. Every platform entry point —
- * Android's `MainActivity`, the desktop `Window`, the iOS `UIViewController`
- * and the wasm `ComposeViewport` — does nothing but host this.
- */
+
 @Composable
 fun App() {
     SketchyTheme {
@@ -32,15 +28,12 @@ fun App() {
 
 @Composable
 private fun SketchyApp(modifier: Modifier = Modifier) {
+
     var tab by remember { mutableIntStateOf(TabIllustrations) }
     var query by remember { mutableStateOf("") }
     var selectedSketch by remember { mutableStateOf<Sketch?>(null) }
     var selectedEmptyState by remember { mutableStateOf<EmptyState?>(null) }
     var selectedIcon by remember { mutableStateOf<Icon?>(null) }
-
-    // Hoisted here, above the HomeScreen/DetailScreen `when` branches below, so navigating into a
-    // detail screen and back doesn't tear down and recreate each grid's scroll position — only
-    // this composable's own remembered state survives that; HomeScreen's own would not.
     val illustrationsGridState = rememberLazyGridState()
     val emptyStatesGridState = rememberLazyGridState()
     val iconsGridState = rememberLazyGridState()
