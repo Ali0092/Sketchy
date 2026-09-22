@@ -287,6 +287,45 @@ sensible default. Omit `title`/`subtitle` entirely (pass `null`) for an
 icon-only illustration. `SketchyColors` is the same type for both catalogs, so
 one palette restyles your entire onboarding flow and empty-state set at once.
 
+### An icon
+
+Icons are a simpler model than illustrations and empty states — monochrome by
+design, one `tint` rather than a full palette, and static rather than
+looping, since they're meant to sit inline in real UI (a button, a list row,
+a nav bar) rather than as decoration:
+
+```kotlin
+import com.sketchy.library.icons.Icon
+import com.sketchy.library.icons.SketchyIcon
+
+SketchyIcon(
+    icon = Icon.Heart,
+    modifier = Modifier.size(24.dp),
+    tint = MaterialTheme.colorScheme.onSurface,
+)
+```
+
+`strokeWidth` is a design-space number on the same 24-unit grid the icon
+itself is drawn on — it scales along with the icon if you display it larger
+than the default 24dp. A one-shot fade/pop still plays on first composition
+by default; pass `animate = false` to skip it and render at full opacity
+immediately.
+
+### The same icon, five families
+
+Every icon renders in five families off the same hand-drawn geometry — pick
+whichever fits the weight of the UI around it:
+
+```kotlin
+import com.sketchy.library.icons.IconStyle
+
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Default)   // a hollow line at normal weight
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Outlined)  // the same line, drawn thinner
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Sharp)     // square corners, mitred joins
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Filled)    // a solid silhouette
+SketchyIcon(icon = Icon.Bell, style = IconStyle.TwoTone)   // Filled at low opacity, Default traced on top
+```
+
 ## Same situation, different families
 
 A handful of situations — a network error, an empty result set, "all caught

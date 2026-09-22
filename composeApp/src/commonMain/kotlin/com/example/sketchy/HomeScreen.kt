@@ -71,17 +71,17 @@ fun HomeScreen(
             Tab(
                 selected = tab == TabIllustrations,
                 onClick = { onTabSelected(TabIllustrations) },
-                text = { Text("Illustrations · ${Sketch.entries.size}") }
+                text = { Text("Illustrations") }
             )
             Tab(
                 selected = tab == TabEmptyStates,
                 onClick = { onTabSelected(TabEmptyStates) },
-                text = { Text("Empty States · ${EmptyState.entries.size}") }
+                text = { Text("Empty States") }
             )
             Tab(
                 selected = tab == TabIcons,
                 onClick = { onTabSelected(TabIcons) },
-                text = { Text("Icons · ${Icon.entries.size}") }
+                text = { Text("Icons") }
             )
         }
         when (tab) {
