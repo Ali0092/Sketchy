@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,11 +30,17 @@ import com.sketchy.library.illustrations.Sketch
 import com.sketchy.library.illustrations.SketchyIllustration
 
 @Composable
-fun SketchyGalleryScreen(query: String, onSelect: (Sketch) -> Unit, modifier: Modifier = Modifier) {
+fun SketchyGalleryScreen(
+    query: String,
+    onSelect: (Sketch) -> Unit,
+    modifier: Modifier = Modifier,
+    gridState: LazyGridState = rememberLazyGridState(),
+) {
     val filtered = Sketch.entries.filter { it.matches(query) }
     val grouped = filtered.groupBy { it.category }
 
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Adaptive(minSize = 160.dp),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),

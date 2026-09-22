@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -28,6 +31,8 @@ import com.example.sketchy.ui.theme.SketchyGold
 import com.example.sketchy.ui.theme.SketchyInk
 import com.example.sketchy.ui.theme.SketchyTeal
 import com.sketchy.library.emptystates.EmptyState
+import com.sketchy.library.icons.Icon
+import com.sketchy.library.icons.IconStyle
 import com.sketchy.library.illustrations.Sketch
 
 /** Shared building blocks used by the gallery and detail screens. */
@@ -43,6 +48,11 @@ internal fun EmptyState.matches(query: String) =
         defaultTitle.contains(query, ignoreCase = true) ||
         category.contains(query, ignoreCase = true) ||
         style.contains(query, ignoreCase = true)
+
+internal fun Icon.matches(query: String) =
+    query.isBlank() ||
+        displayName.contains(query, ignoreCase = true) ||
+        category.contains(query, ignoreCase = true)
 
 @Composable
 internal fun CategoryHeader(category: String, count: Int, modifier: Modifier = Modifier) {
@@ -147,5 +157,29 @@ internal fun SketchyToggleRow(
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(checkedTrackColor = SketchyGold, checkedThumbColor = SketchyInk)
         )
+    }
+}
+
+/** A 5-way segmented selector for [IconStyle] — Default/Outlined/Sharp/Filled/TwoTone. */
+@Composable
+internal fun IconStylePicker(
+    selected: IconStyle,
+    onSelect: (IconStyle) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val styles = IconStyle.entries
+    SingleChoiceSegmentedButtonRow(modifier = modifier.fillMaxWidth()) {
+        styles.forEachIndexed { index, style ->
+            SegmentedButton(
+                selected = selected == style,
+                onClick = { onSelect(style) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = styles.size),
+                colors = SegmentedButtonDefaults.colors(
+                    activeContainerColor = SketchyGold,
+                    activeContentColor = SketchyInk
+                ),
+                label = { Text(style.name, style = MaterialTheme.typography.labelSmall) }
+            )
+        }
     }
 }

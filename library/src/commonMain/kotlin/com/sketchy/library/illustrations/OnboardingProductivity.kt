@@ -14,6 +14,549 @@ import com.sketchy.library.utils.*
 import kotlin.math.cos
 import kotlin.math.sin
 
+// ─── Know What Matters Most ─────────────────────────────────────────────────
+//   A person plants a flag on the top card of a stack of tasks, while a small
+//   floating priority matrix glows in its "urgent & important" corner.
+
+internal fun DrawScope.drawPrioritizeTasksScene(t: Float, colors: SketchyStyle) {
+    // ── floating priority matrix (top-right) ──────────────────
+    val boardX = 214f
+    val boardY = 40f
+    val boardW = 76f
+    val boardH = 60f
+    val board = roundRectPath(boardX, boardY, boardW, boardH, 8f)
+    paint(board, vBrush(boardY, boardY + boardH, colors.paper, colors.metal), colors.ink, 2.2f)
+    sketchLine(pt(boardX + boardW / 2f, boardY + 6f), pt(boardX + boardW / 2f, boardY + boardH - 6f), colors.inkSoft, 1.4f)
+    sketchLine(pt(boardX + 6f, boardY + boardH / 2f), pt(boardX + boardW - 6f, boardY + boardH / 2f), colors.inkSoft, 1.4f)
+    // top-left quadrant glows as "urgent & important"
+    val glowAlpha = 0.18f + 0.14f * pulse(t, 0f)
+    fill(roundRectPath(boardX + 3f, boardY + 3f, boardW / 2f - 6f, boardH / 2f - 6f, 4f), colors.accentRed.a(glowAlpha))
+    sketchCircle(pt(boardX + boardW * 0.27f, boardY + boardH * 0.27f), 3f, colors.accentRed, filled = true)
+    sketchCircle(pt(boardX + boardW * 0.73f, boardY + boardH * 0.3f), 2.2f, colors.inkSoft, filled = true)
+    sketchCircle(pt(boardX + boardW * 0.3f, boardY + boardH * 0.73f), 2.2f, colors.inkSoft, filled = true)
+    sketchCircle(pt(boardX + boardW * 0.7f, boardY + boardH * 0.75f), 1.8f, colors.inkFaint, filled = true)
+
+    // ── stacked task cards (right) ─────────────────────────────
+    val stackCx = 222f
+    val stackTopY = 168f
+    listOf(2, 1, 0).forEach { i ->
+        val cardY = stackTopY + i * 9f
+        val cardX = stackCx - 42f + i * 3f
+        val card = roundRectPath(cardX, cardY, 84f, 30f, 6f)
+        if (i == 0) {
+            contactShadow(stackCx, cardY + 44f, 48f, 6f, colors.shade)
+            paint(card, colors.paper, colors.ink, 2.4f)
+            sketchLine(pt(cardX + 30f, cardY + 11f), pt(cardX + 74f, cardY + 11f), colors.inkSoft, 1.8f)
+            sketchLine(pt(cardX + 30f, cardY + 20f), pt(cardX + 62f, cardY + 20f), colors.inkSoft, 1.8f)
+            sketchCircle(pt(cardX + 12f, cardY + 15f), 5f, colors.accentRed, filled = true)
+        } else {
+            paint(card, colors.paper.a(0.9f - i * 0.15f), colors.inkSoft, 1.8f)
+        }
+    }
+
+    // a little flag pops onto the top card once per loop
+    val flagAt = 0.15f
+    if (t > flagAt) {
+        val poleX = stackCx - 28f
+        val poleTopY = stackTopY - 34f
+        sketchLine(pt(poleX, stackTopY + 6f), pt(poleX, poleTopY), colors.ink, 2.2f)
+        val pop = 1f + 0.4f * (1f - ((t - flagAt) / 0.12f).coerceAtMost(1f))
+        val flagPivot = pt(poleX, poleTopY)
+        withTransform({ scale(scaleX = pop, scaleY = pop, pivot = flagPivot) }) {
+            val pennant = Path().apply {
+                moveTo(d(poleX), d(poleTopY))
+                lineTo(d(poleX + 20f), d(poleTopY + 6f))
+                lineTo(d(poleX), d(poleTopY + 12f))
+                close()
+            }
+            paint(pennant, colors.accentRed, colors.ink, 1.8f)
+        }
+    }
+
+    // ── person planting the flag (left) ────────────────────────
+    contactShadow(112f, 258f, 46f, 6f, colors.shade)
+    paintCircle(pt(112f, 112f), 20f, colors.skin, colors.ink, 2.4f)
+    val hairTop = Path().apply {
+        moveTo(d(94f), d(106f))
+        quadraticTo(d(96f), d(90f), d(112f), d(88f))
+        quadraticTo(d(128f), d(90f), d(130f), d(106f))
+        quadraticTo(d(112f), d(98f), d(94f), d(106f))
+        close()
+    }
+    paint(hairTop, colors.hair, colors.ink, 2.0f)
+    sketchCircle(pt(118f, 112f), 1.5f, colors.ink, filled = true)
+    val smile = Path().apply {
+        moveTo(d(115f), d(119f))
+        quadraticTo(d(118f), d(122f), d(121f), d(119f))
+    }
+    stroke(smile, colors.ink, 1.8f)
+    limb(
+        Path().apply { moveTo(d(112f), d(132f)); lineTo(d(112f), d(140f)) },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
+
+    val body = Path().apply {
+        moveTo(d(112f), d(140f))
+        quadraticTo(d(92f), d(142f), d(84f), d(154f))
+        lineTo(d(78f), d(204f))
+        quadraticTo(d(112f), d(216f), d(146f), d(204f))
+        lineTo(d(140f), d(154f))
+        quadraticTo(d(132f), d(142f), d(112f), d(140f))
+        close()
+    }
+    paint(body, vBrush(140f, 216f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(body, hBrush(112f, 146f, colors.shade.a(0f), colors.shade))
+
+    val armR = Path().apply {
+        moveTo(d(140f), d(158f))
+        quadraticTo(d(168f), d(168f), d(184f), d(170f))
+    }
+    limb(armR, colors.fabric, colors.ink, 2.4f, thickness = 9f)
+    paintCircle(pt(186f, 171f), 4f, colors.skin, colors.ink, 2.0f)
+
+    val armL = Path().apply {
+        moveTo(d(84f), d(156f))
+        quadraticTo(d(70f), d(172f), d(76f), d(190f))
+    }
+    limb(armL, colors.fabric, colors.ink, 2.4f, thickness = 9f)
+
+    val legL = Path().apply { moveTo(d(94f), d(210f)); quadraticTo(d(96f), d(234f), d(90f), d(256f)) }
+    val legR = Path().apply { moveTo(d(130f), d(210f)); quadraticTo(d(134f), d(234f), d(132f), d(256f)) }
+    limb(legL, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    limb(legR, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    sketchLine(pt(84f, 256f), pt(100f, 256f), colors.ink)
+    sketchLine(pt(126f, 256f), pt(142f, 256f), colors.ink)
+
+    twinkle(200f, 100f, 3f, t, 0.2f, colors.inkSoft)
+    twinkle(58f, 80f, 3f, t, 0.6f, colors.inkSoft)
+    groundHint(288f, colors.inkFaint)
+}
+
+// ─── Make Time For What Matters ─────────────────────────────────────────────
+//   An hourglass steadily runs its sand out beside a colour-coded, vertical
+//   time-block planner filling in one block at a time.
+
+internal fun DrawScope.drawMasterYourTimeScene(t: Float, colors: SketchyStyle) {
+    // ── hourglass (left) ───────────────────────────────────────
+    val hgX = 118f
+    val hgTopY = 70f
+    val hgW = 84f
+    val hgH = 148f
+    contactShadow(hgX, hgTopY + hgH + 12f, 52f, 7f, colors.shade)
+
+    paint(roundRectPath(hgX - hgW / 2f, hgTopY, hgW, 12f, 5f), colors.wood, colors.ink, 2.4f)
+    paint(roundRectPath(hgX - hgW / 2f, hgTopY + hgH - 12f, hgW, 12f, 5f), colors.wood, colors.ink, 2.4f)
+    listOf(-1f, 1f).forEach { side ->
+        limb(
+            Path().apply {
+                moveTo(d(hgX + side * hgW / 2f), d(hgTopY + 6f))
+                lineTo(d(hgX + side * hgW / 2f), d(hgTopY + hgH - 6f))
+            },
+            colors.woodDark, colors.ink, 2.2f, thickness = 5f
+        )
+    }
+    val glass = Path().apply {
+        moveTo(d(hgX - hgW / 2f + 8f), d(hgTopY + 12f))
+        lineTo(d(hgX + hgW / 2f - 8f), d(hgTopY + 12f))
+        lineTo(d(hgX + 8f), d(hgTopY + hgH / 2f))
+        lineTo(d(hgX + hgW / 2f - 8f), d(hgTopY + hgH - 12f))
+        lineTo(d(hgX - hgW / 2f + 8f), d(hgTopY + hgH - 12f))
+        lineTo(d(hgX - 8f), d(hgTopY + hgH / 2f))
+        close()
+    }
+    paint(glass, colors.paper.a(0.45f), colors.ink, 2.2f)
+
+    val sandFlow = loop(t, 0f)
+    val sandHue = colors.touch(colors.sun, 0.85f)
+    val topLevel = 1f - sandFlow
+    val topSand = Path().apply {
+        moveTo(d(hgX - hgW / 2f + 10f), d(hgTopY + 14f))
+        lineTo(d(hgX + hgW / 2f - 10f), d(hgTopY + 14f))
+        lineTo(d(hgX + 6f), d(hgTopY + 14f + (hgH / 2f - 20f) * topLevel))
+        close()
+    }
+    paint(topSand, sandHue, colors.ink, 1.4f)
+    val botBaseY = hgTopY + hgH - 14f
+    val botSand = Path().apply {
+        moveTo(d(hgX - hgW / 2f + 10f), d(botBaseY))
+        lineTo(d(hgX + hgW / 2f - 10f), d(botBaseY))
+        lineTo(d(hgX), d(botBaseY - (hgH / 2f - 20f) * sandFlow * 0.8f))
+        close()
+    }
+    paint(botSand, sandHue, colors.ink, 1.4f)
+    val streamAlpha = if (sandFlow in 0.03f..0.97f) 1f else 0f
+    sketchLine(
+        pt(hgX, hgTopY + hgH / 2f - 6f),
+        pt(hgX, hgTopY + hgH / 2f + 6f),
+        colors.line(colors.sunDeep).a(streamAlpha),
+        1.8f
+    )
+
+    // ── vertical, colour-coded time-block planner (right) ──────
+    val planX = 226f
+    val planY = 56f
+    val planW = 46f
+    val planH = 168f
+    contactShadow(planX + planW / 2f, planY + planH + 8f, 30f, 6f, colors.shade)
+    paint(roundRectPath(planX, planY, planW, planH, 8f), colors.paper, colors.ink, 2.4f)
+    val blocks = listOf(colors.accentBlue, colors.accentGreen, colors.accent, colors.accentRed)
+    val filledUpTo = loop(t, 0.1f) * blocks.size
+    blocks.forEachIndexed { i, hue ->
+        val by = planY + 8f + i * 38f
+        val portion = (filledUpTo - i).coerceIn(0f, 1f)
+        paint(roundRectPath(planX + 6f, by, planW - 12f, 30f, 4f), colors.paper.lit(0.3f), colors.inkFaint, 1.4f)
+        if (portion > 0f) {
+            fill(roundRectPath(planX + 6f, by, (planW - 12f) * portion, 30f, 4f), hue.a(0.85f))
+        }
+    }
+
+    twinkle(66f, 96f, 3f, t, 0.3f, colors.inkSoft)
+    twinkle(282f, 240f, 3f, t, 0.7f, colors.accent)
+    groundHint(296f, colors.inkFaint)
+}
+
+// ─── Get More Done Together ──────────────────────────────────────────────────
+//   A small kanban board, a colleague passing a card into "Doing," and a
+//   person carrying it the rest of the way into "Done."
+
+internal fun DrawScope.drawWorkBetterTogetherScene(t: Float, colors: SketchyStyle) {
+    // ── kanban board (background) ──────────────────────────────
+    val boardX = 44f
+    val boardY = 40f
+    val boardW = 232f
+    val boardH = 120f
+    paint(roundRectPath(boardX, boardY, boardW, boardH, 10f), colors.paper.a(0.6f), colors.ink, 2.2f)
+    val colW = boardW / 3f
+    listOf(1, 2).forEach { i ->
+        sketchLine(pt(boardX + colW * i, boardY + 4f), pt(boardX + colW * i, boardY + boardH - 4f), colors.inkFaint, 1.4f)
+    }
+    val headers = listOf(colors.inkSoft, colors.accent, colors.accentGreen)
+    headers.forEachIndexed { i, hue ->
+        fill(roundRectPath(boardX + colW * i + 6f, boardY + 6f, colW - 12f, 12f, 4f), hue.a(0.4f))
+    }
+    listOf(0 to 0, 0 to 1, 2 to 0).forEach { (col, row) ->
+        val cx0 = boardX + colW * col + 10f
+        val cy0 = boardY + 26f + row * 26f
+        paint(roundRectPath(cx0, cy0, colW - 20f, 20f, 4f), colors.paper, colors.inkSoft, 1.6f)
+        sketchLine(pt(cx0 + 6f, cy0 + 10f), pt(cx0 + colW - 32f, cy0 + 10f), colors.inkFaint, 1.4f)
+    }
+
+    // the shared card, carried from "Doing" to "Done" each loop
+    val travel = smooth01(loop(t, 0f))
+    val doingCx = boardX + colW * 1f + colW / 2f
+    val doneCx = boardX + colW * 2f + colW / 2f
+    val cardCx = doingCx + (doneCx - doingCx) * travel
+    val cardCy = (boardY + boardH + 34f) - 18f * travel
+    contactShadow(cardCx, boardY + boardH + 30f, 22f, 4f, colors.shade.a(colors.shade.alpha * (1f - travel * 0.6f)))
+    val card = roundRectPath(cardCx - 26f, cardCy - 13f, 52f, 26f, 5f)
+    paint(card, colors.paper, colors.ink, 2f)
+    sketchLine(pt(cardCx - 18f, cardCy - 3f), pt(cardCx + 14f, cardCy - 3f), colors.inkSoft, 1.4f)
+    sketchLine(pt(cardCx - 18f, cardCy + 4f), pt(cardCx + 4f, cardCy + 4f), colors.inkSoft, 1.4f)
+
+    // ── colleague, a simple supporting silhouette (left) ───────
+    contactShadow(100f, 250f, 34f, 5f, colors.shade)
+    paintCircle(pt(100f, 206f), 15f, colors.fabricDark, colors.ink, 2.0f)
+    val mate = Path().apply {
+        moveTo(d(100f), d(221f))
+        quadraticTo(d(80f), d(224f), d(76f), d(248f))
+        lineTo(d(124f), d(248f))
+        quadraticTo(d(120f), d(224f), d(100f), d(221f))
+        close()
+    }
+    paint(mate, colors.fabricDark, colors.ink, 2.0f)
+    limb(
+        Path().apply {
+            moveTo(d(116f), d(226f))
+            quadraticTo(d(134f), d(210f), d(doingCx - 8f), d(boardY + boardH - 6f))
+        },
+        colors.fabricDark, colors.ink, 2.0f, thickness = 7f
+    )
+    sketchLine(pt(92f, 248f), pt(80f, 250f), colors.ink, 1.6f)
+    sketchLine(pt(108f, 248f), pt(120f, 250f), colors.ink, 1.6f)
+
+    // ── person delivering the card into "Done" (right) ─────────
+    contactShadow(244f, 292f, 46f, 6f, colors.shade)
+    paintCircle(pt(244f, 202f), 19f, colors.skin, colors.ink, 2.4f)
+    val pony = Path().apply {
+        moveTo(d(259f), d(195f))
+        quadraticTo(d(272f), d(192f), d(270f), d(206f))
+    }
+    limb(pony, colors.hair, colors.ink, 2.2f, thickness = 7f)
+    sketchCircle(pt(238f, 202f), 1.5f, colors.ink, filled = true)
+    val grin = Path().apply {
+        moveTo(d(235f), d(209f))
+        quadraticTo(d(239f), d(213f), d(244f), d(209f))
+    }
+    stroke(grin, colors.ink, 1.8f)
+    limb(
+        Path().apply { moveTo(d(244f), d(221f)); lineTo(d(244f), d(229f)) },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
+
+    val pBody = Path().apply {
+        moveTo(d(244f), d(229f))
+        quadraticTo(d(224f), d(231f), d(218f), d(243f))
+        lineTo(d(214f), d(266f))
+        quadraticTo(d(244f), d(276f), d(274f), d(266f))
+        lineTo(d(270f), d(243f))
+        quadraticTo(d(264f), d(231f), d(244f), d(229f))
+        close()
+    }
+    paint(pBody, vBrush(229f, 276f, colors.terracotta.lit(0.28f), colors.clay), colors.ink, 2.4f)
+    shade(pBody, hBrush(244f, 270f, colors.shade.a(0f), colors.shade))
+
+    limb(
+        Path().apply {
+            moveTo(d(270f), d(245f))
+            quadraticTo(d(doneCx + 16f), d((245f + boardY + boardH) / 2f), d(doneCx - 4f), d(boardY + boardH + 4f))
+        },
+        colors.terracotta, colors.ink, 2.4f, thickness = 9f
+    )
+    limb(
+        Path().apply { moveTo(d(218f), d(245f)); quadraticTo(d(206f), d(258f), d(212f), d(272f)) },
+        colors.terracotta, colors.ink, 2.4f, thickness = 9f
+    )
+
+    val legL = Path().apply { moveTo(d(228f), d(268f)); quadraticTo(d(230f), d(282f), d(226f), d(292f)) }
+    val legR = Path().apply { moveTo(d(258f), d(268f)); quadraticTo(d(262f), d(282f), d(260f), d(292f)) }
+    limb(legL, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    limb(legR, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    sketchLine(pt(220f, 292f), pt(234f, 292f), colors.ink)
+    sketchLine(pt(254f, 292f), pt(268f, 292f), colors.ink)
+
+    twinkle(60f, 180f, 3f, t, 0.3f, colors.inkSoft)
+    twinkle(284f, 200f, 3f, t, 0.6f, colors.accentGreen)
+    groundHint(300f, colors.inkFaint)
+}
+
+// ─── Let Automation Handle It ────────────────────────────────────────────────
+//   A pair of meshed gears drive a stamping arm that checks off a whole row of
+//   tasks in one satisfying press.
+
+internal fun DrawScope.drawAutomateBusyworkScene(t: Float, colors: SketchyStyle) {
+    // ── the drive gear, turning steadily (left) ─────────────────
+    val gearCx = 90f
+    val gearCy = 150f
+    val gearR = 52f
+    val gearPivot = pt(gearCx, gearCy)
+    withTransform({ rotate(degrees = 360f * t, pivot = gearPivot) }) {
+        val teeth = 10
+        val gear = Path().apply {
+            for (i in 0 until teeth * 2) {
+                val ang = i * kotlin.math.PI.toFloat() / teeth
+                val rad = if (i % 2 == 0) gearR else gearR * 0.8f
+                val gx = gearCx + rad * cos(ang)
+                val gy = gearCy + rad * sin(ang)
+                if (i == 0) moveTo(d(gx), d(gy)) else lineTo(d(gx), d(gy))
+            }
+            close()
+        }
+        paint(gear, vBrush(gearCy - gearR, gearCy + gearR, colors.metal.lit(0.25f), colors.metalDark), colors.ink, 2.4f)
+        sketchCircle(pt(gearCx, gearCy), gearR * 0.34f, colors.metalDark, width = 2.2f)
+        for (i in 0..3) {
+            val ang = i * (kotlin.math.PI.toFloat() / 2f)
+            sketchLine(
+                pt(gearCx, gearCy),
+                pt(gearCx + gearR * 0.34f * cos(ang), gearCy + gearR * 0.34f * sin(ang)),
+                colors.inkFaint, 1.4f
+            )
+        }
+    }
+
+    // a small meshing gear, counter-rotating
+    val smallCx = 150f
+    val smallCy = 118f
+    val smallR = 26f
+    val smallPivot = pt(smallCx, smallCy)
+    withTransform({ rotate(degrees = -360f * t * (gearR / smallR), pivot = smallPivot) }) {
+        val teeth = 8
+        val gear = Path().apply {
+            for (i in 0 until teeth * 2) {
+                val ang = i * kotlin.math.PI.toFloat() / teeth
+                val rad = if (i % 2 == 0) smallR else smallR * 0.78f
+                val gx = smallCx + rad * cos(ang)
+                val gy = smallCy + rad * sin(ang)
+                if (i == 0) moveTo(d(gx), d(gy)) else lineTo(d(gx), d(gy))
+            }
+            close()
+        }
+        paint(gear, vBrush(smallCy - smallR, smallCy + smallR, colors.metal.lit(0.3f), colors.metalDark), colors.ink, 2.2f)
+        sketchCircle(pt(smallCx, smallCy), smallR * 0.3f, colors.metalDark, width = 1.8f)
+    }
+
+    // ── stamping arm (right) ─────────────────────────────────────
+    val stampAt = 0.22f
+    val toStamp = ((t - (stampAt - 0.05f)) / 0.05f).coerceIn(0f, 1f)
+    val fromStamp = ((t - stampAt) / 0.08f).coerceIn(0f, 1f)
+    val armDown = smooth01(toStamp) * (1f - smooth01(fromStamp))
+    val checked = t > stampAt
+
+    val armX = 222f
+    val paperY = 210f
+    val liftHeight = 26f
+    val tipY = paperY - liftHeight * (1f - armDown)
+
+    limb(
+        Path().apply { moveTo(d(armX), d(64f)); lineTo(d(armX), d(tipY - 10f)) },
+        colors.metal, colors.ink, 2.2f, thickness = 6f
+    )
+    paint(roundRectPath(armX - 20f, tipY - 10f, 40f, 14f, 3f), colors.metalDark, colors.ink, 2.2f)
+
+    // ── checklist strip, stamped all at once ──────────────────────
+    val stripX = 44f
+    contactShadow(stripX + 110f, paperY + 46f, 100f, 7f, colors.shade)
+    paint(roundRectPath(stripX, paperY, 220f, 40f, 8f), colors.paper, colors.ink, 2.4f)
+    for (i in 0 until 4) {
+        val bx = stripX + 18f + i * 52f
+        val by = paperY + 10f
+        val box = roundRectPath(bx, by, 18f, 18f, 3f)
+        if (checked) {
+            val pop = 1f + 0.4f * (1f - ((t - stampAt) / 0.1f).coerceAtMost(1f))
+            fill(box, colors.accentGreen)
+            drawPath(box, color = colors.ink, style = bold(1.8f))
+            val ccx = bx + 9f
+            val ccy = by + 9f
+            sketchLine(pt(ccx - 5f * pop, ccy), pt(ccx - 1f, ccy + 5f * pop), colors.accent, 2.2f)
+            sketchLine(pt(ccx - 1f, ccy + 5f * pop), pt(ccx + 7f * pop, ccy - 5f * pop), colors.accent, 2.2f)
+        } else {
+            paint(box, colors.paper.lit(0.4f), colors.ink, 1.6f)
+        }
+    }
+
+    twinkle(266f, 70f, 3f, t, 0.3f, colors.inkSoft)
+    twinkle(46f, 220f, 3f, t, 0.6f, colors.accentGreen)
+    groundHint(284f, colors.inkFaint)
+}
+
+// ─── Reflect, Then Reset ──────────────────────────────────────────────────────
+//   A person unwinds with tea beside a finished week's journal — one page
+//   full of checked days, the next left invitingly blank.
+
+internal fun DrawScope.drawReflectAndResetScene(t: Float, colors: SketchyStyle) {
+    // ── small side table with journal + tea (right) ─────────────
+    val tableCx = 232f
+    val tableTopY = 214f
+    contactShadow(tableCx, tableTopY + 66f, 58f, 7f, colors.shade)
+    paint(ellipsePath(tableCx, tableTopY, 56f, 12f), colors.wood.lit(0.15f), colors.ink, 2.2f)
+    listOf(-1f, 1f).forEach { side ->
+        limb(
+            Path().apply {
+                moveTo(d(tableCx + side * 40f), d(tableTopY + 6f))
+                lineTo(d(tableCx + side * 34f), d(tableTopY + 62f))
+            },
+            colors.woodDark, colors.ink, 2.2f, thickness = 6f
+        )
+    }
+
+    // journal, open flat — a finished week on the left, a fresh page on the right
+    val bookY = tableTopY - 6f
+    val book = Path().apply {
+        moveTo(d(tableCx - 46f), d(bookY - 2f))
+        quadraticTo(d(tableCx), d(bookY - 8f), d(tableCx + 46f), d(bookY - 2f))
+        lineTo(d(tableCx + 42f), d(bookY + 20f))
+        quadraticTo(d(tableCx), d(bookY + 14f), d(tableCx - 42f), d(bookY + 20f))
+        close()
+    }
+    paint(book, colors.paper, colors.ink, 2.0f)
+    sketchLine(pt(tableCx, bookY - 4f), pt(tableCx, bookY + 17f), colors.inkSoft, 1.2f)
+    for (i in 0 until 4) {
+        val ry = bookY + 2f + i * 4f
+        sketchCircle(pt(tableCx - 30f + (i % 2) * 6f, ry), 1.8f, colors.accentGreen, filled = true)
+    }
+    sketchLine(pt(tableCx + 12f, bookY + 2f), pt(tableCx + 34f, bookY), colors.inkFaint, 1.2f)
+    sketchLine(pt(tableCx + 12f, bookY + 10f), pt(tableCx + 30f, bookY + 8f), colors.inkFaint, 1.2f)
+
+    // tea mug, a wisp of steam curling up
+    val mugCx = tableCx + 4f
+    val mugTopY = tableTopY - 20f
+    val mug = Path().apply {
+        moveTo(d(mugCx - 12f), d(mugTopY))
+        lineTo(d(mugCx + 12f), d(mugTopY))
+        lineTo(d(mugCx + 10f), d(mugTopY + 16f))
+        quadraticTo(d(mugCx), d(mugTopY + 20f), d(mugCx - 10f), d(mugTopY + 16f))
+        close()
+    }
+    val handle = Path().apply {
+        moveTo(d(mugCx + 11f), d(mugTopY + 4f))
+        quadraticTo(d(mugCx + 20f), d(mugTopY + 6f), d(mugCx + 19f), d(mugTopY + 13f))
+        quadraticTo(d(mugCx + 18f), d(mugTopY + 18f), d(mugCx + 10f), d(mugTopY + 16f))
+    }
+    paintStroke(handle, colors.paper, colors.ink, width = 4f)
+    paint(mug, colors.paper, colors.ink, 2.0f)
+    paint(ellipsePath(mugCx, mugTopY, 12f, 3.4f), colors.coffee.lit(0.1f), colors.line(colors.coffee), 1f)
+    steam(mugCx - 2f, mugTopY - 6f, t, 0.1f, colors.hint(colors.paper.a(0.75f)), height = 34f)
+
+    // ── person, relaxed on a low stool (center-left) ────────────
+    val hipX = 150f
+    val hipY = 232f
+    contactShadow(hipX, 290f, 50f, 6f, colors.shade)
+
+    paint(roundRectPath(hipX - 34f, hipY + 6f, 68f, 12f, 5f), colors.wood, colors.ink, 2.2f)
+    listOf(-1f, 1f).forEach { side ->
+        limb(
+            Path().apply {
+                moveTo(d(hipX + side * 26f), d(hipY + 16f))
+                lineTo(d(hipX + side * 22f), d(hipY + 52f))
+            },
+            colors.woodDark, colors.ink, 2.0f, thickness = 6f
+        )
+    }
+
+    paintCircle(pt(hipX + 6f, hipY - 82f), 19f, colors.skin, colors.ink, 2.4f)
+    val hairSide = Path().apply {
+        moveTo(d(hipX - 10f), d(hipY - 88f))
+        quadraticTo(d(hipX - 22f), d(hipY - 76f), d(hipX - 16f), d(hipY - 60f))
+    }
+    limb(hairSide, colors.hair, colors.ink, 2.2f, thickness = 7f)
+    val eyeL = Path().apply { moveTo(d(hipX - 3f), d(hipY - 84f)); quadraticTo(d(hipX), d(hipY - 81f), d(hipX + 3f), d(hipY - 84f)) }
+    val eyeR = Path().apply { moveTo(d(hipX + 11f), d(hipY - 84f)); quadraticTo(d(hipX + 14f), d(hipY - 81f), d(hipX + 17f), d(hipY - 84f)) }
+    stroke(eyeL, colors.ink, 1.6f)
+    stroke(eyeR, colors.ink, 1.6f)
+    val contentSmile = Path().apply { moveTo(d(hipX), d(hipY - 74f)); quadraticTo(d(hipX + 6f), d(hipY - 71f), d(hipX + 12f), d(hipY - 74f)) }
+    stroke(contentSmile, colors.ink, 1.6f)
+
+    limb(
+        Path().apply { moveTo(d(hipX + 6f), d(hipY - 63f)); lineTo(d(hipX + 4f), d(hipY - 55f)) },
+        colors.skinDark, colors.ink, 2.4f, thickness = 9f
+    )
+
+    val rBody = Path().apply {
+        moveTo(d(hipX + 4f), d(hipY - 55f))
+        quadraticTo(d(hipX - 20f), d(hipY - 50f), d(hipX - 26f), d(hipY - 30f))
+        lineTo(d(hipX - 22f), d(hipY + 4f))
+        quadraticTo(d(hipX + 8f), d(hipY + 14f), d(hipX + 38f), d(hipY + 4f))
+        lineTo(d(hipX + 32f), d(hipY - 30f))
+        quadraticTo(d(hipX + 24f), d(hipY - 50f), d(hipX + 4f), d(hipY - 55f))
+        close()
+    }
+    paint(rBody, vBrush(hipY - 55f, hipY + 14f, colors.fabric.lit(0.3f), colors.fabricDark), colors.ink, 2.4f)
+    shade(rBody, hBrush(hipX, hipX + 38f, colors.shade.a(0f), colors.shade))
+
+    val armR = Path().apply {
+        moveTo(d(hipX + 32f), d(hipY - 30f))
+        quadraticTo(d(mugCx - 20f), d(hipY - 20f), d(mugCx - 14f), d(mugTopY + 8f))
+    }
+    limb(armR, colors.fabric, colors.ink, 2.2f, thickness = 8f)
+    paintCircle(pt(mugCx - 15f, mugTopY + 10f), 3.6f, colors.skin, colors.ink, 1.8f)
+
+    val armL = Path().apply {
+        moveTo(d(hipX - 26f), d(hipY - 30f))
+        quadraticTo(d(hipX - 40f), d(hipY - 10f), d(hipX - 30f), d(hipY + 6f))
+    }
+    limb(armL, colors.fabric, colors.ink, 2.2f, thickness = 8f)
+
+    val legL = Path().apply { moveTo(d(hipX - 16f), d(hipY + 10f)); quadraticTo(d(hipX - 20f), d(hipY + 40f), d(hipX - 16f), d(hipY + 54f)) }
+    val legR = Path().apply { moveTo(d(hipX + 22f), d(hipY + 10f)); quadraticTo(d(hipX + 26f), d(hipY + 40f), d(hipX + 22f), d(hipY + 54f)) }
+    limb(legL, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    limb(legR, colors.fabricDark, colors.ink, 2.4f, thickness = 10f)
+    sketchLine(pt(hipX - 24f, hipY + 54f), pt(hipX - 8f, hipY + 54f), colors.ink)
+    sketchLine(pt(hipX + 14f, hipY + 54f), pt(hipX + 30f, hipY + 54f), colors.ink)
+
+    twinkle(64f, 90f, 3f, t, 0.3f, colors.inkSoft)
+    twinkle(276f, 150f, 3f, t, 0.6f, colors.accent)
+    groundHint(300f, colors.inkFaint)
+}
+
 // ─── Plan Every Task ────────────────────────────────────────────────────────
 //   Person seated at a small desk with an open laptop, floating checklist,
 //   a leafy plant, and a scatter of sparkles.

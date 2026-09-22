@@ -69,6 +69,8 @@ class SketchyStyle internal constructor(
     val clay: Color get() = material(palette.clay)
     val fabric: Color get() = material(palette.fabric)
     val fabricDark: Color get() = material(palette.fabricDark)
+    val plum: Color get() = material(palette.plum)
+    val plumDark: Color get() = material(palette.plumDark)
     val metal: Color get() = material(palette.metal)
     val metalDark: Color get() = material(palette.metalDark)
     val skin: Color get() = material(palette.skin)

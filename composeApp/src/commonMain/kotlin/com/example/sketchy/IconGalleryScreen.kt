@@ -25,22 +25,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.sketchy.ui.theme.SketchyCream
 import com.example.sketchy.ui.theme.SketchyInk
-import com.sketchy.library.emptystates.EmptyState
-import com.sketchy.library.emptystates.SketchyEmptyState
+import com.sketchy.library.icons.Icon
+import com.sketchy.library.icons.IconStyle
+import com.sketchy.library.icons.SketchyIcon
 
 @Composable
-fun EmptyStateGalleryScreen(
+fun IconGalleryScreen(
     query: String,
-    onSelect: (EmptyState) -> Unit,
+    onSelect: (Icon) -> Unit,
     modifier: Modifier = Modifier,
     gridState: LazyGridState = rememberLazyGridState(),
 ) {
-    val filtered = EmptyState.entries.filter { it.matches(query) }
+    val filtered = Icon.entries.filter { it.matches(query) }
     val grouped = filtered.groupBy { it.category }
 
     LazyVerticalGrid(
         state = gridState,
-        columns = GridCells.Adaptive(minSize = 160.dp),
+        columns = GridCells.Fixed(4),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -53,19 +54,19 @@ fun EmptyStateGalleryScreen(
             item(span = { GridItemSpan(maxLineSpan) }, key = "header_$category") {
                 CategoryHeader(category, items.size)
             }
-            items(items, key = { it.name }) { state ->
-                EmptyStateCard(state = state, onClick = { onSelect(state) })
+            items(items, key = { it.name }) { icon ->
+                IconCard(icon = icon, onClick = { onSelect(icon) })
             }
         }
     }
 }
 
 @Composable
-private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun IconCard(icon: Icon, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = SketchyCream),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp, pressedElevation = 6.dp)
     ) {
@@ -75,22 +76,22 @@ private fun EmptyStateCard(state: EmptyState, onClick: () -> Unit, modifier: Mod
                 .aspectRatio(1f),
             contentAlignment = Alignment.Center
         ) {
-            SketchyEmptyState(
-                state = state,
-                illustrationSize = 130.dp,
-                title = null,
-                subtitle = null
+            SketchyIcon(
+                icon = icon,
+                style = IconStyle.Default,
+                tint = SketchyInk,
+                modifier = Modifier.aspectRatio(1f).padding(20.dp)
             )
         }
         Text(
-            text = state.defaultTitle,
-            style = MaterialTheme.typography.labelLarge,
+            text = icon.displayName,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold,
             color = SketchyInk,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 10.dp)
+                .padding(horizontal = 6.dp, vertical = 8.dp)
         )
     }
 }

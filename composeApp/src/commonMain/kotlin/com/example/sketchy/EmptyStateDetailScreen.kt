@@ -80,7 +80,7 @@ fun EmptyStateDetailScreen(
                             state = familyStates[page],
                             animate = animate,
                             colorful = colorful,
-                            illustrationSize = 220.dp
+                            illustrationSize = 350.dp
                         )
                     }
                 }
@@ -102,9 +102,9 @@ fun EmptyStateDetailScreen(
     }
 }
 
-/** A row of small dots marking [current] out of [count] — swipe progress for the pager above. */
+/** A row of small dots marking [current] out of [count] — swipe progress for a family pager. */
 @Composable
-private fun PagerDots(count: Int, current: Int, modifier: Modifier = Modifier) {
+internal fun PagerDots(count: Int, current: Int, modifier: Modifier = Modifier) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         repeat(count) { i ->
             val active = i == current

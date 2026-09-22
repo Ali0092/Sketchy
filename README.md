@@ -31,7 +31,9 @@ longer publishes artifacts for it.
 
 ---
 ## Demo
-https://github.com/user-attachments/assets/b5ab7d8a-45b9-43c3-ab53-1d2f6dc9a673
+https://github.com/user-attachments/assets/2db98caf-7201-4e06-97de-919f964268de
+
+
 
 ## Why Sketchy
 
@@ -60,11 +62,15 @@ animated in a way that feels alive. Sketchy takes a different approach:
 | Catalog | Count | Entry point |
 |---|---|---|
 | **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Onboarding illustrations** | 17, across 7 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
-| **Empty states** | 52, across 7 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+| **Onboarding illustrations** | 24, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
+| **Empty states** | 80, across 10 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
+| **Icons** | 20, across 1 category | `SketchyIcon(icon, modifier, style, tint, animate)` |
 
-Every one of the 75 scenes draws two ways from the same code — a colourless
-hand-drawn outline by default, or fully painted with `colorful = true`.
+Every one of the 110 illustrations and empty states draws two ways from the same code — a
+colourless hand-drawn outline by default, or fully painted with `colorful = true`. Icons are a
+different, simpler model: monochrome by design (a single `tint` rather than the full palette), each
+one rendering in five families off the same hand-drawn geometry — `Default`, `Outlined`, `Sharp`,
+`Filled` and `TwoTone`.
 
 A demo ships alongside the library as a live, searchable catalog of every
 illustration and empty state — the fastest way to browse what's available and
@@ -283,6 +289,45 @@ sensible default. Omit `title`/`subtitle` entirely (pass `null`) for an
 icon-only illustration. `SketchyColors` is the same type for both catalogs, so
 one palette restyles your entire onboarding flow and empty-state set at once.
 
+### An icon
+
+Icons are a simpler model than illustrations and empty states — monochrome by
+design, one `tint` rather than a full palette, and static rather than
+looping, since they're meant to sit inline in real UI (a button, a list row,
+a nav bar) rather than as decoration:
+
+```kotlin
+import com.sketchy.library.icons.Icon
+import com.sketchy.library.icons.SketchyIcon
+
+SketchyIcon(
+    icon = Icon.Heart,
+    modifier = Modifier.size(24.dp),
+    tint = MaterialTheme.colorScheme.onSurface,
+)
+```
+
+`strokeWidth` is a design-space number on the same 24-unit grid the icon
+itself is drawn on — it scales along with the icon if you display it larger
+than the default 24dp. A one-shot fade/pop still plays on first composition
+by default; pass `animate = false` to skip it and render at full opacity
+immediately.
+
+### The same icon, five families
+
+Every icon renders in five families off the same hand-drawn geometry — pick
+whichever fits the weight of the UI around it:
+
+```kotlin
+import com.sketchy.library.icons.IconStyle
+
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Default)   // a hollow line at normal weight
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Outlined)  // the same line, drawn thinner
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Sharp)     // square corners, mitred joins
+SketchyIcon(icon = Icon.Bell, style = IconStyle.Filled)    // a solid silhouette
+SketchyIcon(icon = Icon.Bell, style = IconStyle.TwoTone)   // Filled at low opacity, Default traced on top
+```
+
 ## Same situation, different families
 
 A handful of situations — a network error, an empty result set, "all caught
@@ -354,12 +399,14 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Onboarding illustrations (17)</strong></summary>
+<summary><strong>Onboarding illustrations (24)</strong></summary>
 
 | Category | Illustrations |
 |---|---|
+| Weather | A Rainy Day |
+| Plants and Things | A Desert in Bloom |
 | Signboards | Road Work Ahead · Every Path Leads Somewhere |
-| Productivity | Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
+| Productivity | Know What Matters Most · Make Time For What Matters · Get More Done Together · Let Automation Handle It · Reflect, Then Reset · Plan Every Task · Find Your Focus · Never Miss a Meeting · Capture Every Thought · Build Better Habits |
 | Finance | Track Every Expense · Watch Your Savings Grow |
 | Fitness | Train Anywhere, Anytime · See Your Progress |
 | Food Delivery | Order Your Favorites · Fast, Fresh Delivery |
@@ -369,7 +416,28 @@ Every entry below draws both ways — colourless by default, painted with
 </details>
 
 <details>
-<summary><strong>Empty states (52)</strong></summary>
+<summary><strong>Empty states (80)</strong></summary>
+
+The same cloud mascot every time — only its face and the sky around it (a
+peeking sun, a crescent moon, rain, lightning, a rainbow) change:
+
+| Category | Empty states |
+|---|---|
+| Weather | No Connection · Something Went Wrong · All Caught Up · All Quiet · No Results Found · Just a Moment · Nothing Scheduled Tonight · Welcome! · Your Inbox is Empty · Under Maintenance |
+
+The same twin-bell alarm clock every time — only its face, hands and the
+small prop beside it change:
+
+| Category | Empty states |
+|---|---|
+| Clock and Time | All Quiet · No Alarms Set · Nothing Scheduled · No Reminders Yet · Session Expired · Time's Up · All Caught Up · Coming Soon |
+
+A small garden world built only from potted plants and garden props —
+terracotta pots, watering cans, plant markers:
+
+| Category | Empty states |
+|---|---|
+| Plants and Things | No Data Yet · No Favorites Yet · No Results Found · Nothing To Do · All Quiet · All Caught Up · No Messages Yet · Your Cart is Empty · Let's Get Growing · Under Maintenance |
 
 A minimal single-outline standing figure — the same body every time, only
 the eyes and mouth change to carry the mood:
@@ -401,6 +469,18 @@ And the original catalog:
 
 </details>
 
+<details>
+<summary><strong>Icons (20)</strong></summary>
+
+Monochrome, hand-drawn glyphs on the standard 24×24 icon grid — pass any `IconStyle` to
+`SketchyIcon` to switch families:
+
+| Category | Icons |
+|---|---|
+| General | Home · Search · Heart · Star · Bell · Settings · User · Mail · Calendar · Clock · Cart · Edit · Trash · Camera · Image · Folder · Download · Upload · Share · Lock |
+
+</details>
+
 ## Project structure
 
 ```
@@ -416,6 +496,10 @@ Sketchy/
 │       ├── emptystates/
 │       │   ├── EmptyState.kt            # EmptyState enum, SketchyEmptyState composable
 │       │   └── EmptyStates*.kt          # …grouped by category
+│       ├── icons/
+│       │   ├── Icons.kt                 # Icon enum, IconStyle, SketchyIcon composable
+│       │   ├── IconPainting.kt          # Shared stroke/fill/hole rendering per IconStyle
+│       │   └── Icons*.kt                # …grouped by category
 │       └── utils/
 │           ├── Extensions.kt            # DrawScope drawing extensions (stroke, sketchLine, …)
 │           ├── Painting.kt              # Fills, shading, brushes, limbs — the painted half

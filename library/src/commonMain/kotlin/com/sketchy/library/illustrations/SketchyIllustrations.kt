@@ -55,6 +55,12 @@ import com.sketchy.library.utils.wave
  * `sketchy-illustrations` skill's `references/theming.md` before adding a new theme.
  */
 enum class Sketch(val displayName: String, val category: String, val style: String = "Classic") {
+    // ── Weather — a full outdoor downpour scene ──
+    RainyDay("A Rainy Day", "Weather"),
+
+    // ── Plants and Things — a full desert scene, real cacti and succulents ──
+    DesertBloom("A Desert in Bloom", "Plants and Things"),
+
     // ── Signboards — road signage as the scene's setting, not just its subject ──
     RoadWorkAhead("Road Work Ahead", "Signboards"),
     Crossroads("Every Path Leads Somewhere", "Signboards"),
@@ -68,6 +74,11 @@ enum class Sketch(val displayName: String, val category: String, val style: Stri
     RainyWindow("Rainy Day Indoors", "Featured"),
 
     // ── Productivity ────────────────────────────────────────────────────
+    PrioritizeTasks("Know What Matters Most", "Productivity"),
+    MasterYourTime("Make Time For What Matters", "Productivity"),
+    WorkBetterTogether("Get More Done Together", "Productivity"),
+    AutomateBusywork("Let Automation Handle It", "Productivity"),
+    ReflectAndReset("Reflect, Then Reset", "Productivity"),
     PlanTasks("Plan Every Task", "Productivity"),
     FindFocus("Find Your Focus", "Productivity"),
     NeverMissMeeting("Never Miss a Meeting", "Productivity"),
@@ -160,6 +171,10 @@ fun SketchyIllustration(
 
 private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: SketchyStyle) {
     when (sketch) {
+        Sketch.RainyDay -> drawRainyDayScene(t, colors)
+
+        Sketch.DesertBloom -> drawDesertBloomScene(t, colors)
+
         Sketch.RoadWorkAhead -> drawRoadWorkScene(t, colors)
         Sketch.Crossroads -> drawCrossroadsScene(t, colors)
 
@@ -170,6 +185,11 @@ private fun DrawScope.drawIllustration(sketch: Sketch, t: Float, colors: Sketchy
         Sketch.ReadingNook -> drawReadingNookScene(t, colors)
         Sketch.RainyWindow -> drawRainyWindowScene(t, colors)
 
+        Sketch.PrioritizeTasks -> drawPrioritizeTasksScene(t, colors)
+        Sketch.MasterYourTime -> drawMasterYourTimeScene(t, colors)
+        Sketch.WorkBetterTogether -> drawWorkBetterTogetherScene(t, colors)
+        Sketch.AutomateBusywork -> drawAutomateBusyworkScene(t, colors)
+        Sketch.ReflectAndReset -> drawReflectAndResetScene(t, colors)
         Sketch.PlanTasks -> drawTasksScene(t, colors)
         Sketch.FindFocus -> drawFocusScene(t, colors)
         Sketch.NeverMissMeeting -> drawMeetingsScene(t, colors)
