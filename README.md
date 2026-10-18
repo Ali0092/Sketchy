@@ -8,6 +8,7 @@ states — drawn entirely on `Canvas`, animated out of the box, and fully
 themeable to match your app. It runs on Android, iOS, desktop and the web from
 one `commonMain` source set.
 
+[![Featured on Android Weekly](https://androidweekly.net/issues/issue-749/badge)](https://androidweekly.net/issues/issue-749)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.ali0092/sketchy.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ali0092/sketchy)
 [![](https://jitpack.io/v/Ali0092/Sketchy.svg)](https://jitpack.io/#Ali0092/Sketchy)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
