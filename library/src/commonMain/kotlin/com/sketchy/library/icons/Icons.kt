@@ -69,6 +69,53 @@ enum class Icon(val displayName: String, val category: String) {
     Upload("Upload", "General"),
     Share("Share", "General"),
     Lock("Lock", "General"),
+    ArrowUp("Arrow Up", "Arrows"),
+    ArrowDown("Arrow Down", "Arrows"),
+    ArrowLeft("Arrow Left", "Arrows"),
+    ArrowRight("Arrow Right", "Arrows"),
+    ArrowUpRight("Arrow Up Right", "Arrows"),
+    ChevronUp("Chevron Up", "Arrows"),
+    ChevronDown("Chevron Down", "Arrows"),
+    ChevronLeft("Chevron Left", "Arrows"),
+    ChevronRight("Chevron Right", "Arrows"),
+    ArrowBigLeft("Big Arrow Left", "Arrows"),
+    ArrowBigRight("Big Arrow Right", "Arrows"),
+    Undo("Undo", "Arrows"),
+    Redo("Redo", "Arrows"),
+    Refresh("Refresh", "Arrows"),
+    Swap("Swap", "Arrows"),
+    Sort("Sort", "Arrows"),
+    Expand("Expand", "Arrows"),
+    Collapse("Collapse", "Arrows"),
+    Plus("Plus", "Actions"),
+    Minus("Minus", "Actions"),
+    Close("Close", "Actions"),
+    Check("Check", "Actions"),
+    Menu("Menu", "Actions"),
+    More("More", "Actions"),
+    Eye("Eye", "Actions"),
+    EyeOff("Eye Off", "Actions"),
+    Filter("Filter", "Actions"),
+    Bookmark("Bookmark", "Actions"),
+    Link("Link", "Actions"),
+    Pin("Pin", "Actions"),
+    Flag("Flag", "Actions"),
+    Info("Info", "Status"),
+    Warning("Warning", "Status"),
+    Help("Help", "Status"),
+    Phone("Phone", "Communication"),
+    Chat("Chat", "Communication"),
+    Send("Send", "Communication"),
+    Play("Play", "Media"),
+    Pause("Pause", "Media"),
+    Mic("Mic", "Media"),
+    Volume("Volume", "Media"),
+    Sun("Sun", "Weather"),
+    Moon("Moon", "Weather"),
+    Cloud("Cloud", "Weather"),
+    Gift("Gift", "Objects"),
+    Lightbulb("Lightbulb", "Objects"),
+    Coffee("Coffee", "Objects"),
 }
 
 /**
@@ -140,5 +187,52 @@ private fun DrawScope.drawIcon(icon: Icon, style: IconStyle, tint: Color, stroke
         Icon.Upload -> drawUploadIcon(style, tint, strokeWidth)
         Icon.Share -> drawShareIcon(style, tint, strokeWidth)
         Icon.Lock -> drawLockIcon(style, tint, strokeWidth)
+        Icon.ArrowUp -> drawArrowUpIcon(style, tint, strokeWidth)
+        Icon.ArrowDown -> drawArrowDownIcon(style, tint, strokeWidth)
+        Icon.ArrowLeft -> drawArrowLeftIcon(style, tint, strokeWidth)
+        Icon.ArrowRight -> drawArrowRightIcon(style, tint, strokeWidth)
+        Icon.ArrowUpRight -> drawArrowUpRightIcon(style, tint, strokeWidth)
+        Icon.ChevronUp -> drawChevronUpIcon(style, tint, strokeWidth)
+        Icon.ChevronDown -> drawChevronDownIcon(style, tint, strokeWidth)
+        Icon.ChevronLeft -> drawChevronLeftIcon(style, tint, strokeWidth)
+        Icon.ChevronRight -> drawChevronRightIcon(style, tint, strokeWidth)
+        Icon.ArrowBigLeft -> drawArrowBigLeftIcon(style, tint, strokeWidth)
+        Icon.ArrowBigRight -> drawArrowBigRightIcon(style, tint, strokeWidth)
+        Icon.Undo -> drawUndoIcon(style, tint, strokeWidth)
+        Icon.Redo -> drawRedoIcon(style, tint, strokeWidth)
+        Icon.Refresh -> drawRefreshIcon(style, tint, strokeWidth)
+        Icon.Swap -> drawSwapIcon(style, tint, strokeWidth)
+        Icon.Sort -> drawSortIcon(style, tint, strokeWidth)
+        Icon.Expand -> drawExpandIcon(style, tint, strokeWidth)
+        Icon.Collapse -> drawCollapseIcon(style, tint, strokeWidth)
+        Icon.Plus -> drawPlusIcon(style, tint, strokeWidth)
+        Icon.Minus -> drawMinusIcon(style, tint, strokeWidth)
+        Icon.Close -> drawCloseIcon(style, tint, strokeWidth)
+        Icon.Check -> drawCheckIcon(style, tint, strokeWidth)
+        Icon.Menu -> drawMenuIcon(style, tint, strokeWidth)
+        Icon.More -> drawMoreIcon(style, tint, strokeWidth)
+        Icon.Eye -> drawEyeIcon(style, tint, strokeWidth)
+        Icon.EyeOff -> drawEyeOffIcon(style, tint, strokeWidth)
+        Icon.Filter -> drawFilterIcon(style, tint, strokeWidth)
+        Icon.Bookmark -> drawBookmarkIcon(style, tint, strokeWidth)
+        Icon.Link -> drawLinkIcon(style, tint, strokeWidth)
+        Icon.Pin -> drawPinIcon(style, tint, strokeWidth)
+        Icon.Flag -> drawFlagIcon(style, tint, strokeWidth)
+        Icon.Info -> drawInfoIcon(style, tint, strokeWidth)
+        Icon.Warning -> drawWarningIcon(style, tint, strokeWidth)
+        Icon.Help -> drawHelpIcon(style, tint, strokeWidth)
+        Icon.Phone -> drawPhoneIcon(style, tint, strokeWidth)
+        Icon.Chat -> drawChatIcon(style, tint, strokeWidth)
+        Icon.Send -> drawSendIcon(style, tint, strokeWidth)
+        Icon.Play -> drawPlayIcon(style, tint, strokeWidth)
+        Icon.Pause -> drawPauseIcon(style, tint, strokeWidth)
+        Icon.Mic -> drawMicIcon(style, tint, strokeWidth)
+        Icon.Volume -> drawVolumeIcon(style, tint, strokeWidth)
+        Icon.Sun -> drawSunIcon(style, tint, strokeWidth)
+        Icon.Moon -> drawMoonIcon(style, tint, strokeWidth)
+        Icon.Cloud -> drawCloudIcon(style, tint, strokeWidth)
+        Icon.Gift -> drawGiftIcon(style, tint, strokeWidth)
+        Icon.Lightbulb -> drawLightbulbIcon(style, tint, strokeWidth)
+        Icon.Coffee -> drawCoffeeIcon(style, tint, strokeWidth)
     }
 }
