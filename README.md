@@ -65,7 +65,7 @@ animated in a way that feels alive. Sketchy takes a different approach:
 | **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
 | **Onboarding illustrations** | 24, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
 | **Empty states** | 80, across 10 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
-| **Icons** | 20, across 1 category | `SketchyIcon(icon, modifier, style, tint, animate)` |
+| **Icons** | 67, across 8 categories | `SketchyIcon(icon, modifier, style, tint, animate)` |
 
 Every one of the 110 illustrations and empty states draws two ways from the same code — a
 colourless hand-drawn outline by default, or fully painted with `colorful = true`. Icons are a
@@ -121,7 +121,7 @@ repository setup required:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.ali0092:sketchy:1.0.9")
+            implementation("io.github.ali0092:sketchy:1.0.10")
         }
     }
 }
@@ -132,7 +132,7 @@ An Android-only consumer adds it the usual way:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.9")
+    implementation("io.github.ali0092:sketchy:1.0.10")
 }
 ```
 
@@ -142,7 +142,7 @@ your network:
 
 ```kotlin
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.9")
+    implementation("io.github.ali0092:sketchy:1.0.10")
 }
 ```
 
@@ -471,7 +471,7 @@ And the original catalog:
 </details>
 
 <details>
-<summary><strong>Icons (20)</strong></summary>
+<summary><strong>Icons (67)</strong></summary>
 
 Monochrome, hand-drawn glyphs on the standard 24×24 icon grid — pass any `IconStyle` to
 `SketchyIcon` to switch families:
@@ -479,6 +479,13 @@ Monochrome, hand-drawn glyphs on the standard 24×24 icon grid — pass any `Ico
 | Category | Icons |
 |---|---|
 | General | Home · Search · Heart · Star · Bell · Settings · User · Mail · Calendar · Clock · Cart · Edit · Trash · Camera · Image · Folder · Download · Upload · Share · Lock |
+| Arrows | Arrow Up · Arrow Down · Arrow Left · Arrow Right · Arrow Up Right · Chevron Up · Chevron Down · Chevron Left · Chevron Right · Big Arrow Left · Big Arrow Right · Undo · Redo · Refresh · Swap · Sort · Expand · Collapse |
+| Actions | Plus · Minus · Close · Check · Menu · More · Eye · Eye Off · Filter · Bookmark · Link · Pin · Flag |
+| Status | Info · Warning · Help |
+| Communication | Phone · Chat · Send |
+| Media | Play · Pause · Mic · Volume |
+| Weather | Sun · Moon · Cloud |
+| Objects | Gift · Lightbulb · Coffee |
 
 </details>
 

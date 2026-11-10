@@ -1,6 +1,9 @@
 package com.sketchy.library.icons
 
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.PathMeasure
@@ -12,7 +15,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import com.sketchy.library.utils.d
 import com.sketchy.library.utils.hash01
 import com.sketchy.library.utils.pt
+import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.sin
 
 /**
  * Shared rendering for every hand-drawn icon: the same path geometry throughout, with only the
@@ -104,6 +110,78 @@ internal fun DrawScope.paintIcon(path: Path, style: IconStyle, tint: Color, stro
             drawPath(inked, color = tint, style = iconStroke(IconStyle.Default, strokeWidth))
         }
         else -> drawPath(inked, color = tint, style = iconStroke(style, strokeWidth))
+    }
+}
+
+internal fun DrawScope.paintLineIcon(paths: List<Path>, style: IconStyle, tint: Color, strokeWidth: Float) {
+    val inked = Path().apply { paths.forEach { addPath(sketch(it)) } }
+    when (style) {
+        IconStyle.Filled -> drawPath(inked, color = tint, style = iconStroke(IconStyle.Default, strokeWidth, 2f))
+        IconStyle.TwoTone -> {
+            drawPath(inked, color = tint.copy(alpha = tint.alpha * 0.28f), style = iconStroke(IconStyle.Default, strokeWidth, 3.4f))
+            drawPath(inked, color = tint, style = iconStroke(IconStyle.Default, strokeWidth))
+        }
+        else -> drawPath(inked, color = tint, style = iconStroke(style, strokeWidth))
+    }
+}
+
+internal fun DrawScope.paintShapeIcon(
+    body: Path,
+    style: IconStyle,
+    tint: Color,
+    strokeWidth: Float,
+    holes: List<Path> = emptyList(),
+    cuts: List<Path> = emptyList(),
+    dots: List<Pair<Float, Float>> = emptyList(),
+    lines: List<Path> = emptyList(),
+    cutWidth: Float = 1.4f,
+    dotRadius: Float = 1.1f,
+) {
+    val inkedBody = sketch(body)
+    val inkedHoles = holes.map { sketch(it) }
+    val inkedCuts = cuts.map { sketch(it) }
+    val inkedLines = lines.map { sketch(it) }
+    val holePath = Path().apply { inkedHoles.forEach { addPath(it) } }
+    val outlines = listOf(inkedBody) + inkedHoles + inkedCuts
+    if (style == IconStyle.Filled || style == IconStyle.TwoTone) {
+        val fillColor = if (style == IconStyle.Filled) tint else tint.copy(alpha = tint.alpha * 0.28f)
+        drawContext.canvas.saveLayer(Rect(-d(4f), -d(4f), d(28f), d(28f)), Paint())
+        drawPath(inkedBody.withHole(holePath), color = fillColor, style = Fill)
+        inkedCuts.forEach {
+            drawPath(it, color = Color.Black, style = iconStroke(IconStyle.Default, strokeWidth, cutWidth), blendMode = BlendMode.Clear)
+        }
+        dots.forEach { (x, y) -> drawCircle(Color.Black, d(dotRadius), pt(x, y), blendMode = BlendMode.Clear) }
+        drawContext.canvas.restore()
+    }
+    if (style != IconStyle.Filled) {
+        val lineStyle = if (style == IconStyle.TwoTone) IconStyle.Default else style
+        outlines.forEach { drawPath(it, color = tint, style = iconStroke(lineStyle, strokeWidth)) }
+        dots.forEach { (x, y) -> solidDot(x, y, dotRadius, tint) }
+    }
+    val lineStroke = when (style) {
+        IconStyle.Filled -> iconStroke(IconStyle.Default, strokeWidth, 1.6f)
+        IconStyle.TwoTone -> iconStroke(IconStyle.Default, strokeWidth)
+        else -> iconStroke(style, strokeWidth)
+    }
+    inkedLines.forEach { drawPath(it, color = tint, style = lineStroke) }
+}
+
+internal fun DrawScope.linePath(fromX: Float, fromY: Float, toX: Float, toY: Float): Path = Path().apply {
+    moveTo(d(fromX), d(fromY))
+    lineTo(d(toX), d(toY))
+}
+
+internal fun DrawScope.arrowHeadPath(tipX: Float, tipY: Float, angleDegrees: Float, size: Float, spreadDegrees: Float = 45f): Path {
+    fun wing(offset: Float): Pair<Float, Float> {
+        val rad = (angleDegrees + offset) * (PI / 180.0).toFloat()
+        return (tipX - size * cos(rad)) to (tipY - size * sin(rad))
+    }
+    val (leftX, leftY) = wing(-spreadDegrees)
+    val (rightX, rightY) = wing(spreadDegrees)
+    return Path().apply {
+        moveTo(d(leftX), d(leftY))
+        lineTo(d(tipX), d(tipY))
+        lineTo(d(rightX), d(rightY))
     }
 }
 
