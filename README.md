@@ -65,7 +65,7 @@ animated in a way that feels alive. Sketchy takes a different approach:
 | **Featured illustrations** | 6 elaborate full scenes | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
 | **Onboarding illustrations** | 24, across 9 categories | `SketchyIllustration(modifier, sketch, animate, colorful, colors)` |
 | **Empty states** | 80, across 10 categories | `SketchyEmptyState(state, modifier, animate, colorful, colors, illustrationSize, title, subtitle, titleStyle, subtitleStyle, spacing)` |
-| **Icons** | 68, across 8 categories | `SketchyIcon(icon, modifier, style, tint, animate)` |
+| **Icons** | 67, across 8 categories | `SketchyIcon(icon, modifier, style, tint, animate)` |
 
 Every one of the 110 illustrations and empty states draws two ways from the same code — a
 colourless hand-drawn outline by default, or fully painted with `colorful = true`. Icons are a
@@ -121,7 +121,7 @@ repository setup required:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.ali0092:sketchy:1.0.9")
+            implementation("io.github.ali0092:sketchy:1.0.10")
         }
     }
 }
@@ -132,7 +132,7 @@ An Android-only consumer adds it the usual way:
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.9")
+    implementation("io.github.ali0092:sketchy:1.0.10")
 }
 ```
 
@@ -142,7 +142,7 @@ your network:
 
 ```kotlin
 dependencies {
-    implementation("io.github.ali0092:sketchy:1.0.9")
+    implementation("io.github.ali0092:sketchy:1.0.10")
 }
 ```
 
@@ -471,7 +471,7 @@ And the original catalog:
 </details>
 
 <details>
-<summary><strong>Icons (68)</strong></summary>
+<summary><strong>Icons (67)</strong></summary>
 
 Monochrome, hand-drawn glyphs on the standard 24×24 icon grid — pass any `IconStyle` to
 `SketchyIcon` to switch families:
