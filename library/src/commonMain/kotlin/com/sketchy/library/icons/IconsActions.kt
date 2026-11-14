@@ -1,5 +1,6 @@
 package com.sketchy.library.icons
 
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -108,4 +109,86 @@ private fun DrawScope.eyePath() = Path().apply {
     cubicTo(d(19f), d(17.5f), d(15.5f), d(19f), d(12f), d(19f))
     cubicTo(d(8.5f), d(19f), d(5f), d(17.5f), d(2f), d(12f))
     close()
+}
+
+internal fun DrawScope.drawCopyIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val r = cornerRadius(style, 2f)
+    val back = Path().apply {
+        moveTo(d(8.5f), d(15.5f))
+        lineTo(d(3.5f + r), d(15.5f))
+        quadraticTo(d(3.5f), d(15.5f), d(3.5f), d(15.5f - r))
+        lineTo(d(3.5f), d(3.5f + r))
+        quadraticTo(d(3.5f), d(3.5f), d(3.5f + r), d(3.5f))
+        lineTo(d(15.5f - r), d(3.5f))
+        quadraticTo(d(15.5f), d(3.5f), d(15.5f), d(3.5f + r))
+        lineTo(d(15.5f), d(8.5f))
+    }
+    paintLineIcon(listOf(back), style, tint, strokeWidth)
+    paintIcon(roundRectPath(8.5f, 8.5f, 12f, 12f, r), style, tint, strokeWidth)
+}
+
+internal fun DrawScope.drawAttachIcon(style: IconStyle, tint: Color, strokeWidth: Float) =
+    rotate(45f, pivot = pt(12f, 12f)) {
+        fun arc(cx: Float, cy: Float, r: Float) = Rect(d(cx - r), d(cy - r), d(cx + r), d(cy + r))
+        val clip = Path().apply {
+            moveTo(d(13.5f), d(8f))
+            lineTo(d(13.5f), d(16f))
+            arcTo(arc(12f, 16f, 1.5f), 0f, 180f, false)
+            lineTo(d(10.5f), d(5.5f))
+            arcTo(arc(13.5f, 5.5f, 3f), 180f, 180f, false)
+            lineTo(d(16.5f), d(17f))
+            arcTo(arc(12f, 17f, 4.5f), 0f, 180f, false)
+            lineTo(d(7.5f), d(9f))
+        }
+        paintLineIcon(listOf(clip), style, tint, strokeWidth)
+    }
+
+internal fun DrawScope.drawLogoutIcon(style: IconStyle, tint: Color, strokeWidth: Float) =
+    paintLineIcon(
+        listOf(doorFramePath(style, mirrored = false), linePath(10f, 12f, 20.5f, 12f), arrowHeadPath(20.5f, 12f, 0f, 5.5f)),
+        style,
+        tint,
+        strokeWidth
+    )
+
+internal fun DrawScope.drawLoginIcon(style: IconStyle, tint: Color, strokeWidth: Float) =
+    paintLineIcon(
+        listOf(doorFramePath(style, mirrored = true), linePath(3.5f, 12f, 14f, 12f), arrowHeadPath(14f, 12f, 0f, 5.5f)),
+        style,
+        tint,
+        strokeWidth
+    )
+
+internal fun DrawScope.drawGridViewIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val r = cornerRadius(style, 1.5f)
+    listOf(3.5f to 3.5f, 13.5f to 3.5f, 3.5f to 13.5f, 13.5f to 13.5f).forEach { (x, y) ->
+        paintIcon(roundRectPath(x, y, 7f, 7f, r), style, tint, strokeWidth)
+    }
+}
+
+internal fun DrawScope.drawListViewIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val rows = listOf(6f, 12f, 18f)
+    paintLineIcon(rows.map { y -> linePath(9f, y, 20.5f, y) }, style, tint, strokeWidth)
+    rows.forEach { y -> solidDot(4.5f, y, 1.3f, tint) }
+}
+
+internal fun DrawScope.drawSlidersIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val knobs = listOf(6f to 15f, 12f to 8f, 18f to 13f)
+    val knobR = 2.2f
+    val tracks = knobs.flatMap { (y, x) -> listOf(linePath(3.5f, y, x - knobR, y), linePath(x + knobR, y, 20.5f, y)) }
+    paintLineIcon(tracks, style, tint, strokeWidth)
+    knobs.forEach { (y, x) -> paintIcon(ellipsePath(x, y, knobR, knobR), style, tint, strokeWidth) }
+}
+
+private fun DrawScope.doorFramePath(style: IconStyle, mirrored: Boolean): Path {
+    fun x(v: Float) = d(if (mirrored) 24f - v else v)
+    val r = cornerRadius(style, 2f)
+    return Path().apply {
+        moveTo(x(10f), d(4f))
+        lineTo(x(4f + r), d(4f))
+        quadraticTo(x(4f), d(4f), x(4f), d(4f + r))
+        lineTo(x(4f), d(20f - r))
+        quadraticTo(x(4f), d(20f), x(4f + r), d(20f))
+        lineTo(x(10f), d(20f))
+    }
 }

@@ -100,22 +100,55 @@ enum class Icon(val displayName: String, val category: String) {
     Link("Link", "Actions"),
     Pin("Pin", "Actions"),
     Flag("Flag", "Actions"),
+    Copy("Copy", "Actions"),
+    Attach("Attach", "Actions"),
+    Logout("Logout", "Actions"),
+    Login("Login", "Actions"),
+    GridView("Grid View", "Actions"),
+    ListView("List View", "Actions"),
+    Sliders("Sliders", "Actions"),
     Info("Info", "Status"),
     Warning("Warning", "Status"),
     Help("Help", "Status"),
+    CheckCircle("Check Circle", "Status"),
+    CloseCircle("Close Circle", "Status"),
+    Shield("Shield", "Status"),
+    Battery("Battery", "Status"),
     Phone("Phone", "Communication"),
     Chat("Chat", "Communication"),
     Send("Send", "Communication"),
+    Video("Video", "Communication"),
+    Globe("Globe", "Communication"),
+    Inbox("Inbox", "Communication"),
+    Rss("RSS", "Communication"),
+    Wifi("Wi-Fi", "Communication"),
     Play("Play", "Media"),
     Pause("Pause", "Media"),
     Mic("Mic", "Media"),
     Volume("Volume", "Media"),
+    Stop("Stop", "Media"),
+    SkipNext("Skip Next", "Media"),
+    SkipPrevious("Skip Previous", "Media"),
+    Music("Music", "Media"),
+    Headphones("Headphones", "Media"),
+    Mute("Mute", "Media"),
     Sun("Sun", "Weather"),
     Moon("Moon", "Weather"),
     Cloud("Cloud", "Weather"),
+    Rain("Rain", "Weather"),
+    Snow("Snow", "Weather"),
+    Lightning("Lightning", "Weather"),
+    Wind("Wind", "Weather"),
+    Umbrella("Umbrella", "Weather"),
     Gift("Gift", "Objects"),
     Lightbulb("Lightbulb", "Objects"),
     Coffee("Coffee", "Objects"),
+    Book("Book", "Objects"),
+    Key("Key", "Objects"),
+    Tag("Tag", "Objects"),
+    Trophy("Trophy", "Objects"),
+    Briefcase("Briefcase", "Objects"),
+    Clipboard("Clipboard", "Objects"),
 }
 
 /**
@@ -218,21 +251,54 @@ private fun DrawScope.drawIcon(icon: Icon, style: IconStyle, tint: Color, stroke
         Icon.Link -> drawLinkIcon(style, tint, strokeWidth)
         Icon.Pin -> drawPinIcon(style, tint, strokeWidth)
         Icon.Flag -> drawFlagIcon(style, tint, strokeWidth)
+        Icon.Copy -> drawCopyIcon(style, tint, strokeWidth)
+        Icon.Attach -> drawAttachIcon(style, tint, strokeWidth)
+        Icon.Logout -> drawLogoutIcon(style, tint, strokeWidth)
+        Icon.Login -> drawLoginIcon(style, tint, strokeWidth)
+        Icon.GridView -> drawGridViewIcon(style, tint, strokeWidth)
+        Icon.ListView -> drawListViewIcon(style, tint, strokeWidth)
+        Icon.Sliders -> drawSlidersIcon(style, tint, strokeWidth)
         Icon.Info -> drawInfoIcon(style, tint, strokeWidth)
         Icon.Warning -> drawWarningIcon(style, tint, strokeWidth)
         Icon.Help -> drawHelpIcon(style, tint, strokeWidth)
+        Icon.CheckCircle -> drawCheckCircleIcon(style, tint, strokeWidth)
+        Icon.CloseCircle -> drawCloseCircleIcon(style, tint, strokeWidth)
+        Icon.Shield -> drawShieldIcon(style, tint, strokeWidth)
+        Icon.Battery -> drawBatteryIcon(style, tint, strokeWidth)
         Icon.Phone -> drawPhoneIcon(style, tint, strokeWidth)
         Icon.Chat -> drawChatIcon(style, tint, strokeWidth)
         Icon.Send -> drawSendIcon(style, tint, strokeWidth)
+        Icon.Video -> drawVideoIcon(style, tint, strokeWidth)
+        Icon.Globe -> drawGlobeIcon(style, tint, strokeWidth)
+        Icon.Inbox -> drawInboxIcon(style, tint, strokeWidth)
+        Icon.Rss -> drawRssIcon(style, tint, strokeWidth)
+        Icon.Wifi -> drawWifiIcon(style, tint, strokeWidth)
         Icon.Play -> drawPlayIcon(style, tint, strokeWidth)
         Icon.Pause -> drawPauseIcon(style, tint, strokeWidth)
         Icon.Mic -> drawMicIcon(style, tint, strokeWidth)
         Icon.Volume -> drawVolumeIcon(style, tint, strokeWidth)
+        Icon.Stop -> drawStopIcon(style, tint, strokeWidth)
+        Icon.SkipNext -> drawSkipNextIcon(style, tint, strokeWidth)
+        Icon.SkipPrevious -> drawSkipPreviousIcon(style, tint, strokeWidth)
+        Icon.Music -> drawMusicIcon(style, tint, strokeWidth)
+        Icon.Headphones -> drawHeadphonesIcon(style, tint, strokeWidth)
+        Icon.Mute -> drawMuteIcon(style, tint, strokeWidth)
         Icon.Sun -> drawSunIcon(style, tint, strokeWidth)
         Icon.Moon -> drawMoonIcon(style, tint, strokeWidth)
         Icon.Cloud -> drawCloudIcon(style, tint, strokeWidth)
+        Icon.Rain -> drawRainIcon(style, tint, strokeWidth)
+        Icon.Snow -> drawSnowIcon(style, tint, strokeWidth)
+        Icon.Lightning -> drawLightningIcon(style, tint, strokeWidth)
+        Icon.Wind -> drawWindIcon(style, tint, strokeWidth)
+        Icon.Umbrella -> drawUmbrellaIcon(style, tint, strokeWidth)
         Icon.Gift -> drawGiftIcon(style, tint, strokeWidth)
         Icon.Lightbulb -> drawLightbulbIcon(style, tint, strokeWidth)
         Icon.Coffee -> drawCoffeeIcon(style, tint, strokeWidth)
+        Icon.Book -> drawBookIcon(style, tint, strokeWidth)
+        Icon.Key -> drawKeyIcon(style, tint, strokeWidth)
+        Icon.Tag -> drawTagIcon(style, tint, strokeWidth)
+        Icon.Trophy -> drawTrophyIcon(style, tint, strokeWidth)
+        Icon.Briefcase -> drawBriefcaseIcon(style, tint, strokeWidth)
+        Icon.Clipboard -> drawClipboardIcon(style, tint, strokeWidth)
     }
 }

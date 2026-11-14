@@ -53,6 +53,8 @@ internal fun DrawScope.sketch(path: Path, amplitude: Float = 0.34f, step: Float 
     val closed = hypot((end.x - start.x).toDouble(), (end.y - start.y).toDouble()) < 0.01
 
     val result = Path()
+    var firstX = 0f
+    var firstY = 0f
     var prevX = 0f
     var prevY = 0f
     for (i in 0..samples) {
@@ -60,8 +62,13 @@ internal fun DrawScope.sketch(path: Path, amplitude: Float = 0.34f, step: Float 
         val pos = measure.getPosition(dist)
         val tan = measure.getTangent(dist)
         val n = hash01(seed + i) * 2f - 1f
-        val x = pos.x + (-tan.y) * amp * n
-        val y = pos.y + tan.x * amp * n
+        val snapToStart = closed && i == samples
+        val x = if (snapToStart) firstX else pos.x + (-tan.y) * amp * n
+        val y = if (snapToStart) firstY else pos.y + tan.x * amp * n
+        if (i == 0) {
+            firstX = x
+            firstY = y
+        }
         when (i) {
             0 -> result.moveTo(x, y)
             samples -> result.quadraticTo(prevX, prevY, x, y)

@@ -4,7 +4,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.sketchy.library.utils.d
+import com.sketchy.library.utils.ellipsePath
 import com.sketchy.library.utils.roundRectPath
+import com.sketchy.library.utils.roundedPolygonPath
 
 internal fun DrawScope.drawGiftIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
     val leftBow = Path().apply {
@@ -81,4 +83,84 @@ internal fun DrawScope.drawCoffeeIcon(style: IconStyle, tint: Color, strokeWidth
         }
     }
     paintShapeIcon(mug, style, tint, strokeWidth, lines = listOf(handle) + steam)
+}
+
+internal fun DrawScope.drawBookIcon(style: IconStyle, tint: Color, strokeWidth: Float) =
+    paintShapeIcon(
+        roundRectPath(4.5f, 2.5f, 15f, 19f, cornerRadius(style, 2f)),
+        style,
+        tint,
+        strokeWidth,
+        cuts = listOf(linePath(8f, 3f, 8f, 21f), linePath(11f, 7.5f, 16f, 7.5f))
+    )
+
+internal fun DrawScope.drawKeyIcon(style: IconStyle, tint: Color, strokeWidth: Float) =
+    paintShapeIcon(
+        ellipsePath(7.5f, 12f, 4.5f, 4.5f),
+        style,
+        tint,
+        strokeWidth,
+        holes = listOf(ellipsePath(7.5f, 12f, 1.6f, 1.6f)),
+        lines = listOf(linePath(12f, 12f, 21f, 12f), linePath(18f, 12f, 18f, 15.5f), linePath(15f, 12f, 15f, 14.5f))
+    )
+
+internal fun DrawScope.drawTagIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val tag = roundedPolygonPath(
+        listOf(3f to 3f, 11.5f to 3f, 21f to 12.5f, 12.5f to 21f, 3f to 11.5f),
+        cornerRadius(style, 1.5f)
+    )
+    paintShapeIcon(tag, style, tint, strokeWidth, holes = listOf(ellipsePath(7.5f, 7.5f, 1.6f, 1.6f)))
+}
+
+internal fun DrawScope.drawTrophyIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val cup = Path().apply {
+        moveTo(d(7f), d(3.5f))
+        lineTo(d(17f), d(3.5f))
+        lineTo(d(17f), d(9f))
+        cubicTo(d(17f), d(12.5f), d(14.8f), d(14.5f), d(12f), d(14.5f))
+        cubicTo(d(9.2f), d(14.5f), d(7f), d(12.5f), d(7f), d(9f))
+        close()
+    }
+    val leftHandle = Path().apply {
+        moveTo(d(7f), d(5.5f))
+        lineTo(d(4.5f), d(5.5f))
+        cubicTo(d(4.5f), d(9f), d(5.5f), d(10.5f), d(7.3f), d(10.8f))
+    }
+    val rightHandle = Path().apply {
+        moveTo(d(17f), d(5.5f))
+        lineTo(d(19.5f), d(5.5f))
+        cubicTo(d(19.5f), d(9f), d(18.5f), d(10.5f), d(16.7f), d(10.8f))
+    }
+    paintShapeIcon(cup, style, tint, strokeWidth, lines = listOf(leftHandle, rightHandle, linePath(12f, 14.5f, 12f, 18f)))
+    paintIcon(roundRectPath(7.5f, 18f, 9f, 3f, cornerRadius(style, 1f)), style, tint, strokeWidth)
+}
+
+internal fun DrawScope.drawBriefcaseIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    val handle = Path().apply {
+        moveTo(d(9f), d(7f))
+        lineTo(d(9f), d(5f))
+        quadraticTo(d(9f), d(4f), d(10f), d(4f))
+        lineTo(d(14f), d(4f))
+        quadraticTo(d(15f), d(4f), d(15f), d(5f))
+        lineTo(d(15f), d(7f))
+    }
+    paintShapeIcon(
+        roundRectPath(3f, 7f, 18f, 13f, cornerRadius(style, 2f)),
+        style,
+        tint,
+        strokeWidth,
+        cuts = listOf(linePath(3.5f, 12.5f, 20.5f, 12.5f)),
+        lines = listOf(handle)
+    )
+}
+
+internal fun DrawScope.drawClipboardIcon(style: IconStyle, tint: Color, strokeWidth: Float) {
+    paintShapeIcon(
+        roundRectPath(4.5f, 4f, 15f, 18f, cornerRadius(style, 2f)),
+        style,
+        tint,
+        strokeWidth,
+        cuts = listOf(linePath(8.5f, 10.5f, 15.5f, 10.5f), linePath(8.5f, 14.5f, 15.5f, 14.5f), linePath(8.5f, 18f, 12.5f, 18f))
+    )
+    paintIcon(roundRectPath(8.5f, 2.5f, 7f, 4f, cornerRadius(style, 1f)), style, tint, strokeWidth)
 }
