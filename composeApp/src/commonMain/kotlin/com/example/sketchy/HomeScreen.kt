@@ -34,9 +34,10 @@ import com.sketchy.library.emptystates.EmptyState
 import com.sketchy.library.icons.Icon
 import com.sketchy.library.illustrations.Sketch
 
-const val TabIllustrations = 0
-const val TabEmptyStates = 1
-const val TabIcons = 2
+const val TabMascots = 0
+const val TabIllustrations = 1
+const val TabEmptyStates = 2
+const val TabIcons = 3
 
 @Composable
 fun HomeScreen(
@@ -58,6 +59,7 @@ fun HomeScreen(
             query = query,
             onQueryChange = onQueryChange,
             placeholder = when (tab) {
+                TabMascots -> "Search mascots…"
                 TabIllustrations -> "Search illustrations…"
                 TabEmptyStates -> "Search empty states…"
                 else -> "Search icons…"
@@ -68,6 +70,11 @@ fun HomeScreen(
         )
         Spacer(Modifier.height(4.dp))
         SecondaryTabRow(selectedTabIndex = tab) {
+            Tab(
+                selected = tab == TabMascots,
+                onClick = { onTabSelected(TabMascots) },
+                text = { Text("Mascot") }
+            )
             Tab(
                 selected = tab == TabIllustrations,
                 onClick = { onTabSelected(TabIllustrations) },
@@ -85,6 +92,12 @@ fun HomeScreen(
             )
         }
         when (tab) {
+            TabMascots -> MascotGalleryScreen(
+                query = query,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
             TabIllustrations -> SketchyGalleryScreen(
                 query = query,
                 onSelect = onSelectSketch,
